@@ -1,16 +1,19 @@
 //
-//  BusmeIPhoneTests.swift
-//  BusmeIPhoneTests
+//  HttpClientTest.swift
+//  BusmeIPhone
 //
-//  Created by Polar Humenn on 12/29/14.
-//  Copyright (c) 2014 Polar Humenn. All rights reserved.
+//  Created by Polar Humenn on 1/3/15.
+//  Copyright (c) 2015 Polar Humenn. All rights reserved.
 //
+
 
 import UIKit
 import XCTest
 import BusmeIPhone
 
-class BusmeIPhoneTests: XCTestCase {
+
+class HttpClientTest: XCTestCase {
+    
     var httpQ : dispatch_queue_t = dispatch_queue_create("http", DISPATCH_QUEUE_SERIAL);
     var httpClient : HttpClient?;
     var api : ApiBase?;
@@ -36,13 +39,26 @@ class BusmeIPhoneTests: XCTestCase {
         XCTAssert(response.getStatusLine().statusCode == 200, "Pass");
         XCTAssert(response.getEntity()!.getContent() == "<API version='d1' discover='http://busme-apis.herokuapp.com/apis/d1/discover' master='http://busme-apis.herokuapp.com/apis/d1/master'/>", "Did not get right API structure");
     }
+    func testArray() {
+        NSLog("Starting testing testArray");
+        var eatme = Array<String>();
+        XCTAssertEqual(eatme.count, 0, "Not an empty array");
+        eatme.append("Eatme");
+        XCTAssertEqual(eatme.count, 1, "Expected to have one value");
+        NSLog("Finished testing testArray");
+    }
+    
+    func testXMLParse1() {
+        let response: HttpResponse = self.api!.getURLResponse(initialURL);
+        XCTAssert(response.getStatusLine().statusCode == 200, "Pass");
+        XCTAssert(response.getEntity()!.getContent() == "<API version='d1' discover='http://busme-apis.herokuapp.com/apis/d1/discover' master='http://busme-apis.herokuapp.com/apis/d1/master'/>", "Did not get right API structure");
+    }
     
     func testXMLParse() {
         let response: HttpResponse = self.api!.getURLResponse(initialURL);
         XCTAssert(response.getStatusLine().statusCode == 200, "Pass");
         XCTAssert(response.getEntity()!.getContent() == "<API version='d1' discover='http://busme-apis.herokuapp.com/apis/d1/discover' master='http://busme-apis.herokuapp.com/apis/d1/master'/>", "Did not get right API structure");
-        let tag = self.api!.xmlParse(response.getEntity());
-        XCTAssertNotNil(tag, "Tag empty");
+        let tag = self.api!.xmlParse(response.getEntity());        XCTAssertNotNil(tag, "Tag empty");
         XCTAssertEqual(tag!.name, "API", "Not right tag");
         let version = tag!.attributes["version"];
         XCTAssertEqual(version!, "d1", "Not right attribute");
@@ -55,24 +71,30 @@ class BusmeIPhoneTests: XCTestCase {
         XCTAssert(response.getEntity()!.getContent() == "<API version='d1' discover='http://busme-apis.herokuapp.com/apis/d1/discover' master='http://busme-apis.herokuapp.com/apis/d1/master'/>", "Did not get right API structure");
         let tag = self.api!.xmlParse(response.getEntity());
         let url = tag!.attributes["master"];
-        let query = "\(url)/syracuse-university";
+        let query = "\(url!)?slug=syracuse-university";
         
-        let result: HttpResponse = self.api!.getURLResponse(initialURL);
+        let result: HttpResponse = self.api!.getURLResponse(query);
         let tag2 = self.api!.xmlParse(result.getEntity());
-        XCTAssertEqual(tag2!.name, "Masters", "Not Masters");
-        XCTAssertNotNil(tag2!.childNodes, "Tag empty");
+        XCTAssertEqual(tag2!.name, "master", "Not a master");
+        XCTAssertEqual(tag2!.childNodes.count, 2, "Wrong number of childNodes");
+        var gotit = false;
         for node in tag2!.childNodes {
-            NSLog("%@", node.name);
+            NSLog(node.name);
+            if (node.name == "title") {
+                XCTAssertEqual(node.text!, "Syracuse-University", "Not SU");
+                gotit = true;
+            }
         }
+        XCTAssert(gotit, "Children not found");
         NSLog("We got here");
     }
 
-    
+
     func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measureBlock() {
             // Put the code you want to measure the time of here.
         }
     }
-    
+
 }
