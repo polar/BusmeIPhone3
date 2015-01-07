@@ -14,6 +14,14 @@ public struct UtilsTime {
         return now
     }
     
+    public static func stringForTime(time : TimeValue64) -> String {
+        let date_formatter = NSDateFormatter()
+        date_formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        let date = NSDate(timeIntervalSince1970: NSTimeInterval(time))
+        let today = date_formatter.stringFromDate(date)
+        return today
+    }
+    
     public static func parseInTimeZone(str : String, zone : String) -> TimeValue64 {
         
         let timeZone = NSTimeZone(name: zone)

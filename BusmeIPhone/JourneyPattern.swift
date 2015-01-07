@@ -105,6 +105,14 @@ public class JourneyPattern {
         return distance!
     }
     
+    public func getEndPoint() -> GeoPoint? {
+        if (isReady() && path!.count > 0) {
+            return path!.last! as GeoPoint
+        } else {
+            return nil
+        }
+    }
+    
     public func getRect() -> MKMapRect {
         if (rect == nil) {
 //            let geoRect = GeoPathUtils.rectForPath(path!);

@@ -17,7 +17,7 @@ public class BuspassApi : ApiBase {
     public var ready : Bool = false;
     public var syncRate : Int = 60 * 1000;
     public var updateRate : Int = 60 * 1000;
-    public var activeStartDisplayThreshold : Int = 60 * 1000;
+    public var activeStartDisplayThreshold : Double = 60 * 1000;
     public var busmeAppVersionString : String = "iPhone 1.0.0"
     //public var loginManager : LoginManager?
     public var uiEvents : String?

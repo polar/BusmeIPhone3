@@ -10,7 +10,7 @@ import Foundation
 
 public class JourneyStore : Storage {
 
-    public func getPattern(id: String) -> AnyObject? {
+    public func getPattern(id: String) -> JourneyPattern? {
         return nil;
     }
 }
