@@ -261,6 +261,14 @@ public class Route : Storage {
         return false
     }
     
+    public func isNotYetStartingJourney() -> Bool {
+        if (isJourney() && busAPI != nil) {
+            let startMeasure = getStartingMeasure(busAPI!.activeStartDisplayThreshold, time: UtilsTime.current())
+            return startMeasure < 0.0
+        }
+        return false
+    }
+    
     public func getStartingMeasure() -> Double {
         if (busAPI != nil) {
             return getStartingMeasure(busAPI!.activeStartDisplayThreshold, time: UtilsTime.current())
@@ -304,6 +312,41 @@ public class Route : Storage {
             }
         }
         return ret
+    }
+    
+    public func isNearRoute(point : GeoPoint, buffer : Double) -> Bool {
+        var isNearRoute = false
+        for jp in getJourneyPatterns() {
+            let path = jp.path!
+            isNearRoute |= GeoPathUtils.isOnPath(path, buffer: buffer, c3: point)
+            if isNearRoute {
+                break
+            }
+        }
+        return isNearRoute
+    }
+    
+    public func whereOnPaths(point : GeoPoint, buffer : Double) -> [DGeoPoint] {
+        var result = [DGeoPoint]()
+        for jp in getJourneyPatterns() {
+            let path = jp.path!
+            let possibles = GeoPathUtils.whereOnPath(path, buffer: buffer, c3: point)
+            result += possibles
+        }
+        return result
+    }
+    
+    private var _zoomcenter : CLLocationCoordinate2D?
+    public func getZoomCenter() -> GeoPoint {
+        if (_zoomcenter == nil) {
+            let lat = se_lat! + (nw_lat! - se_lat!)/2.0
+            let dx = nw_lon! - se_lon!
+            var lon = se_lon! + dx/2
+            lon = lon < -180 ? lon+360 : lon
+            lon = lon > 180 ? lon-360 : lon
+            self._zoomcenter = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+        }
+        return _zoomcenter!
     }
     
     public func loadParsedXML(tag : Tag) -> Route? {

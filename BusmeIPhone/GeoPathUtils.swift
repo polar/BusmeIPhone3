@@ -293,8 +293,23 @@ public struct GeoCalc {
 //        return result
     }
     
-
+    
     public static func isOnPath(path : [GeoPoint], buffer : Double, c3 : GeoPoint) -> Bool {
+        var p1 = path[0]
+        var i = 1
+        while (i < path.count) {
+            let p2 = path[i]
+            if isOnLine(p1, c2: p2, buffer: buffer, c3: c3) {
+                return true
+            }
+            p1 = p2
+            i += 1
+        }
+        return false
+    }
+    
+    
+    public static func isOnPath(path : [CLLocationCoordinate2D], buffer : Double, c3 : GeoPoint) -> Bool {
         var p1 = path[0]
         var i = 1
         while (i < path.count) {
@@ -369,6 +384,10 @@ public struct GeoPathUtils {
         return GeoCalc.isOnPath(path, buffer: buffer, c3: c3)
     }
     
+    public static func isOnPath(path : [CLLocationCoordinate2D], buffer : Double, c3 : GeoPoint) -> Bool {
+        return GeoCalc.isOnPath(path, buffer: buffer, c3: c3)
+    }
+    
     public static func offPath(path : [GeoPoint], point : GeoPoint) -> Double {
         var max = GeoCalc.EARTH_RADIUS_FEET * GeoCalc.EARTH_RADIUS_FEET * M_PI
         var last : GeoPoint? = nil
@@ -386,6 +405,26 @@ public struct GeoPathUtils {
     }
     
     public static func whereOnPath(path : [GeoPoint], buffer : Double, c3 : GeoPoint) -> [DGeoPoint] {
+        var results = [DGeoPoint]()
+        var distance = 0.0
+        var p1 = path[0]
+        var i = 1
+        for(var p2 = path[i]; i < path.count-1; i++) {
+            if isOnLine(p1, c2: p2, buffer: buffer, c3: c3) {
+                let dist = GeoCalc.getGeoDistance(p1, c2: c3)
+                let bearing = GeoCalc.getBearing(c3, gp2: p2)
+                results.append(DGeoPoint(point: c3, b: distance + dist, d: bearing))
+                distance += GeoCalc.getGeoDistance(p1, c2: p2)
+            } else {
+                distance += GeoCalc.getGeoDistance(p1, c2: p2)
+            }
+            p1 = p2
+            i += 1
+        }
+        return results
+    }
+    
+    public static func whereOnPath(path : [CLLocationCoordinate2D], buffer : Double, c3 : GeoPoint) -> [DGeoPoint] {
         var results = [DGeoPoint]()
         var distance = 0.0
         var p1 = path[0]
