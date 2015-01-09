@@ -30,17 +30,19 @@ public class JourneyDisplayEventData {
         self.id = id
     }
 }
+
 public class JourneyDisplayController : OnJourneyAddedListener, OnJourneyRemovedListener {
     public var api : BuspassApi
-    public var journeyBasket : JourneyBasket?
+    public var journeyBasket : JourneyBasket
     
     public var onJourneyDisplayAddedListener : OnJourneyDisplayAddedListener?
     public var onJourneyDisplayRemovedListener : OnJourneyDisplayRemovedListener?
     public var journeyDisplays = [JourneyDisplay]()
     public var journeyDisplayMap = [String:JourneyDisplay]()
     
-    public init(api :BuspassApi) {
+    public init(api :BuspassApi, basket : JourneyBasket) {
         self.api = api
+        self.journeyBasket = basket
     }
     
     public func getJourneyDisplays() -> [JourneyDisplay] {
@@ -60,7 +62,7 @@ public class JourneyDisplayController : OnJourneyAddedListener, OnJourneyRemoved
     }
     
     public func onJourneyAdded(journeyBasket : JourneyBasket, journey : Route) {
-        let newRoute = JourneyDisplay(jdc: self, route: journey)
+        let newRoute = JourneyDisplay(journeyDisplayController: self, route: journey)
         journeyDisplays.append(newRoute)
         journeyDisplayMap[journey.id!] = newRoute
         onJourneyDisplayAddedListener?.onJourneyDisplayAdded(newRoute)

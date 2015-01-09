@@ -19,7 +19,7 @@ public class BuspassEvent {
     }
 }
 
-public protocol BuspassEventListener {
+public protocol BuspassEventListener : class {
     func onBuspassEvent(event : BuspassEvent)
 }
 
@@ -37,7 +37,7 @@ public class BuspassEventNotifier {
     
     public func unregister(listener : BuspassEventListener) {
         self.eventListeners =
-            self.eventListeners.filter({(x : BuspassEventListener) in listener != x});
+            self.eventListeners.filter({(x : BuspassEventListener) in listener !== x});
     }
     
     public func reset() {
@@ -51,7 +51,7 @@ public class BuspassEventNotifier {
     }
 }
 
-public protocol BuspassPostListener {
+public protocol BuspassPostListener : class {
     func onPostEvent(event : BuspassEvent)
 }
 

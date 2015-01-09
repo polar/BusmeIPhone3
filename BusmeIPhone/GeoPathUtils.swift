@@ -8,6 +8,24 @@
 
 import Foundation
 import CoreLocation
+import CoreGraphics
+
+public struct Rect {
+    public var left : Double
+    public var top : Double
+    public var right : Double
+    public var bottom : Double
+    public init(left: Double, top : Double, right : Double, bottom : Double) {
+        self.left = left
+        self.top = top
+        self.right = right
+        self.bottom = bottom
+    }
+    
+    public func toCGRect() -> CGRect {
+        return CGRectMake(CGFloat(left), CGFloat(bottom), CGFloat(right-left), CGFloat(top-bottom))
+    }
+}
 
 public protocol GeoPoint {
     func getLatitude() -> Double
@@ -18,6 +36,7 @@ public protocol GeoPoint {
 public protocol GeoPointMutable : GeoPoint {
     func setLatitude(lat : Double)
     func setLongitude(lon :Double)
+    func set(lat : Double, lon : Double) -> GeoPointMutable
 }
 
 public class BoundingBox {
@@ -125,13 +144,19 @@ public class GeoPointImpl : GeoPointMutable {
         return longitude
     }
     public func setLatitude(lat: Double) {
-        self.setLatitude(lat)
+        self.latitude = lat
     }
     public func setLongitude(lon: Double) {
-        self.setLongitude(lon)
+        self.longitude = lon
     }
 
     public init() {
+    }
+    
+    public func set(lat: Double, lon: Double) -> GeoPointMutable {
+        self.latitude = lat
+        self.longitude = lon
+        return self
     }
     
     public init(lat : Double, lon : Double) {
