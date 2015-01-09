@@ -19,10 +19,8 @@ public class BuspassEvent {
     }
 }
 
-public class BuspassEventListener {
-    public func onBuspassEvent(event : BuspassEvent) {
-        
-    }
+public protocol BuspassEventListener {
+    func onBuspassEvent(event : BuspassEvent)
 }
 
 public class BuspassEventNotifier {
@@ -39,7 +37,7 @@ public class BuspassEventNotifier {
     
     public func unregister(listener : BuspassEventListener) {
         self.eventListeners =
-            self.eventListeners.filter({(x : BuspassEventListener) in listener !== x});
+            self.eventListeners.filter({(x : BuspassEventListener) in listener != x});
     }
     
     public func reset() {
@@ -53,19 +51,27 @@ public class BuspassEventNotifier {
     }
 }
 
-public class BuspassPostListener {
-    public func onPostEvent(event : BuspassEvent) {
-    }
+public protocol BuspassPostListener {
+    func onPostEvent(event : BuspassEvent)
 }
 
 public class BuspassEventDistributor {
     public var name : String
     public var postEventListener : BuspassPostListener?
-    public var eventNotifiers : [String:[BuspassEventNotifier]] = [String:[BuspassEventNotifier]]();
+    public var eventNotifiers : [String:BuspassEventNotifier] = [String:BuspassEventNotifier]();
     public var eventQ : [BuspassEvent] = [BuspassEvent]();
 
     public init(name : String) {
         self.name = name
+    }
+    
+    public func registerForEvent(eventName : String, listener : BuspassEventListener) {
+        var notifier = eventNotifiers[eventName]
+        if notifier == nil {
+            notifier = BuspassEventNotifier(name: eventName)
+            eventNotifiers[eventName] = notifier
+        }
+        notifier!.register(listener)
     }
     
     public func postBuspassEvent(event : BuspassEvent) {
@@ -96,11 +102,9 @@ public class BuspassEventDistributor {
     public func roll() -> BuspassEvent? {
         let event : BuspassEvent? = self.eventQ.removeLast();
         if (event != nil) {
-            let notifiers = eventNotifiers[event!.eventName]
-            if (notifiers != nil) {
-                for notifier in notifiers! {
-                    notifier.notifyEventListeners(event!)
-                }
+            let notifier = eventNotifiers[event!.eventName]
+            if (notifier != nil) {
+                notifier!.notifyEventListeners(event!)
             }
             return event!
         }

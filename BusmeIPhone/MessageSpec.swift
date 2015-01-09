@@ -9,9 +9,13 @@
 import Foundation
 
 public class MessageSpec {
-    public var id : String
-    public var version : TimeValue64
-    public var expiryTime : TimeValue64
+    public var id : String = ""
+    public var version : TimeValue64 = 0
+    public var expiryTime : TimeValue64 = 0
+    
+    public init() {
+        
+    }
     
     public init(id : String, version: TimeValue64, expiryTime : TimeValue64) {
         self.id = id

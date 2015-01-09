@@ -9,6 +9,20 @@
 import Foundation
 import CoreLocation
 
+public class PostLocation {
+    public var journey : Route
+    public var lon : Double = 0.0
+    public var lat : Double = 0.0
+    public var time : TimeValue64 = 0
+    public var bearing : Double = 0.0
+    public var speed : Double = 0.0
+    public var altitude : Double = 0.0
+    
+    public init(journey:Route) {
+        self.journey = journey
+    }
+}
+
 public class JourneyLocation {
     public var id : String?
     public var lat : Double = 0

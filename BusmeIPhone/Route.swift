@@ -47,6 +47,11 @@ public class Route : Storage {
     public var reported : Bool = false
     public var reporting : Bool = false
     
+    public init(tag : Tag) {
+        super.init()
+        loadParsedXML(tag)
+    }
+    
     public var journeyStore : JourneyStore?
     
     public func initWithCoder(coder : NSCoder) -> Route {
@@ -349,63 +354,91 @@ public class Route : Storage {
         return _zoomcenter!
     }
     
+    public func updateStartTimes(nameid : NameId) {
+        self.actualStartTime = nameid.time_start
+        self.schedStartTime = nameid.sched_time_start
+    }
+    
     public func loadParsedXML(tag : Tag) -> Route? {
         self.type = tag.attributes["type"]
         self.id = tag.attributes["id"]
         self.name = tag.attributes["name"]
-        if (tag.attributes["distance"] != nil) {
-            self.distance = (tag.attributes["distance"]! as NSString).doubleValue
-        }
-        if (tag.attributes["dir"] != nil) {
-            self.direction = (tag.attributes["dir"]! as NSString).doubleValue
-        }
         self.code = tag.attributes["routeCode"]
-        if (tag.attributes["version"] != nil) {
-            self.version = Int64((tag.attributes["version"]! as NSString).integerValue)
+        
+        let distance = tag.attributes["distance"] as NSString?
+        if (distance != nil) {
+            self.distance = distance!.doubleValue
         }
+        
+        let dir = tag.attributes["dir"] as NSString?
+        if (dir != nil) {
+            self.direction = dir!.doubleValue
+        }
+        
+        let version = tag.attributes["version"] as NSString?
+        if (version != nil) {
+            self.version = Int64(version!.integerValue)
+        }
+        
         self.routeid = tag.attributes["routeid"]
         self.patternid = tag.attributes["patternid"]
         self.vid = tag.attributes["vid"]
-        if (tag.attributes["duration"] != nil) {
-            self.duration = (tag.attributes["duration"]! as NSString).doubleValue
-        }
-        if (tag.attributes["sort"] != nil) {
-            self.sort = (tag.attributes["sort"]! as NSString).doubleValue
+        
+        let duration = tag.attributes["duration"] as NSString?
+        if (duration != nil) {
+            self.duration = duration!.doubleValue
         }
         
-        if (tag.attributes["locationRefreshRate"] != nil) {
-            self.locationRefreshRate = (tag.attributes["locationRefreshRate"]! as NSString).doubleValue
+        let sort = tag.attributes["sort"] as NSString?
+        if (sort != nil) {
+            self.sort = sort!.doubleValue
         }
-
+        
+        let locationRefreshRate = tag.attributes["locationRefreshRate"] as NSString?
+        if (locationRefreshRate != nil) {
+            self.locationRefreshRate = locationRefreshRate!.doubleValue
+        }
+        
         self.timeZone = tag.attributes["time_zone"]
-        if (tag.attributes["schedStartTime"] != nil) {
-            self.schedStartTime = Int64((tag.attributes["schedStartTime"]! as NSString).integerValue)
-        }
-        if (tag.attributes["nw_lon"] != nil) {
-            self.nw_lon = (tag.attributes["nw_lon"]! as NSString).doubleValue
+        
+        let schedStartTime = tag.attributes["schedStartTime"] as NSString?
+        if (schedStartTime != nil) {
+            self.schedStartTime = Int64(schedStartTime!.integerValue)
         }
         
-        if (tag.attributes["nw_lat"] != nil) {
-            self.nw_lat = (tag.attributes["nw_lat"]! as NSString).doubleValue
+        let nw_lon = tag.attributes["nw_lon"] as NSString?
+        if (nw_lon != nil) {
+            self.nw_lon = nw_lon!.doubleValue
         }
         
-        if (tag.attributes["se_lon"] != nil) {
-            self.se_lon = (tag.attributes["se_lon"]! as NSString).doubleValue
+        let nw_lat = tag.attributes["nw_lat"] as NSString?
+        if (nw_lat != nil) {
+            self.nw_lat = nw_lat!.doubleValue
         }
         
-        if (tag.attributes["se_lat"] != nil) {
-            self.se_lat = (tag.attributes["se_lat"]! as NSString).doubleValue
-        }
-
-        self.timeless = tag.attributes["timeless"] != nil ? tag.attributes["timeless"] == "true" : false
-        
-        if (tag.attributes["startOffset"] != nil) {
-            self.startOffset = (tag.attributes["startOffset"]! as NSString).doubleValue
+        let se_lon = tag.attributes["se_lon"] as NSString?
+        if (se_lon != nil) {
+            self.se_lon = se_lon!.doubleValue
         }
         
-        if (tag.attributes["patternids"] != nil) {
-            self.patternids = tag.attributes["patternids"]!.componentsSeparatedByString(",")
+        let se_lat = tag.attributes["se_lat"] as NSString?
+        if (se_lat != nil) {
+            self.se_lat = se_lat!.doubleValue
         }
+        
+        let timeless = tag.attributes["timeless"]
+        self.timeless = timeless != nil ? timeless! == "true" : false
+        
+        let startOffset = tag.attributes["startOffset"] as NSString?
+        if (startOffset != nil) {
+            self.startOffset = startOffset!.doubleValue
+        }
+        
+        let patternids = tag.attributes["patternids"]
+        if (patternids != nil) {
+            self.patternids = patternids!.componentsSeparatedByString(",")
+        }
+        
         if isValid() {
             return self
         } else {
@@ -436,5 +469,32 @@ public class Route : Storage {
         self.onRoute = loc.onroute
         self.reported = loc.reported
         return (lastKnownLocation!, lastLocation)
+    }
+    
+    public func toString() -> String {
+        var s = ""
+        if isRouteDefinition() {
+            s = "Route(\(code), \(name), paths=\(getPaths().count), id=\(id)"
+        }
+        if isJourney() {
+            s = "Journey(\(code) \(name) id=\(id), patid=\(patternid),"
+            if isActiveJourney() {
+                s += ", ActiveJourney"
+            }
+            if isStartingJourney() {
+                s += "Starting, "
+            }
+            if isNotYetStartingJourney() {
+                s += ", NotYetStartingJourney"
+            }
+            if isFinished() {
+                s += ", Finished"
+            }
+            if isTimeless() {
+                s += ", Timeless"
+            }
+            s += "vid=\(vid) wvid=\(workingVid) st=\(getStartTime()) et=\(getEndTime())"
+        }
+        return s
     }
 }

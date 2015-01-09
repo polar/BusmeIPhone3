@@ -15,4 +15,7 @@ public class HttpStatusLine {
         self.statusCode = statusCode;
         self.reasonPhrase = reasonPhrase;
     }
+    public func toString() -> String {
+        return "\(statusCode): \(reasonPhrase)"
+    }
 }

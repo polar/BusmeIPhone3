@@ -9,5 +9,18 @@
 import Foundation
 import CoreLocation
 
-public class MasterMessage : MessageBase {
+public class MasterMessage : MessageBase, StorageProtocol {
+    
+    public override func isValid() -> Bool {
+        return title != nil && content != nil
+    }
+    
+    public func preSerialize(api : ApiBase, time : TimeValue64) {
+        
+    }
+    
+    public func postSerialize(api : ApiBase, time : TimeValue64) {
+        
+    }
+
 }

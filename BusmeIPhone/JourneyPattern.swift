@@ -10,8 +10,8 @@ import Foundation
 import CoreLocation
 import MapKit
 
-public class JourneyPattern {
-    public var id : String
+public class JourneyPattern : Storage {
+    public var id : String = ""
     public var path : [CLLocationCoordinate2D]?
     public var projectedPath : [MKMapPoint]?
     public var distance : Double?
@@ -20,6 +20,11 @@ public class JourneyPattern {
     
     public init(id : String) {
         self.id = id
+    }
+    
+    public init(tag : Tag) {
+        super.init()
+        loadParsedXML(tag)
     }
     
     func initWithCoder(decoder: NSCoder) -> Void {

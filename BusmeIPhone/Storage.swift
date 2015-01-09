@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class Storage {
+public class Storage : StorageProtocol {
     
     public func preSerialize(api : ApiBase, time : TimeValue64) {
         
@@ -17,4 +17,9 @@ public class Storage {
     public func postSerialize(api : ApiBase, time : TimeValue64) {
         
     }
+}
+
+public protocol StorageProtocol {
+    func preSerialize(api : ApiBase, time : TimeValue64)
+    func postSerialize(api : ApiBase, time : TimeValue64)
 }

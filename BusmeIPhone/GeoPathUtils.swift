@@ -20,6 +20,100 @@ public protocol GeoPointMutable : GeoPoint {
     func setLongitude(lon :Double)
 }
 
+public class BoundingBox {
+    public var eastE6 : Int = 0
+    public var westE6 : Int = 0
+    public var northE6 : Int = 0
+    public var southE6 : Int = 0
+    
+    
+    public init(array: [String]) {
+        setNorth((array[0] as NSString).doubleValue)
+        setEast((array[1] as NSString).doubleValue)
+        setWest((array[2] as NSString).doubleValue)
+        setSouth((array[3] as NSString).doubleValue)
+    }
+
+    public init(north: Double, east: Double, west: Double, south : Double) {
+        setNorth(north)
+        setEast(east)
+        setWest(west)
+        setSouth(south)
+    }
+    
+    public init(northE6: Int, eastE6: Int, westE6: Int, southE6: Int) {
+        setNorthE6(northE6)
+        setEastE6(eastE6)
+        setWestE6(westE6)
+        setSouthE6(southE6)
+    }
+    
+    public func toGeoRect() -> GeoRect {
+        return GeoRect(left: west(), top: north(), right: east(), bottom: south())
+    }
+    
+    func initWithCoder( coder : NSCoder) {
+        self.eastE6 = Int(coder.decodeIntForKey("eastE6"))
+        self.westE6 = Int(coder.decodeIntForKey("westE6"))
+        self.northE6 = Int(coder.decodeIntForKey("northE6"))
+        self.southE6 = Int(coder.decodeIntForKey("southE6"))
+    }
+    
+    public func encodeWithCoder( coder : NSCoder) {
+        coder.encodeInt(Int32(eastE6), forKey: "eastE6")
+        coder.encodeInt(Int32(westE6), forKey: "westE6")
+        coder.encodeInt(Int32(southE6), forKey: "southE6")
+        coder.encodeInt(Int32(northE6), forKey: "northE6")
+    }
+    
+    public func east() -> Double {
+        return Double(eastE6) * 1E6
+    }
+    
+    public func west() -> Double {
+        return Double(westE6) * 1E6
+    }
+    
+    public func north() -> Double {
+        return Double(northE6) * 1E6
+    }
+    
+    public func south() -> Double {
+        return Double(southE6) * 1E6
+    }
+    
+    public func setEast(x :Double) {
+        self.eastE6 = Int(x/1E6)
+    }
+    
+    public func setWest(x :Double) {
+        self.eastE6 = Int(x/1E6)
+    }
+    
+    public func setNorth(x :Double) {
+        self.eastE6 = Int(x/1E6)
+    }
+    
+    public func setSouth(x :Double) {
+        self.eastE6 = Int(x/1E6)
+    }
+    
+    public func setEastE6(x :Int) {
+        self.eastE6 = x
+    }
+    
+    public func setWestE6(x :Int) {
+        self.eastE6 = x
+    }
+    
+    public func setNorthE6(x :Int) {
+        self.eastE6 = x
+    }
+    
+    public func setSouthE6(x :Int) {
+        self.eastE6 = x    }
+}
+
 public class GeoPointImpl : GeoPointMutable {
     public var latitude  : Double = 0.0
     public var longitude : Double = 0.0

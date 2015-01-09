@@ -54,9 +54,9 @@ public class Buspass {
     public var bannerMaxImageSize : String?
     public var bannerImageUrl : String?
     public var helpUrl : String?
-    public var initialMessages : [String]
+    public var initialMessages : [MasterMessage]
     
     public init() {
-        self.initialMessages = [String]();
+        self.initialMessages = [MasterMessage]();
     }
 }

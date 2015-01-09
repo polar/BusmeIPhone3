@@ -11,22 +11,25 @@ import CoreLocation
 
 public class MessageBase : MessageSpec {
     public var point : CLLocationCoordinate2D?
-    public var radius : Float = 500 // feet
-    public var title : String = ""
-    public var description : String = ""
+    public var radius : Double = 500 // feet
+    public var title : String?
+    public var description : String?
     public var goUrl : String?
     public var goLabel : String?
     public var content : String?
     public var iconUrl : String?
-    public var loaded : Bool = false
-    public var priority : Float = 0
-    
-    public var seen : Bool = false
-    public var lastSeen : TimeValue64?
-    public var displayed : Bool = false
+    public var priority : Double = 0
+    public var displayDuration : Double = 30 //seconds
     public var remindable : Bool = false
-    public var remindPeriod : Int = 1 * 24 * 60 * 60 * 1000 // milliseconds
+    public var lastSeen : TimeValue64?
+    public var seen : Bool = false
+    public var remindPeriod : Double = 1 * 24 * 60 * 60 * 1000 // milliseconds
+    
+    // Transients
+    public var displayed : Bool = false
     public var remindTime : TimeValue64 = 0
+    public var beginSeen : TimeValue64 = 0
+    public var loaded : Bool = false
     
     public func isLoaded() -> Bool {
         return loaded
@@ -40,12 +43,17 @@ public class MessageBase : MessageSpec {
         return seen;
     }
 
-    public func setRemindTime(time : TimeValue64, forward: Int) {
-        self.remindTime = time + forward;
+    public func setRemindTime(time : TimeValue64, forward: Double) {
+        self.remindTime = time + Int(forward);
     }
     
     public func resetRemindTime(time : TimeValue64) {
         setRemindTime(time, forward: remindPeriod)
+    }
+    
+    public init(tag : Tag) {
+        super.init()
+        loadParsedXML(tag)
     }
     
     public init(id : String, version: TimeValue64) {
@@ -54,32 +62,33 @@ public class MessageBase : MessageSpec {
         super.init(id: id, version: version, expiryTime: then)
     }
     
-    override func initWithCoder(decoder: NSCoder) -> Void {
-        super.initWithCoder(decoder)
-        let hasPoint = decoder.decodeBoolForKey("hasPoint")
+    override func initWithCoder(coder: NSCoder) -> Void {
+        super.initWithCoder(coder)
+        let hasPoint = coder.decodeBoolForKey("hasPoint")
         if (hasPoint) {
-            let lat = decoder.decodeDoubleForKey("lat")
-            let lon = decoder.decodeDoubleForKey("lon")
+            let lat = coder.decodeDoubleForKey("lat")
+            let lon = coder.decodeDoubleForKey("lon")
             self.point = CLLocationCoordinate2DMake(lat, lon)
         }
-        self.radius = decoder.decodeFloatForKey("radius")
-        self.priority = decoder.decodeFloatForKey("priority")
-        self.title = decoder.decodeObjectForKey("title") as String;
-        self.description = decoder.decodeObjectForKey("description") as String
-        self.goLabel = decoder.decodeObjectForKey("goLabel") as? String
-        self.goUrl = decoder.decodeObjectForKey("goUrl") as? String
-        self.iconUrl = decoder.decodeObjectForKey("iconUrl") as? String
-        self.seen = decoder.decodeBoolForKey("seen")
-        self.lastSeen = decoder.decodeInt64ForKey("lastSeen")
-        self.displayed = decoder.decodeBoolForKey("displayed")
-        self.remindable = decoder.decodeBoolForKey("remindable")
-        self.remindTime = decoder.decodeInt64ForKey("remindTime")
-        self.loaded = decoder.decodeBoolForKey("loaded")
+        self.radius = coder.decodeDoubleForKey("radius")
+        self.priority = coder.decodeDoubleForKey("priority")
+        self.title = coder.decodeObjectForKey("title") as? String;
+        self.description = coder.decodeObjectForKey("description") as? String
+        self.content = coder.decodeObjectForKey("content") as? String
+        self.goLabel = coder.decodeObjectForKey("goLabel") as? String
+        self.goUrl = coder.decodeObjectForKey("goUrl") as? String
+        self.iconUrl = coder.decodeObjectForKey("iconUrl") as? String
+        self.seen = coder.decodeBoolForKey("seen")
+        self.lastSeen = coder.decodeInt64ForKey("lastSeen")
+        self.remindable = coder.decodeBoolForKey("remindable")
+        self.remindPeriod = coder.decodeDoubleForKey("remindPeriod")
+        self.displayDuration = coder.decodeDoubleForKey("displayDuration")
+        self.loaded = true
         self
     }
     
     override public func encodeWithCoder(encoder: NSCoder) -> Void {
-        encoder.encodeObject(id, forKey: "id")
+        super.encodeWithCoder(encoder)
         if (point != nil) {
             encoder.encodeDouble(point!.latitude, forKey: "lat")
             encoder.encodeDouble(point!.longitude, forKey: "lon")
@@ -87,12 +96,12 @@ public class MessageBase : MessageSpec {
         } else {
             encoder.encodeBool(false, forKey: "hasPoint")
         }
-        encoder.encodeInt64(version, forKey: "version")
-        encoder.encodeFloat(radius, forKey: "radius")
-        encoder.encodeFloat(priority, forKey: "priority")
-        encoder.encodeInt64(expiryTime, forKey: "expiryTime")
+        encoder.encodeDouble(radius, forKey: "radius")
+        encoder.encodeDouble(priority, forKey: "priority")
         encoder.encodeObject(title, forKey: "title")
         encoder.encodeObject(description, forKey: "description")
+        encoder.encodeObject(content, forKey: "content")
+        encoder.encodeObject(goLabel, forKey: "goLabel")
         encoder.encodeObject(goUrl, forKey: "goUrl")
         encoder.encodeObject(iconUrl, forKey: "iconUrl")
         encoder.encodeBool(seen, forKey: "seen")
@@ -101,15 +110,16 @@ public class MessageBase : MessageSpec {
         }
         encoder.encodeBool(remindable, forKey: "remindable")
         
-        encoder.encodeBool(displayed, forKey: "displayed")
-        encoder.encodeBool(loaded, forKey: "loaded")
+        encoder.encodeDouble(displayDuration, forKey: "displayDuration")
     }
     
-    public func shouldBeSeen(time: TimeValue64?) -> Bool {
-        var now = time == nil ? UtilsTime.current() : time
-        
-        let nonExpired = (now < expiryTime)
-        let remindPast = remindTime < now
+    public func shouldBeSeen() -> Bool {
+        return shouldBeSeen(UtilsTime.current())
+    }
+    
+    public func shouldBeSeen(time: TimeValue64) -> Bool {
+        let nonExpired = (time < expiryTime)
+        let remindPast = remindTime < time
         return nonExpired && (!seen || (displayed || (remindable && remindPast)))
     }
     
@@ -131,69 +141,127 @@ public class MessageBase : MessageSpec {
         }
     }
     
-    public func reset(time : TimeValue64?) {
+    public func reset(time : TimeValue64 = UtilsTime.current()) {
         self.seen = false
         self.displayed = false
         self.lastSeen = nil
         self.remindTime = 0
     }
     
-    public func onDisplay(time : TimeValue64?) {
+    public func onDisplay() {
+        onDisplay(UtilsTime.current())
+    }
+    
+    public func onDisplay(time : TimeValue64) {
         self.seen = true
+        self.beginSeen = time
         self.displayed = true
         self.lastSeen = time
+    }
+    
+    public func onDismiss(remind : Bool) {
+        onDismiss(remind, time: UtilsTime.current())
     }
     
     public func onDismiss(remind : Bool, time : TimeValue64) {
         self.displayed = false
         self.lastSeen = time
+        self.beginSeen = 0
         if (remind && remindable) {
-            self.remindTime = time + remindPeriod
+            self.remindTime = time + Int(remindPeriod)
         }
     }
     
+    public func isDisplayTimeExpired() -> Bool {
+        return isDisplayTimeExpired(UtilsTime.current())
+    }
+    
+    public func isDisplayTimeExpired(time: TimeValue64) -> Bool {
+        return Double(beginSeen) + displayDuration < Double(time)
+    }
+    
     public func loadParsedXML(tag : Tag) {
-        self.id = tag.attributes["id"]!
+        let id = tag.attributes["id"]
+        if (id != nil) {
+            self.id = id!
+        }
         self.goUrl = tag.attributes["go_url"]
+        if (goUrl == nil) { self.goUrl = tag.attributes["goUrl"] }
         self.iconUrl = tag.attributes["icon_url"]
-        self.remindable = "true" == tag.attributes["remindable"]
+        if (iconUrl == nil) { self.iconUrl = tag.attributes["goUrl"] }
+        
+        // BannerInfo
+        let duration = tag.attributes["length"] as NSString?
+        if (duration != nil) {
+            self.displayDuration = duration!.doubleValue
+        }
+        
+        // BannerInfo remindable is true by default
+        let remindable = tag.attributes["remindable"]
+        if (remindable != nil) {
+            self.remindable = remindable == "true"
+        }
+        
         for m in tag.childNodes {
-            switch m.name {
-            case "Title":
+            switch m.name.lowercaseString {
+            case "title":
                 self.title = m.text!
                 break;
-            case "Content":
+            case "content":
                 self.content = m.text!
                 break;
-            case "GoLabel":
+            case "description":
+                self.description = m.text!
+                break;
+            case "golabel":
                 self.goLabel = m.text!
                 break;
             default:
                 break;
             }
         }
-        self.expiryTime = Int64((tag.attributes["expiryTime"]! as NSString).integerValue) as TimeValue64
+        
+        let expiryTime = tag.attributes["expiryTime"] as NSString?
+        if (expiryTime != nil) {
+            self.expiryTime = Int64(expiryTime!.integerValue) as TimeValue64
+        }
         
         let priority = tag.attributes["priority"] as NSString?
         if (priority != nil) {
-            self.priority = priority!.floatValue
+            self.priority = priority!.doubleValue
         }
         
         let remindPeriod = tag.attributes["remindPeriod"] as NSString?
         if (remindPeriod != nil) {
-            self.remindPeriod = remindPeriod!.integerValue
+            self.remindPeriod = remindPeriod!.doubleValue
         }
-        self.version = Int64((tag.attributes["version"]! as NSString).integerValue) as TimeValue64
         
-        let lon = (tag.attributes["lon"]! as NSString).doubleValue
-        let lat = (tag.attributes["lat"]! as NSString).doubleValue
-        self.point = CLLocationCoordinate2DMake(lat, lon)
+        // Banner Info : Frequency is technically remindPeriod
+        let frequency = tag.attributes["frequency"] as NSString?
+        if (frequency != nil) {
+            self.remindPeriod = frequency!.doubleValue
+        }
+        
+        let version = tag.attributes["version"] as NSString?
+        if (version != nil) {
+            self.version = Int64(version!.integerValue) as TimeValue64
+        }
+        
+        let lon = tag.attributes["lon"] as NSString?
+        let lat = tag.attributes["lat"] as NSString?
+        if (lat != nil && lon != nil) {
+            self.point = CLLocationCoordinate2DMake(lat!.doubleValue, lon!.doubleValue)
+        }
         
         let radius = tag.attributes["radius"] as NSString?
         if (radius != nil) {
-            self.radius = radius!.floatValue
+            self.radius = radius!.doubleValue
         }
         self.loaded = true
+    }
+    
+    public func isValid() -> Bool {
+        return false;
     }
 
 }
