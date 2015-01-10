@@ -87,10 +87,10 @@ public struct JourneyDisplayUtils {
                         }
                     }
                     if loc != nil {
-                        let rect = locatorRect.dup()
+                        var rect = locatorRect.dup()
                         let screenCoords = projection.toMapPixels(loc!)
-                        rect.offsetTo(screenCoords.getX(), screenCoords.getY())
-                        if rect.containsXY(touchPoint.getX(), touchPoint.getY()) {
+                        rect.offsetTo(screenCoords.getX(), y: screenCoords.getY())
+                        if rect.containsXY(touchPoint.getX(), y: touchPoint.getY()) {
                             return journeyDisplay
                         }
                     }
