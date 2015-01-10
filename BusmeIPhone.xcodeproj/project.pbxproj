@@ -23,6 +23,11 @@
 		F3140F4C1A6055630024A65D /* JourneyDisplayUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3140F4B1A6055630024A65D /* JourneyDisplayUtils.swift */; };
 		F3140F4E1A6057EB0024A65D /* Projection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3140F4D1A6057EB0024A65D /* Projection.swift */; };
 		F3140F501A6058B30024A65D /* ScreenPathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3140F4F1A6058B30024A65D /* ScreenPathUtils.swift */; };
+		F3140F521A6186E30024A65D /* PathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3140F511A6186E30024A65D /* PathUtils.swift */; };
+		F3140F541A61878B0024A65D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3140F531A61878B0024A65D /* Extensions.swift */; };
+		F3140F561A618C330024A65D /* UpdateRemoteInvoation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3140F551A618C330024A65D /* UpdateRemoteInvoation.swift */; };
+		F3140F581A618C840024A65D /* MasterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3140F571A618C840024A65D /* MasterController.swift */; };
+		F3140F5A1A618E070024A65D /* LoginForeground.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3140F591A618E070024A65D /* LoginForeground.swift */; };
 		F31E4BCA1A58760E00E2F0A2 /* HttpClientTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31E4BC91A58760E00E2F0A2 /* HttpClientTest.swift */; };
 		F326F1051A5EAFC000CBCE28 /* BLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F326F1041A5EAFC000CBCE28 /* BLog.swift */; };
 		F33B69B41A5B022C004C7742 /* GeoPathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33B69B31A5B022C004C7742 /* GeoPathUtils.swift */; };
@@ -142,6 +147,11 @@
 		F3140F4B1A6055630024A65D /* JourneyDisplayUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JourneyDisplayUtils.swift; sourceTree = "<group>"; };
 		F3140F4D1A6057EB0024A65D /* Projection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Projection.swift; sourceTree = "<group>"; };
 		F3140F4F1A6058B30024A65D /* ScreenPathUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenPathUtils.swift; sourceTree = "<group>"; };
+		F3140F511A6186E30024A65D /* PathUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathUtils.swift; sourceTree = "<group>"; };
+		F3140F531A61878B0024A65D /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		F3140F551A618C330024A65D /* UpdateRemoteInvoation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateRemoteInvoation.swift; sourceTree = "<group>"; };
+		F3140F571A618C840024A65D /* MasterController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterController.swift; sourceTree = "<group>"; };
+		F3140F591A618E070024A65D /* LoginForeground.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginForeground.swift; sourceTree = "<group>"; };
 		F31E4BC91A58760E00E2F0A2 /* HttpClientTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpClientTest.swift; sourceTree = "<group>"; };
 		F326F1041A5EAFC000CBCE28 /* BLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLog.swift; sourceTree = "<group>"; };
 		F33B69B31A5B022C004C7742 /* GeoPathUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeoPathUtils.swift; sourceTree = "<group>"; };
@@ -265,6 +275,8 @@
 				F3F87A381A5EF7A800EB1EC1 /* PriorityQueue.swift */,
 				F3140F4D1A6057EB0024A65D /* Projection.swift */,
 				F3140F4F1A6058B30024A65D /* ScreenPathUtils.swift */,
+				F3140F511A6186E30024A65D /* PathUtils.swift */,
+				F3140F531A61878B0024A65D /* Extensions.swift */,
 			);
 			name = utils;
 			sourceTree = "<group>";
@@ -429,6 +441,9 @@
 				F3140F471A5FA03E0024A65D /* JourneyDisplay.swift */,
 				F3140F491A6055110024A65D /* JourneyDisplaySelectionController.swift */,
 				F3140F4B1A6055630024A65D /* JourneyDisplayUtils.swift */,
+				F3140F551A618C330024A65D /* UpdateRemoteInvoation.swift */,
+				F3140F571A618C840024A65D /* MasterController.swift */,
+				F3140F591A618E070024A65D /* LoginForeground.swift */,
 			);
 			name = Platform;
 			sourceTree = "<group>";
@@ -637,12 +652,14 @@
 				F37633BB1A5AFACC005AFB8F /* JourneyPattern.swift in Sources */,
 				F3C8FE8B1A535B0D009FF404 /* HttpResponse.swift in Sources */,
 				F37633B71A5AF9F3005AFB8F /* Storage.swift in Sources */,
+				F3140F581A618C840024A65D /* MasterController.swift in Sources */,
 				F36316A51A5D9F7A002CAE61 /* DiscoverApiVersion1.swift in Sources */,
 				F36316A91A5DFDA8002CAE61 /* LoginManager.swift in Sources */,
 				F398020C1A5A424200D6C2B0 /* MarkerInfo.swift in Sources */,
 				F39802081A5A08A400D6C2B0 /* BuspasEvents.swift in Sources */,
 				F3140F3F1A5F57090024A65D /* JourneyBasket.swift in Sources */,
 				F3F87A331A5EEB1500EB1EC1 /* BannerBasket.swift in Sources */,
+				F3140F561A618C330024A65D /* UpdateRemoteInvoation.swift in Sources */,
 				F35F75431A59D93200283F1C /* BannerInfo.swift in Sources */,
 				F3C8FE561A5359B0009FF404 /* SecondViewController.swift in Sources */,
 				F36316A71A5DFBAD002CAE61 /* Login.swift in Sources */,
@@ -651,6 +668,7 @@
 				F3C8FE521A5359B0009FF404 /* AppDelegate.swift in Sources */,
 				F33B69BA1A5B43D2004C7742 /* IPUtils.swift in Sources */,
 				F37633B51A5ADB7B005AFB8F /* NameId.swift in Sources */,
+				F3140F521A6186E30024A65D /* PathUtils.swift in Sources */,
 				F3140F3D1A5F3B2A0024A65D /* MasterMessageEvent.swift in Sources */,
 				F3C8FE891A535B0D009FF404 /* HttpClient.swift in Sources */,
 				F39802011A59FEB400D6C2B0 /* Buspass.swift in Sources */,
@@ -666,6 +684,7 @@
 				F37633B31A5ACEFF005AFB8F /* Time.swift in Sources */,
 				F33B69BC1A5C3CD3004C7742 /* Route.swift in Sources */,
 				F3140F371A5F384C0024A65D /* MasterMessageBasket.swift in Sources */,
+				F3140F5A1A618E070024A65D /* LoginForeground.swift in Sources */,
 				F3C8FE871A535B0D009FF404 /* DetailViewController.swift in Sources */,
 				F3140F411A5F92D50024A65D /* JourneySyncProgressEvent.swift in Sources */,
 				F3C8FE8C1A535B0D009FF404 /* HttpStatusLine.swift in Sources */,
@@ -682,6 +701,7 @@
 				F3F87A391A5EF7A800EB1EC1 /* PriorityQueue.swift in Sources */,
 				F3C8FE8E1A535B0D009FF404 /* Tag.swift in Sources */,
 				F3140F4C1A6055630024A65D /* JourneyDisplayUtils.swift in Sources */,
+				F3140F541A61878B0024A65D /* Extensions.swift in Sources */,
 				F33B69B41A5B022C004C7742 /* GeoPathUtils.swift in Sources */,
 				F3140F3B1A5F398F0024A65D /* MasterMessagePresentationController.swift in Sources */,
 			);

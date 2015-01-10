@@ -18,6 +18,7 @@ public class Projection {
     public var offsetY : Double = 0
     
     public var screenRect : Rect
+    
     public init(zoom : Int, rect : Rect) {
         self.zoomLevel = zoom
         self.worldSize_2 = ScreenPathUtils.getMapSize(zoom)
