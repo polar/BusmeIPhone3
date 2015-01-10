@@ -12,8 +12,8 @@ import MapKit
 
 public class JourneyPattern : Storage {
     public var id : String = ""
-    public var path : [CLLocationCoordinate2D]?
-    public var projectedPath : [MKMapPoint]?
+    public var path : [GeoPoint]?
+    public var projectedPath : [Point]?
     public var distance : Double?
     public var rect : MKMapRect?
     public var nameid : NameId?
@@ -41,18 +41,18 @@ public class JourneyPattern : Storage {
         
     }
     
-    private func toCoordinates(path : [GeoPointImpl]) -> [CLLocationCoordinate2D] {
-        var ps = Array<CLLocationCoordinate2D>()
+    private func toCoordinates(path : [GeoPointImpl]) -> [GeoPoint] {
+        var ps = Array<GeoPoint>()
         for p in path {
             ps.append(CLLocationCoordinate2DMake(p.getLatitude(), p.getLongitude()))
         }
         return ps
     }
     
-    private func toPath(path : [CLLocationCoordinate2D]) -> [GeoPointImpl] {
+    private func toPath(path : [GeoPoint]) -> [GeoPointImpl] {
         var ps = [GeoPointImpl]()
         for p in path {
-            ps.append(GeoPointImpl(lat: p.latitude, lon: p.longitude))
+            ps.append(GeoPointImpl(lat: p.getLatitude(), lon: p.getLongitude()))
         }
         return ps
     }
@@ -86,11 +86,9 @@ public class JourneyPattern : Storage {
         }
     }
     
-    public func getProjectedPath() -> [MKMapPoint] {
+    public func getProjectedPath() -> [Point] {
         if (projectedPath == nil) {
-            projectedPath = path!.map({
-                (x : CLLocationCoordinate2D) in MKMapPointForCoordinate(x)
-            })
+            self.projectedPath = ScreenPathUtils.toProjectedPath(path!)
         }
         return projectedPath!;
     }
@@ -140,12 +138,12 @@ public class JourneyPattern : Storage {
         }
     }
     
-    private func parsePath(jps : Tag) -> [CLLocationCoordinate2D] {
-        var path = [CLLocationCoordinate2D]()
+    private func parsePath(jps : Tag) -> [GeoPoint] {
+        var path = [GeoPoint]()
         for jp in jps.childNodes {
             let lat = (jp.attributes["lat"]! as NSString).doubleValue
             let lon = (jp.attributes["lon"]! as NSString).doubleValue
-            let gp = CLLocationCoordinate2DMake(lat, lon)
+            let gp = GeoPointImpl(lat: lat, lon: lon)
             path.append(gp)
         }
         return path

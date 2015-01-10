@@ -41,12 +41,24 @@ public struct ScreenPathUtils {
     public static func getMapScale(latitude : Double, levelOfDetail : Int, screenDpi : Double) -> Double {
         return getGroundResolution(latitude, levelOfDetail: levelOfDetail) * screenDpi / 0.0254
     }
-    public static func latLongToPixelXY(latitude : Double, longitude: Double, levelOfDetail : Int, reuse : CGPoint? = nil) -> CGPoint {
-        var out = reuse != nil ? reuse! : CGPoint()
-        let nw = MKMapPointForCoordinate(CLLocationCoordinate2D(latitude: latitude, longitude: longitude))
-        out.x = CGFloat(nw.x)
-        out.y = CGFloat(nw.y)
+    public static func latLongToPixelXY(latitude : Double, longitude: Double, levelOfDetail : Int, reuse : PointMutable? = nil) -> PointMutable {
+        var out = reuse != nil ? reuse! : PointImpl()
+        let lat = clip(latitude, minValue: MinLatitude, maxValue: MaxLatitude)
+        let lon = clip(longitude, minValue: MinLongitude, maxValue: MaxLongitude)
+        
+        let x = (lon + 180.0)/360.0
+        let sinLatitude = sin(lat * PI/180.0)
+        let y = 0.5 - log(1 + sinLatitude) / (1 - sinLatitude) / (4 * PI)
+        let mapSize = getMapSize(levelOfDetail)
+        out.setX(clip(x * Double(mapSize) + 0.5, minValue: 0, maxValue: Double(mapSize) - 1.0))
+        out.setY(clip(y * Double(mapSize) + 0.5, minValue: 0, maxValue: Double(mapSize) - 1.0))
         return out
+    }
+    
+    // Iphone specific
+    public static func latLongToProjectedXY(latitude : Double, longitude : Double) -> Point {
+        let nw = MKMapPointForCoordinate(CLLocationCoordinate2D(latitude: latitude, longitude: longitude))
+        return nw
     }
     public static func pixelXYToLatLong(pixelX : CGFloat, pixelY : CGFloat, levelOfDetail : Int, reuse : GeoPointMutable? = nil) -> GeoPointMutable {
         var out : GeoPointMutable = reuse != nil ? reuse! : GeoPointImpl()
@@ -58,11 +70,10 @@ public struct ScreenPathUtils {
         let latitude = 90 - 360 * atan(exp(-y * 2 * PI)) / PI
         let longitude = 360 * x
         
-        
         return out.set(latitude, lon: longitude)
     }
-    public static func toScreenPath(geoPoints : [GeoPoint], zoomLevel : Int = MAX_ZOOM_LEVEL) -> [CGPoint] {
-        var thePath = [CGPoint]()
+    public static func toScreenPath(geoPoints : [GeoPoint], zoomLevel : Int = MAX_ZOOM_LEVEL) -> [Point] {
+        var thePath = [Point]()
         if geoPoints.count > 0 {
             thePath.append(latLongToPixelXY(geoPoints[0].getLatitude(), longitude: geoPoints[0].getLongitude(), levelOfDetail: zoomLevel))
         }
@@ -71,20 +82,41 @@ public struct ScreenPathUtils {
         }
         return thePath
     }
-    public static func toProjectedPath(geoPoints : [GeoPoint]) -> [CGPoint] {
-        return toReducedScreenPath(geoPoints)
+    public static func toProjectedPath(geoPoints : [GeoPoint]) -> [Point] {
+        var thePath = [Point]()
+        var lastPoint : Point? = nil
+        if geoPoints.count > 0 {
+            let newPoint = latLongToProjectedXY(geoPoints[0].getLatitude(), longitude: geoPoints[0].getLongitude())
+            lastPoint = newPoint
+            thePath.append(newPoint)
+        }
+        for point in geoPoints {
+            var newPoint = latLongToProjectedXY(point.getLatitude(), longitude: point.getLongitude())
+            if newPoint.getX() != lastPoint!.getX() || newPoint.getY() != lastPoint!.getY() {
+                thePath.append(newPoint)
+                lastPoint = newPoint
+            }
+        }
+        return thePath
     }
-    public static func toReducedScreenPath(geoPoints : [GeoPoint], zoomLevel : Int = MAX_ZOOM_LEVEL) -> [CGPoint] {
-        var thePath = [CGPoint]()
-        var lastPoint : CGPoint? = nil
+    public static func projectedToScreenPath(projectedPath : [Point], projection : Projection) -> [Point] {
+        var ps = [Point]()
+        for point in projectedPath {
+            ps.append(projection.translatePoint(point))
+        }
+        return ps
+    }
+    public static func toReducedScreenPath(geoPoints : [GeoPoint], zoomLevel : Int = MAX_ZOOM_LEVEL) -> [Point] {
+        var thePath = [Point]()
+        var lastPoint : Point? = nil
         if geoPoints.count > 0 {
             let newPoint = latLongToPixelXY(geoPoints[0].getLatitude(), longitude: geoPoints[0].getLongitude(), levelOfDetail: zoomLevel)
             lastPoint = newPoint
             thePath.append(newPoint)
         }
         for point in geoPoints {
-            var newPoint = latLongToPixelXY(geoPoints[0].getLatitude(), longitude: geoPoints[0].getLongitude(), levelOfDetail: zoomLevel)
-            if newPoint.x != lastPoint!.x || newPoint.y != lastPoint!.y {
+            var newPoint = latLongToPixelXY(point.getLatitude(), longitude: point.getLongitude(), levelOfDetail: zoomLevel)
+            if newPoint.getX() != lastPoint!.getX() || newPoint.getY() != lastPoint!.getY() {
                 thePath.append(newPoint)
                 lastPoint = newPoint
             }
@@ -92,8 +124,47 @@ public struct ScreenPathUtils {
         return thePath
     }
     
-    public func toClippedScreenPath(projectedPath : [MapPoint], projection : Projection) -> CGPath {
-        
+    public func toClippedScreenPath(projectedPath : [GeoPoint], projection : Projection, path: Path? = nil) -> Path {
+        var out = path == nil ? Path() : path!
+        let rect = projection.screenRect
+        var last : Point? = nil
+        var reuse = PointImpl()
+        var onscreen = false
+        if projectedPath.count > 0 {
+            last = projection.translatePoint(projectedPath[0], reuse: reuse)
+            onscreen = rect.containsXY(last!.getX(),  y: last!.getY())
+        }
+        let coords = PointImpl()
+        for point in projectedPath {
+            projection.translatePoint(point, reuse: coords)
+            if last!.getX() != coords.getX() || last!.getY() != coords.getY() {
+                if rect.containsXY(coords.getX(), y: coords.getY()) {
+                    if !onscreen || out.isEmpty() {
+                        out.moveTo(coords.getX(), y: coords.getY())
+                    }
+                    out.lineTo(coords.getX(), y: coords.getY())
+                    onscreen = true
+                } else {
+                    if onscreen {
+                        if out.isEmpty() {
+                            out.moveTo(coords.getX(), y: coords.getY())
+                        }
+                        out.lineTo(coords.getX(), y: coords.getY())
+                    } else {
+                        let linerect = Rect(left: last!.getX(), top: last!.getY(), right: coords.getX(), bottom: coords.getY())
+                        if linerect.intersectRect(rect) {
+                            if out.isEmpty() {
+                                out.moveTo(coords.getX(), y: coords.getY())
+                            }
+                            out.lineTo(coords.getX(), y: coords.getY())
+                        }
+                    }
+                }
+            } else {
+                onscreen = false
+            }
+            last = coords
+        }
+        return out
     }
-
 }

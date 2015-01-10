@@ -203,11 +203,11 @@ public class Route : Storage {
         return _journeyPatterns
     }
     
-    private var _paths : [[CLLocationCoordinate2D]] = [[CLLocationCoordinate2D]]()
+    private var _paths : [[GeoPoint]] = [[GeoPoint]]()
     
-    public func getPaths() -> [[CLLocationCoordinate2D]] {
+    public func getPaths() -> [[GeoPoint]] {
         if (_paths.count == 0) {
-            var paths = [[CLLocationCoordinate2D]]()
+            var paths = [[GeoPoint]]()
             for pat in getJourneyPatterns() {
                 if pat.isReady() {
                     paths.append(pat.path!)
@@ -218,11 +218,11 @@ public class Route : Storage {
         return _paths
     }
     
-    private var _projectedPaths : [[MKMapPoint]] = [[MKMapPoint]]()
+    private var _projectedPaths : [[Point]] = [[Point]]()
     
-    public func getPorjectedPaths() -> [[MKMapPoint]] {
+    public func getProjectedPaths() -> [[Point]] {
         if (_projectedPaths.count == 0) {
-            var paths = [[MKMapPoint]]()
+            var paths = [[Point]]()
             for pat in getJourneyPatterns() {
                 if pat.isReady() {
                     paths.append(pat.getProjectedPath())

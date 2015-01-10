@@ -24,25 +24,27 @@ public class Projection {
         self.screenRect = rect
     }
     
-    public func translatePoint(point : CGPoint, reuse : CGPoint? = nil) -> CGPoint {
-        var out = reuse == nil ? CGPoint() : reuse!
+    public func translatePoint(projectedPoint : Point, reuse : PointMutable? = nil) -> PointMutable {
+        var out = reuse == nil ? PointImpl() as PointMutable : reuse!
         
         let zoomDifference = MAX_ZOOM_LEVEL - zoomLevel
         
-        out.x = CGFloat(Double(Int(point.x) >> zoomDifference) + offsetX)
-        out.y = CGFloat(Double(Int(point.y) >> zoomDifference) + offsetY)
-        return out
+        let div = pow(2.0, Double(zoomDifference))
+        let x = Float(projectedPoint.getX()/div + offsetX)
+        let y = Float(projectedPoint.getY()/div + offsetX)
+
+        return out.set(x, y: y)
     }
     
     public func fromPixels(x : Double, y : Double) -> GeoPoint {
         return ScreenPathUtils.pixelXYToLatLong(CGFloat(screenRect.left + x + Double(worldSize_2)), pixelY: CGFloat(screenRect.top + y + Double(worldSize_2)), levelOfDetail: zoomLevel)
     }
     
-    public func toMapPixels(geoPoint : GeoPoint, reuse : CGPoint? = nil) -> CGPoint {
-        var out = reuse == nil ? CGPoint() : reuse!
+    public func toMapPixels(geoPoint : GeoPoint, reuse : PointMutable? = nil) -> Point {
+        var out = reuse == nil ? CGPoint() as PointMutable : reuse!
         ScreenPathUtils.latLongToPixelXY(geoPoint.getLatitude(), longitude: geoPoint.getLongitude(), levelOfDetail: zoomLevel, reuse: out)
-        out.x += CGFloat(offsetX)
-        out.y += CGFloat(offsetY)
+        out.setX(out.getX() + offsetX)
+        out.setY(out.getY() + offsetY)
         return out
     }
     
