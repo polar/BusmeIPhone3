@@ -11,7 +11,7 @@ import CoreLocation
 
 public class MessageBase : MessageSpec {
     public var point : CLLocationCoordinate2D?
-    public var radius : Double = 500 // feet
+    public var radius : Double = 0 // feet
     public var title : String?
     public var description : String?
     public var goUrl : String?
@@ -261,7 +261,7 @@ public class MessageBase : MessageSpec {
     }
     
     public func isValid() -> Bool {
-        return false;
+        return loaded && (point != nil) && (version > 0);
     }
 
 }

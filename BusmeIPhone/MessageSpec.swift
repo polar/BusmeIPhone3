@@ -34,5 +34,9 @@ public class MessageSpec {
         encoder.encodeInt64(version, forKey: "version")
         encoder.encodeInt64(expiryTime, forKey: "expiryTime")
     }
+    
+    public func getId() -> String {
+        return id
+    }
 
 }

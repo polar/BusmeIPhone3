@@ -34,5 +34,10 @@ public class MasterController {
     public var loginForeground : LoginForeground
     public var loginBackground : LoginBackground
     
+    public var journeyLocationPoster : JourneyLocationPoster
+    public var journeEventController : JourneyEventController
+    public var journeyPostingController : JourneyPostingController
+    
+    
     
 }

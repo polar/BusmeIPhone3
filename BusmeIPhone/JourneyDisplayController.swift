@@ -17,7 +17,7 @@ public protocol OnJourneyDisplayRemovedListener {
 }
 
 public class JourneyDisplayEventData {
-    public var id : String?
+    public var id : String
     public var journeyDisplay : JourneyDisplay?
     public var journeyDisplayController : JourneyDisplayController?
     

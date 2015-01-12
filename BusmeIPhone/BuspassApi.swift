@@ -296,10 +296,12 @@ public class BuspassApi : ApiBase {
         }
     }
     
-    public func postJourneyLocation(location : PostLocation, role : String) {
+    public func postJourneyLocation(location : PostLocation, role : String) -> (HttpStatusLine, String?) {
         if isReady() {
-            let url = buspass!.postJourneyLocationUrl
-            if url != nil {
+            let postJourneyLocationUrl = buspass!.postJourneyLocationUrl
+            if postJourneyLocationUrl != nil {
+                let query = getDefaultQuery()
+                let url = postJourneyLocationUrl! + query.toString()
                 var params = [String:[String]]()
                 params["lon"] = ["\(location.lon)"]
                 params["lat"] = ["\(location.lat)"]
@@ -312,7 +314,29 @@ public class BuspassApi : ApiBase {
                 if role == "driver" {
                     params["driver"] = ["1"]
                 }
-            }
+                let response = postURLResponse(url, parameters: params)
+                let status = response.getStatusLine()
+                if status.statusCode == 200 {
+                    let tag = xmlParse(response.getEntity())
+                    if (tag != nil) {
+                        return (status, tag!.name.lowercaseString)
+                    } else {
+                        let s = HttpStatusLine(statusCode: 1000, reasonPhrase: "Wrong Response")
+                        if (BLog.ERROR) { BLog.logger.error(s.toString()) }
+                        return (s, nil)
+                    }
+                } else {
+                    if (BLog.ERROR) { BLog.logger.error(status.toString()) }
+                    return (status, nil)
+                }
+            } else {
+                let s = HttpStatusLine(statusCode: 1000, reasonPhrase: "No Posting Url")
+                if (BLog.ERROR) { BLog.logger.error(s.toString()) }
+                return (s,nil)            }
+        } else {
+            let s = HttpStatusLine(statusCode: 1000, reasonPhrase: "Api Not Ready")
+            if (BLog.ERROR) { BLog.logger.error(s.toString()) }
+            return (s,nil)
         }
     }
     

@@ -11,15 +11,11 @@ import CoreLocation
 
 public class PostLocation {
     public var journey : Route
-    public var lon : Double = 0.0
-    public var lat : Double = 0.0
-    public var time : TimeValue64 = 0
-    public var bearing : Double = 0.0
-    public var speed : Double = 0.0
-    public var altitude : Double = 0.0
+    public var location : Location
     
-    public init(journey:Route) {
+    public init(journey:Route, location : Location) {
         self.journey = journey
+        self.location = location
     }
 }
 

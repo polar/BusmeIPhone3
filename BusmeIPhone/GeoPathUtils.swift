@@ -252,6 +252,10 @@ public struct GeoCalc {
     public static func to_sign(n : Double) -> Double {
         return n < 0.0 ? -1.0 : n == 0.0 ? 0.0 : 1.0
     }
+    
+    public static func toGeoPoint(location : Location) -> GeoPoint {
+        return GeoPointImpl(lat: location.latitude, lon: location.longitude)
+    }
 
     public static func equalCoordinates(c1 : GeoPoint, c2 : GeoPoint, prec: Double) -> Bool {
         let result = floor(c1.getLongitude()*prec) == floor(c2.getLongitude()*prec) &&

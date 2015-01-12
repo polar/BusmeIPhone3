@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class LoginManager : BuspassEventListener {
+public class LoginManager {
     public let LOGIN_TRY_LIMIT = 3
     
     public var api : BuspassApi

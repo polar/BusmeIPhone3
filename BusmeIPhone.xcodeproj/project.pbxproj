@@ -28,6 +28,11 @@
 		F3140F561A618C330024A65D /* UpdateRemoteInvoation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3140F551A618C330024A65D /* UpdateRemoteInvoation.swift */; };
 		F3140F581A618C840024A65D /* MasterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3140F571A618C840024A65D /* MasterController.swift */; };
 		F3140F5A1A618E070024A65D /* LoginForeground.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3140F591A618E070024A65D /* LoginForeground.swift */; };
+		F3140F5C1A61AAC00024A65D /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3140F5B1A61AAC00024A65D /* Location.swift */; };
+		F3140F5F1A61AC330024A65D /* JourneyLocationPoster.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3140F5E1A61AC330024A65D /* JourneyLocationPoster.swift */; };
+		F3140F621A643DEC0024A65D /* JourneyEventController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3140F611A643DEC0024A65D /* JourneyEventController.swift */; };
+		F3140F641A64445E0024A65D /* JourneyPostingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3140F631A64445E0024A65D /* JourneyPostingController.swift */; };
+		F3140F681A644EE20024A65D /* BannerRequestProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3140F671A644EE20024A65D /* BannerRequestProcessor.swift */; };
 		F31E4BCA1A58760E00E2F0A2 /* HttpClientTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31E4BC91A58760E00E2F0A2 /* HttpClientTest.swift */; };
 		F326F1051A5EAFC000CBCE28 /* BLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F326F1041A5EAFC000CBCE28 /* BLog.swift */; };
 		F33B69B41A5B022C004C7742 /* GeoPathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33B69B31A5B022C004C7742 /* GeoPathUtils.swift */; };
@@ -152,6 +157,11 @@
 		F3140F551A618C330024A65D /* UpdateRemoteInvoation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateRemoteInvoation.swift; sourceTree = "<group>"; };
 		F3140F571A618C840024A65D /* MasterController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterController.swift; sourceTree = "<group>"; };
 		F3140F591A618E070024A65D /* LoginForeground.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginForeground.swift; sourceTree = "<group>"; };
+		F3140F5B1A61AAC00024A65D /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		F3140F5E1A61AC330024A65D /* JourneyLocationPoster.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JourneyLocationPoster.swift; sourceTree = "<group>"; };
+		F3140F611A643DEC0024A65D /* JourneyEventController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JourneyEventController.swift; sourceTree = "<group>"; };
+		F3140F631A64445E0024A65D /* JourneyPostingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JourneyPostingController.swift; sourceTree = "<group>"; };
+		F3140F671A644EE20024A65D /* BannerRequestProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BannerRequestProcessor.swift; sourceTree = "<group>"; };
 		F31E4BC91A58760E00E2F0A2 /* HttpClientTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpClientTest.swift; sourceTree = "<group>"; };
 		F326F1041A5EAFC000CBCE28 /* BLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLog.swift; sourceTree = "<group>"; };
 		F33B69B31A5B022C004C7742 /* GeoPathUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeoPathUtils.swift; sourceTree = "<group>"; };
@@ -412,6 +422,7 @@
 				F36316A41A5D9F7A002CAE61 /* DiscoverApiVersion1.swift */,
 				F36316A61A5DFBAD002CAE61 /* Login.swift */,
 				F36316A81A5DFDA8002CAE61 /* LoginManager.swift */,
+				F3140F5B1A61AAC00024A65D /* Location.swift */,
 				F3F87A311A5ED18600EB1EC1 /* Platform */,
 			);
 			name = api;
@@ -444,6 +455,10 @@
 				F3140F551A618C330024A65D /* UpdateRemoteInvoation.swift */,
 				F3140F571A618C840024A65D /* MasterController.swift */,
 				F3140F591A618E070024A65D /* LoginForeground.swift */,
+				F3140F5E1A61AC330024A65D /* JourneyLocationPoster.swift */,
+				F3140F611A643DEC0024A65D /* JourneyEventController.swift */,
+				F3140F631A64445E0024A65D /* JourneyPostingController.swift */,
+				F3140F671A644EE20024A65D /* BannerRequestProcessor.swift */,
 			);
 			name = Platform;
 			sourceTree = "<group>";
@@ -655,16 +670,19 @@
 				F3140F581A618C840024A65D /* MasterController.swift in Sources */,
 				F36316A51A5D9F7A002CAE61 /* DiscoverApiVersion1.swift in Sources */,
 				F36316A91A5DFDA8002CAE61 /* LoginManager.swift in Sources */,
+				F3140F5C1A61AAC00024A65D /* Location.swift in Sources */,
 				F398020C1A5A424200D6C2B0 /* MarkerInfo.swift in Sources */,
 				F39802081A5A08A400D6C2B0 /* BuspasEvents.swift in Sources */,
 				F3140F3F1A5F57090024A65D /* JourneyBasket.swift in Sources */,
 				F3F87A331A5EEB1500EB1EC1 /* BannerBasket.swift in Sources */,
 				F3140F561A618C330024A65D /* UpdateRemoteInvoation.swift in Sources */,
+				F3140F641A64445E0024A65D /* JourneyPostingController.swift in Sources */,
 				F35F75431A59D93200283F1C /* BannerInfo.swift in Sources */,
 				F3C8FE561A5359B0009FF404 /* SecondViewController.swift in Sources */,
 				F36316A71A5DFBAD002CAE61 /* Login.swift in Sources */,
 				F3F87A371A5EF6E000EB1EC1 /* BannerPresentationController.swift in Sources */,
 				F3C8FE8A1A535B0D009FF404 /* HttpEntity.swift in Sources */,
+				F3140F5F1A61AC330024A65D /* JourneyLocationPoster.swift in Sources */,
 				F3C8FE521A5359B0009FF404 /* AppDelegate.swift in Sources */,
 				F33B69BA1A5B43D2004C7742 /* IPUtils.swift in Sources */,
 				F37633B51A5ADB7B005AFB8F /* NameId.swift in Sources */,
@@ -685,11 +703,13 @@
 				F33B69BC1A5C3CD3004C7742 /* Route.swift in Sources */,
 				F3140F371A5F384C0024A65D /* MasterMessageBasket.swift in Sources */,
 				F3140F5A1A618E070024A65D /* LoginForeground.swift in Sources */,
+				F3140F681A644EE20024A65D /* BannerRequestProcessor.swift in Sources */,
 				F3C8FE871A535B0D009FF404 /* DetailViewController.swift in Sources */,
 				F3140F411A5F92D50024A65D /* JourneySyncProgressEvent.swift in Sources */,
 				F3C8FE8C1A535B0D009FF404 /* HttpStatusLine.swift in Sources */,
 				F3140F4A1A6055110024A65D /* JourneyDisplaySelectionController.swift in Sources */,
 				F3140F451A5F9FCB0024A65D /* JourneyDisplayController.swift in Sources */,
+				F3140F621A643DEC0024A65D /* JourneyEventController.swift in Sources */,
 				F326F1051A5EAFC000CBCE28 /* BLog.swift in Sources */,
 				F363169A1A5CF904002CAE61 /* JourneyLocation.swift in Sources */,
 				F398020A1A5A40FF00D6C2B0 /* MessageSpec.swift in Sources */,
