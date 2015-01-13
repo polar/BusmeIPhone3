@@ -51,12 +51,17 @@ public class InvocationProgressListener : InvocationProgress {
 
 public class RemoteInvocation {
     public var api : ApiBase
-    public var requestUrl : String
+    public var requestUrl : String?
     public var argumentPreparers : [ArgumentPreparer] = [ArgumentPreparer]()
     public var responseProcessors : [ResponseProcessor] = [ResponseProcessor]()
-    public init(api :ApiBase, url : String) {
+    
+    public init(api :ApiBase, url : String?) {
         self.api = api
         self.requestUrl = url
+    }
+    
+    public func getRequestUrl() -> String? {
+        return requestUrl
     }
     
     public func addArgumentPreparer(ap : ArgumentPreparer) {
@@ -69,6 +74,15 @@ public class RemoteInvocation {
     
     public func invoke(progress : InvocationProgressListener?, isForced : Bool) {
         if (progress != nil) { progress!.onUpdateStart(UtilsTime.current(), isForced: isForced)}
+        let requestUrl = getRequestUrl()
+        if requestUrl == nil {
+            if (progress != nil) {
+                let status = HttpStatusLine(statusCode: 1000, reasonPhrase: "No URL")
+                progress!.onRequestIOError(status)
+                progress!.onRequestFinish(UtilsTime.current())
+            }
+            return
+        }
         var makeRequest = false
         if (progress != nil) { progress!.onArgumentsStart() }
         var parameters = [String:[String]]()

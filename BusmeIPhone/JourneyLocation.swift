@@ -19,8 +19,8 @@ public class PostLocation {
     }
 }
 
-public class JourneyLocation {
-    public var id : String?
+public class JourneyLocation : GeoPoint {
+    public var routeId : String?
     public var lat : Double = 0
     public var lon : Double = 0
     public var dir : Double = 0
@@ -31,9 +31,21 @@ public class JourneyLocation {
     public var reported : Bool = false
     public var distance : Double = 0
     public var time : Double = -1
+
+    public init(tag: Tag) {
+        loadParsedXMLTag(tag)
+    }
+    
+    // GeoPoint Protocol 
+    public func getLatitude() -> Double {
+        return lat
+    }
+    public func getLongitude() -> Double {
+        return lon
+    }
     
     public func loadParsedXMLTag(tag : Tag) {
-        self.id = tag.attributes["id"]
+        self.routeId = tag.attributes["id"]
         self.lat = (tag.attributes["lat"]! as NSString).doubleValue
         self.lat = (tag.attributes["lon"]! as NSString).doubleValue
         self.lat = (tag.attributes["direction"]! as NSString).doubleValue
@@ -42,5 +54,13 @@ public class JourneyLocation {
         self.reported_time = Int64((tag.attributes["reported_time"]! as NSString).integerValue)
         self.recorded_time = Int64((tag.attributes["recorded_time"]! as NSString).integerValue)
         self.onroute = tag.attributes["onroute"] == "true"
+    }
+    
+    public func isValid() -> Bool {
+        return routeId != nil
+    }
+    
+    public func getRouteId() -> String {
+        return routeId!
     }
 }

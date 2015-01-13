@@ -74,6 +74,13 @@ public class BuspassEventDistributor {
         notifier!.register(listener)
     }
     
+    public func unregisterForEvent(eventName : String, listener : BuspassEventListener) {
+        var notifier = eventNotifiers[eventName]
+        if notifier != nil {
+            notifier!.unregister(listener)
+        }
+    }
+    
     public func postBuspassEvent(event : BuspassEvent) {
         eventQ.insert(event, atIndex: 0);
         if (postEventListener != nil) {

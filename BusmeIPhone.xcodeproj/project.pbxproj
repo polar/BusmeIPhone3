@@ -38,6 +38,12 @@
 		F33B69B41A5B022C004C7742 /* GeoPathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33B69B31A5B022C004C7742 /* GeoPathUtils.swift */; };
 		F33B69BA1A5B43D2004C7742 /* IPUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33B69B91A5B43D2004C7742 /* IPUtils.swift */; };
 		F33B69BC1A5C3CD3004C7742 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33B69BB1A5C3CD3004C7742 /* Route.swift */; };
+		F35E28E81A647CBA004DF0D7 /* MarkerRequestProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35E28E71A647CBA004DF0D7 /* MarkerRequestProcessor.swift */; };
+		F35E28EB1A647D2A004DF0D7 /* MasterMessageRequestProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35E28EA1A647D2A004DF0D7 /* MasterMessageRequestProcessor.swift */; };
+		F35E28ED1A647D94004DF0D7 /* JourneyCurrentLocationsRequestProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35E28EC1A647D94004DF0D7 /* JourneyCurrentLocationsRequestProcessor.swift */; };
+		F35E28EF1A6493CA004DF0D7 /* MainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35E28EE1A6493CA004DF0D7 /* MainController.swift */; };
+		F35E28F11A649B85004DF0D7 /* StoageSerializeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35E28F01A649B85004DF0D7 /* StoageSerializeController.swift */; };
+		F35E28F31A649BDB004DF0D7 /* ExternalStorageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35E28F21A649BDB004DF0D7 /* ExternalStorageController.swift */; };
 		F35F75431A59D93200283F1C /* BannerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35F75421A59D93200283F1C /* BannerInfo.swift */; };
 		F36316911A5C63D2002CAE61 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F363168C1A5C60CC002CAE61 /* Alamofire.framework */; };
 		F36316921A5C63D2002CAE61 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F363168C1A5C60CC002CAE61 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -167,6 +173,12 @@
 		F33B69B31A5B022C004C7742 /* GeoPathUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeoPathUtils.swift; sourceTree = "<group>"; };
 		F33B69B91A5B43D2004C7742 /* IPUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPUtils.swift; sourceTree = "<group>"; };
 		F33B69BB1A5C3CD3004C7742 /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
+		F35E28E71A647CBA004DF0D7 /* MarkerRequestProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerRequestProcessor.swift; sourceTree = "<group>"; };
+		F35E28EA1A647D2A004DF0D7 /* MasterMessageRequestProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterMessageRequestProcessor.swift; sourceTree = "<group>"; };
+		F35E28EC1A647D94004DF0D7 /* JourneyCurrentLocationsRequestProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JourneyCurrentLocationsRequestProcessor.swift; sourceTree = "<group>"; };
+		F35E28EE1A6493CA004DF0D7 /* MainController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainController.swift; sourceTree = "<group>"; };
+		F35E28F01A649B85004DF0D7 /* StoageSerializeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoageSerializeController.swift; sourceTree = "<group>"; };
+		F35E28F21A649BDB004DF0D7 /* ExternalStorageController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExternalStorageController.swift; sourceTree = "<group>"; };
 		F35F75421A59D93200283F1C /* BannerInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BannerInfo.swift; sourceTree = "<group>"; };
 		F36316861A5C60CC002CAE61 /* Alamofire.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Alamofire.xcodeproj; path = ../Alamofire/Alamofire.xcodeproj; sourceTree = "<group>"; };
 		F36316961A5C7082002CAE61 /* TimeTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeTest.swift; sourceTree = "<group>"; };
@@ -459,6 +471,12 @@
 				F3140F611A643DEC0024A65D /* JourneyEventController.swift */,
 				F3140F631A64445E0024A65D /* JourneyPostingController.swift */,
 				F3140F671A644EE20024A65D /* BannerRequestProcessor.swift */,
+				F35E28E71A647CBA004DF0D7 /* MarkerRequestProcessor.swift */,
+				F35E28EA1A647D2A004DF0D7 /* MasterMessageRequestProcessor.swift */,
+				F35E28EC1A647D94004DF0D7 /* JourneyCurrentLocationsRequestProcessor.swift */,
+				F35E28EE1A6493CA004DF0D7 /* MainController.swift */,
+				F35E28F01A649B85004DF0D7 /* StoageSerializeController.swift */,
+				F35E28F21A649BDB004DF0D7 /* ExternalStorageController.swift */,
 			);
 			name = Platform;
 			sourceTree = "<group>";
@@ -659,6 +677,7 @@
 			files = (
 				F3140F341A5F1D0E0024A65D /* MarkerEvent.swift in Sources */,
 				F3F87A3B1A5F067C00EB1EC1 /* MarkerBasket.swift in Sources */,
+				F35E28F31A649BDB004DF0D7 /* ExternalStorageController.swift in Sources */,
 				F3140F501A6058B30024A65D /* ScreenPathUtils.swift in Sources */,
 				F3F87A301A5ED10600EB1EC1 /* BannerEvent.swift in Sources */,
 				F3140F391A5F38CA0024A65D /* MasterMessageStore.swift in Sources */,
@@ -666,6 +685,7 @@
 				F3ED41A81A5F0E3500C6FFC9 /* MarkerPresentationController.swift in Sources */,
 				F37633BB1A5AFACC005AFB8F /* JourneyPattern.swift in Sources */,
 				F3C8FE8B1A535B0D009FF404 /* HttpResponse.swift in Sources */,
+				F35E28EF1A6493CA004DF0D7 /* MainController.swift in Sources */,
 				F37633B71A5AF9F3005AFB8F /* Storage.swift in Sources */,
 				F3140F581A618C840024A65D /* MasterController.swift in Sources */,
 				F36316A51A5D9F7A002CAE61 /* DiscoverApiVersion1.swift in Sources */,
@@ -685,6 +705,7 @@
 				F3140F5F1A61AC330024A65D /* JourneyLocationPoster.swift in Sources */,
 				F3C8FE521A5359B0009FF404 /* AppDelegate.swift in Sources */,
 				F33B69BA1A5B43D2004C7742 /* IPUtils.swift in Sources */,
+				F35E28EB1A647D2A004DF0D7 /* MasterMessageRequestProcessor.swift in Sources */,
 				F37633B51A5ADB7B005AFB8F /* NameId.swift in Sources */,
 				F3140F521A6186E30024A65D /* PathUtils.swift in Sources */,
 				F3140F3D1A5F3B2A0024A65D /* MasterMessageEvent.swift in Sources */,
@@ -695,13 +716,16 @@
 				F3C8FE841A535B0D009FF404 /* ApiBase.swift in Sources */,
 				F363169F1A5D823C002CAE61 /* Master.swift in Sources */,
 				F39802061A5A075600D6C2B0 /* BuspassApi.swift in Sources */,
+				F35E28E81A647CBA004DF0D7 /* MarkerRequestProcessor.swift in Sources */,
 				F37633B01A5ACA3A005AFB8F /* MessageBase.swift in Sources */,
 				F3140F4E1A6057EB0024A65D /* Projection.swift in Sources */,
 				F3140F481A5FA03E0024A65D /* JourneyDisplay.swift in Sources */,
 				F36316A11A5D8DB0002CAE61 /* RemoteInvocation.swift in Sources */,
+				F35E28ED1A647D94004DF0D7 /* JourneyCurrentLocationsRequestProcessor.swift in Sources */,
 				F37633B31A5ACEFF005AFB8F /* Time.swift in Sources */,
 				F33B69BC1A5C3CD3004C7742 /* Route.swift in Sources */,
 				F3140F371A5F384C0024A65D /* MasterMessageBasket.swift in Sources */,
+				F35E28F11A649B85004DF0D7 /* StoageSerializeController.swift in Sources */,
 				F3140F5A1A618E070024A65D /* LoginForeground.swift in Sources */,
 				F3140F681A644EE20024A65D /* BannerRequestProcessor.swift in Sources */,
 				F3C8FE871A535B0D009FF404 /* DetailViewController.swift in Sources */,
