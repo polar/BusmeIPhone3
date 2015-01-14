@@ -76,6 +76,8 @@
 		F398020A1A5A40FF00D6C2B0 /* MessageSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39802091A5A40FF00D6C2B0 /* MessageSpec.swift */; };
 		F398020C1A5A424200D6C2B0 /* MarkerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F398020B1A5A424200D6C2B0 /* MarkerInfo.swift */; };
 		F3C33CDE1A6627E600EF8E24 /* DiscoverEventData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C33CDD1A6627E600EF8E24 /* DiscoverEventData.swift */; };
+		F3C33CE11A663CAD00EF8E24 /* DiscoverController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C33CE01A663CAD00EF8E24 /* DiscoverController.swift */; };
+		F3C33CE31A663D9200EF8E24 /* MastersTableScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C33CE21A663D9200EF8E24 /* MastersTableScreen.swift */; };
 		F3C8FE521A5359B0009FF404 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C8FE511A5359B0009FF404 /* AppDelegate.swift */; };
 		F3C8FE5B1A5359B0009FF404 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F3C8FE5A1A5359B0009FF404 /* Images.xcassets */; };
 		F3C8FE5E1A5359B0009FF404 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F3C8FE5C1A5359B0009FF404 /* LaunchScreen.xib */; };
@@ -213,6 +215,8 @@
 		F39802091A5A40FF00D6C2B0 /* MessageSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSpec.swift; sourceTree = "<group>"; };
 		F398020B1A5A424200D6C2B0 /* MarkerInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerInfo.swift; sourceTree = "<group>"; };
 		F3C33CDD1A6627E600EF8E24 /* DiscoverEventData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverEventData.swift; sourceTree = "<group>"; };
+		F3C33CE01A663CAD00EF8E24 /* DiscoverController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverController.swift; sourceTree = "<group>"; };
+		F3C33CE21A663D9200EF8E24 /* MastersTableScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MastersTableScreen.swift; sourceTree = "<group>"; };
 		F3C8FE4C1A5359B0009FF404 /* BusmeIPhone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BusmeIPhone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3C8FE501A5359B0009FF404 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F3C8FE511A5359B0009FF404 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -293,6 +297,7 @@
 			isa = PBXGroup;
 			children = (
 				F3406A551A661DC5000C04F4 /* DiscoverScreen.swift */,
+				F3C33CE21A663D9200EF8E24 /* MastersTableScreen.swift */,
 			);
 			name = Discover;
 			sourceTree = "<group>";
@@ -502,6 +507,7 @@
 				F35E28F41A64D896004DF0D7 /* JourneySyncRequestProcessor.swift */,
 				F35E28F71A64DE75004DF0D7 /* JourneySyncRemoteInvocation.swift */,
 				F3C33CDD1A6627E600EF8E24 /* DiscoverEventData.swift */,
+				F3C33CE01A663CAD00EF8E24 /* DiscoverController.swift */,
 			);
 			name = Platform;
 			sourceTree = "<group>";
@@ -724,6 +730,7 @@
 				F3140F561A618C330024A65D /* UpdateRemoteInvoation.swift in Sources */,
 				F3140F641A64445E0024A65D /* JourneyPostingController.swift in Sources */,
 				F35F75431A59D93200283F1C /* BannerInfo.swift in Sources */,
+				F3C33CE31A663D9200EF8E24 /* MastersTableScreen.swift in Sources */,
 				F36316A71A5DFBAD002CAE61 /* Login.swift in Sources */,
 				F3F87A371A5EF6E000EB1EC1 /* BannerPresentationController.swift in Sources */,
 				F3C8FE8A1A535B0D009FF404 /* HttpEntity.swift in Sources */,
@@ -767,6 +774,7 @@
 				F363169A1A5CF904002CAE61 /* JourneyLocation.swift in Sources */,
 				F398020A1A5A40FF00D6C2B0 /* MessageSpec.swift in Sources */,
 				F3140F431A5F9D860024A65D /* JourneyVisibilityController.swift in Sources */,
+				F3C33CE11A663CAD00EF8E24 /* DiscoverController.swift in Sources */,
 				F37633AB1A5AC549005AFB8F /* MasterMessage.swift in Sources */,
 				F363169D1A5D80E8002CAE61 /* DiscoverApi.swift in Sources */,
 				F3F87A391A5EF7A800EB1EC1 /* PriorityQueue.swift in Sources */,

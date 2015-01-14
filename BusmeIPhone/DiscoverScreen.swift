@@ -10,7 +10,10 @@ import Foundation
 import UIKit
 import MapKit
 
-public class DiscoverScreen : UIViewController, MKMapViewDelegate {
+let APP_VERSION = "1.0.0"
+let PLATFORM_NAME = "iOS"
+
+public class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDelegate {
     public let mapView : MKMapView!
     public var api : DiscoverApi
     public var mainController : MainController
@@ -50,6 +53,17 @@ public class DiscoverScreen : UIViewController, MKMapViewDelegate {
         let alertView = UIAlertView(title: title, message: message, delegate: nil, cancelButtonTitle: nil)
         alertView.show()
         return alertView
+    }
+    
+    
+    func errorDialog(title : String, message : String) -> UIAlertView {
+        let alertView = UIAlertView(title: title, message: message, delegate: self, cancelButtonTitle: "OK")
+        alertView.show()
+        return alertView
+    }
+    
+    public func alertView(alertView: UIAlertView, willDismissWithButtonIndex buttonIndex: Int) {
+        self.discoverInProgress = false
     }
     
     var discoverInProgress : Bool = false
@@ -93,9 +107,18 @@ public class DiscoverScreen : UIViewController, MKMapViewDelegate {
     func onFind(eventData : DiscoverEventData) {
         if eventData.error != nil {
             if (BLog.WARN) {BLog.logger.warn("error from find \(eventData.error?.reasonPhrase)")}
-            return
+            errorDialog("Error", message: eventData.error!.reasonPhrase)
         }
-        
+        if eventData.master != nil {
+            let master = eventData.master!
+            let masteApi = BuspassApi(httpClient: api.httpClient, url: master.apiUrl!, masterSlug: master.slug!, appVersion: APP_VERSION, platformName: PLATFORM_NAME)
+        } else if !discoverInProgress {
+            let discoverController = mainController.discoverController
+            if !discoverController.getMasters().isEmpty {
+                let mastersTableScreen = MastersTableScreen(
+                
+            }
+        }
     }
     
 }
