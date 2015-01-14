@@ -9,5 +9,10 @@
 import Foundation
 
 public class MainController {
+    public var api : DiscoverApiVersion1
+    
+    public init(api : DiscoverApiVersion1) {
+        self.api = api
+    }
     
 }

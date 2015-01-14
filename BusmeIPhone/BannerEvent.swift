@@ -32,6 +32,11 @@ public class BannerEventData {
         self.bannerInfo = bannerInfo
     }
     
+    public init(bannerInfo : BannerInfo, state : Int) {
+        self.bannerInfo = bannerInfo
+        self.state = state
+    }
+    
     public func dup() -> BannerEventData {
         let evd = BannerEventData(bannerInfo: bannerInfo)
         evd.state = state
@@ -82,10 +87,11 @@ public class BannerForeground : BuspassEventListener {
     
     func onPresent(eventData : BannerEventData) {
         eventData.bannerInfo.onDisplay(UtilsTime.current())
-        // The BannerPresentationController should listening to this event as well and present
+        api.uiEvents.postEvent("BannerPresent:display", data: eventData)
     }
     
-    // From the Banner click, BannerPresentationController sends this event.
+    // From the Banner click, The Banner Message is presented and then on the result
+    // it sends this event.
     
     func onResolve(eventData : BannerEventData) {
         let evd = eventData.dup()
@@ -114,10 +120,12 @@ public class BannerForeground : BuspassEventListener {
     
     func onError(eventData : BannerEventData) {
         eventData.bannerInfo.onDismiss(true, time:UtilsTime.current())
+        api.uiEvents.postEvent("BannerPresent:dismiss", data: eventData)
     }
     
     func onDone(eventData : BannerEventData) {
         eventData.bannerInfo.onDismiss(true, time:UtilsTime.current())
+        api.uiEvents.postEvent("BannerPresent:dismiss", data: eventData)
     }
 }
 
@@ -170,10 +178,8 @@ public class BannerBackground : BuspassEventListener {
     }
     
     func onError(eventData : BannerEventData) {
-        api.uiEvents.postEvent("BannerEvent", data: eventData)
     }
     
     func onDone(eventData : BannerEventData) {
-        api.uiEvents.postEvent("BannerEvent", data: eventData)
     }
 }

@@ -104,7 +104,7 @@ public class RemoteInvocation {
         if (progress != nil) { progress!.onArgumentsFinish(makeRequest) }
         if makeRequest {
             if (progress != nil) { progress!.onRequestStart(UtilsTime.current()) }
-            var response = api.postURLResponse(requestUrl, parameters: parameters)
+            var response = api.postURLResponse(requestUrl!, parameters: parameters)
             var tag : Tag? = nil
             if (response.getStatusLine().statusCode != 200) {
                 if (progress != nil) { progress!.onRequestIOError(response.getStatusLine()) }

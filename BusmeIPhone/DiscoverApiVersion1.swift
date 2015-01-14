@@ -12,9 +12,13 @@ public class DiscoverApiVersion1 : DiscoverApi {
     public var initialUrl : String
     public var discoverUrl : String?
     public var masterUrl : String?
+    public var uiEvents : BuspassEventDistributor
+    public var bgEvents : BuspassEventDistributor
     
     public init(httpClient : HttpClient, initialUrl : String) {
         self.initialUrl = initialUrl
+        self.uiEvents = BuspassEventDistributor(name: "UIEvents(Search)")
+        self.bgEvents = BuspassEventDistributor(name: "BGEvents(Search)")
         super.init(httpClient: httpClient)
     }
     
@@ -37,7 +41,7 @@ public class DiscoverApiVersion1 : DiscoverApi {
     
     public override func discover(lon : Double, lat : Double, buffer : Double) -> (HttpStatusLine, [Master]){
         var masters = [Master]();
-        let url = "\(discoverUrl)?lon=\(lon)&lat=\(lat)&buf=\(buffer)"
+        let url = "\(discoverUrl!)?lon=\(lon)&lat=\(lat)&buf=\(buffer)"
         let response = getURLResponse(url)
         let status = response.getStatusLine()
         if status.statusCode == 200 {
@@ -59,7 +63,7 @@ public class DiscoverApiVersion1 : DiscoverApi {
     }
     
     public override func findMaster(slug : String) -> (HttpStatusLine, Master?) {
-        let url = "\(masterUrl)?slug=\(slug)"
+        let url = "\(masterUrl!)?slug=\(slug)"
         let response = getURLResponse(url)
         let status = response.getStatusLine()
         if (status.statusCode == 200) {

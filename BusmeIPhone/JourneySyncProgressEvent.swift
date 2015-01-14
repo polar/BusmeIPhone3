@@ -77,6 +77,7 @@ public class JourneySyncProgressListener : ProgressListener, OnIOErrorListener {
         eventData.syncEndTime = UtilsTime.current()
         api.uiEvents.postEvent("JourneySyncProgress", data: eventData.dup())
     }
+    
     public func onRouteStart(iRoute: Int) {
         eventData.action = JourneySyncProgressEvent.P_ROUTE_START
         eventData.iRoute = iRoute

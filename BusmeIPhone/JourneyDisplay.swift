@@ -95,9 +95,15 @@ public class JourneyDisplay {
     public func isNameHighlighted() -> Bool {
         return nameHighlighted
     }
+    public func setNameHighlighted( value : Bool) {
+        self.nameHighlighted = value
+    }
     
     public func isPathHighlighted() -> Bool {
         return pathHighlighted
+    }
+    public func setPathHighlighted( value : Bool) {
+        self.pathHighlighted = value
     }
     
     public func hasActiveJourneys() -> Bool {

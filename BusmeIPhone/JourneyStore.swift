@@ -12,8 +12,8 @@ public class JourneyStore : Storage {
     
     public var journeys : [String:Route] = [String:Route]()
     public var patterns : [String:JourneyPattern] = [String:JourneyPattern]()
-
-    func initWithCoder( coder : NSCoder) {
+    
+    public override func initWithCoder( coder : NSCoder) {
         let journeys = coder.decodeObjectForKey("journeys") as? [String:Route]
         if journeys != nil {
             self.journeys = journeys!

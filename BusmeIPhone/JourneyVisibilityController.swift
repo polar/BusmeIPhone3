@@ -139,20 +139,20 @@ public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJo
     public func highlight(display : JourneyDisplay) {
         if display.route.isRouteDefinition() {
             for jd in display.getActiveJourneys() {
-                jd.nameHighlighted = true
-                jd.pathHighlighted = true
+                jd.setNameHighlighted(true)
+                jd.setPathHighlighted(true)
                 journeysHighlighted.append(jd)
             }
         }
-        display.nameHighlighted = true
-        display.pathHighlighted = true
+        display.setNameHighlighted(true)
+        display.setPathHighlighted(true)
         journeysHighlighted.append(display)
     }
     
     public func unhighlightAll() {
         for display in journeysHighlighted {
-            display.nameHighlighted = false
-            display.pathHighlighted = false
+            display.setNameHighlighted(false)
+            display.setPathHighlighted(false)
         }
         self.journeysHighlighted = [JourneyDisplay]()
     }

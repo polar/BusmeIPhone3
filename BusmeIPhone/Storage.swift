@@ -8,7 +8,18 @@
 
 import Foundation
 
-public class Storage : StorageProtocol {
+public class Storage : NSObject, StorageProtocol {
+    
+    override init() {
+        super.init()
+    }
+    
+    init(coder : NSCoder) {
+        super.init()
+        initWithCoder(coder)
+    }
+
+    public func initWithCoder(coder : NSCoder) {}
     
     public func preSerialize(api : ApiBase, time : TimeValue64) {
         
@@ -19,7 +30,7 @@ public class Storage : StorageProtocol {
     }
 }
 
-public protocol StorageProtocol {
+public protocol StorageProtocol : class  {
     func preSerialize(api : ApiBase, time : TimeValue64)
     func postSerialize(api : ApiBase, time : TimeValue64)
 }

@@ -11,7 +11,7 @@ import Foundation
 public class MasterController : BuspassEventListener {
     public var api : BuspassApi
     public var master : Master
-    public var mainController : MainController
+    public var mainController : MainController?
     
     public var directory : String?
     public var bannerBasket : BannerBasket
@@ -43,7 +43,7 @@ public class MasterController : BuspassEventListener {
     
     
     
-    public init(api : BuspassApi, master: Master, mainController : MainController) {
+    public init(api : BuspassApi, master: Master, mainController : MainController?) {
         self.api = api
         self.master = master
         self.mainController = mainController
@@ -73,6 +73,7 @@ public class MasterController : BuspassEventListener {
         self.loginBackground = LoginBackground(api: api)
         
         self.updateRemoteInvocation = UpdateRemoteInvocation(api: api, bannerBasket: bannerBasket, markerBasket: markerBasket, masterMessageBasket: masterMessageBasket, journeyDisplayController: journeyDisplayController)
+        
         registerForEvents()
     }
 
@@ -90,5 +91,9 @@ public class MasterController : BuspassEventListener {
         api.bgEvents.unregisterForEvent("Master:store", listener: self)
         api.bgEvents.unregisterForEvent("Master:resetSeenMarkers", listener: self)
         api.bgEvents.unregisterForEvent("Master:resetSeenMessages", listener: self)
+    }
+    
+    public func onBuspassEvent(event: BuspassEvent) {
+        
     }
 }

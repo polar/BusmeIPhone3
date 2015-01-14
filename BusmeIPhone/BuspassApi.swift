@@ -296,21 +296,21 @@ public class BuspassApi : ApiBase {
         }
     }
     
-    public func postJourneyLocation(location : PostLocation, role : String) -> (HttpStatusLine, String?) {
+    public func postJourneyLocation(ploc : PostLocation, role : String) -> (HttpStatusLine, String?) {
         if isReady() {
             let postJourneyLocationUrl = buspass!.postJourneyLocationUrl
             if postJourneyLocationUrl != nil {
                 let query = getDefaultQuery()
                 let url = postJourneyLocationUrl! + query.toString()
                 var params = [String:[String]]()
-                params["lon"] = ["\(location.lon)"]
-                params["lat"] = ["\(location.lat)"]
-                params["id"]  = ["\(location.journey.id)"]
-                params["dir"] = ["\(location.bearing)"]
+                params["lon"] = ["\(ploc.location.longitude)"]
+                params["lat"] = ["\(ploc.location.latitude)"]
+                params["id"]  = ["\(ploc.journey.id)"]
+                params["dir"] = ["\(ploc.location.bearing)"]
                 
-                params["reported_time"] = ["\(location.time)"]
+                params["reported_time"] = ["\(ploc.location.time)"]
                 
-                params["speed"] = ["\(location.speed)"]
+                params["speed"] = ["\(ploc.location.speed)"]
                 if role == "driver" {
                     params["driver"] = ["1"]
                 }

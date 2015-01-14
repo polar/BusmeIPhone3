@@ -32,9 +32,9 @@ public class StoageSerializeController {
         if externalStorageController.isAvailable() {
             if externalStorageController.isWriteable() {
                 storage.preSerialize(api, time: UtilsTime.current())
-                externalStorageController.serializeObjectToFile(storage, file: filename)
+                let result = externalStorageController.serializeObjectToFile(storage, file: filename)
                 storage.postSerialize(api, time: UtilsTime.current())
-                return true
+                return result
             }
 
         }

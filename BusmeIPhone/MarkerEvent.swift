@@ -82,7 +82,7 @@ public class MarkerForeground : BuspassEventListener {
     
     func onPresent(eventData : MarkerEventData) {
         eventData.markerInfo.onDisplay(UtilsTime.current())
-        // The MarkerPresentationController should listening to this event as well and present
+        api.uiEvents.postEvent("MarkerPresent:display", data: eventData)
     }
     
     // From the Marker click, MarkerPresentationController sends this event.

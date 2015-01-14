@@ -75,7 +75,7 @@ public struct JourneyDisplayUtils {
         return (selected, unselected)
     }
     
-    public func hitsRouteLocator(journeyDisplays : [JourneyDisplay], touchPoint : [Point], locatorRect : Rect, projection : Projection) -> JourneyDisplay? {
+    public func hitsRouteLocator(journeyDisplays : [JourneyDisplay], touchPoint : Point, locatorRect : Rect, projection : Projection) -> JourneyDisplay? {
         for journeyDisplay in journeyDisplays {
             if journeyDisplay.isPathVisible() {
                 if journeyDisplay.route.isJourney() {

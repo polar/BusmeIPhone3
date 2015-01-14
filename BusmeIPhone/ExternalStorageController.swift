@@ -35,10 +35,10 @@ public class ExternalStorageController {
     public func getDirectory() -> String {
         return directory
     }
-    public func serializeObjectToFile(store: Storage, file : String) {
-        
+    public func serializeObjectToFile(store: Storage, file : String) -> Bool {
+        return NSKeyedArchiver.archiveRootObject(store, toFile: file)
     }
     public func deserializeObjectFromFile(store: Storage, file :String) -> Storage? {
-        return store
+        return NSKeyedUnarchiver.unarchiveObjectWithFile(file) as? Storage
     }
 }

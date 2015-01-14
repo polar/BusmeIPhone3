@@ -54,7 +54,7 @@ public class Route : Storage {
     
     public var journeyStore : JourneyStore?
     
-    public func initWithCoder(coder : NSCoder) -> Route {
+    public override func initWithCoder(coder : NSCoder) {
         self.name = coder.decodeObjectForKey("name") as? String
         self.type = coder.decodeObjectForKey("type") as? String
         self.id = coder.decodeObjectForKey("id") as? String
@@ -88,7 +88,6 @@ public class Route : Storage {
         self.onRoute = coder.decodeBoolForKey("onRoute")
         self.timeZone = coder.decodeObjectForKey("timeZone") as? String
         self.reported = coder.decodeBoolForKey("reported")
-        return self
     }
     
     public func encodeWithCoder(coder : NSCoder) -> Route {

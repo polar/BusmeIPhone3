@@ -10,15 +10,34 @@ import UIKit
 import CoreData
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
-        let tabBarController = self.window!.rootViewController as UITabBarController
-        let navigationController = tabBarController.navigationController
+        
+        self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        window?.makeKeyAndVisible()
+        
+        
+        let mainViewController = UIViewController()
+        
+        let navigationController = UINavigationController(rootViewController: mainViewController)
+        window!.rootViewController = navigationController
+        
+        let httpClient = HttpClient(queue: GlobalBackgroundQueue)
+        let dapi = DiscoverApiVersion1(httpClient: httpClient, initialUrl: "http://busme-apis.herokuapp.com/apis/d1/get")
+        dapi.get()
+        let (status, master) = dapi.findMaster("syracuse-university")
+        if (master != nil) {
+            let api = BuspassApi(httpClient: httpClient, url: master!.apiUrl!, masterSlug: master!.slug!, appVersion: "1.0.0", platformName: "iPhone")
+            let masterController = MasterController(api: api, master: master!, mainController: nil)
+            let masterMapScreen = MasterMapScreen(masterController: masterController)
+            navigationController.pushViewController(masterMapScreen, animated: true)
+        }
+        
         return true
     }
 
@@ -45,20 +64,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // Saves changes in the application's managed object context before the application terminates.
         self.saveContext()
     }
-
-    // MARK: - Split view
-
-    func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController:UIViewController!, ontoPrimaryViewController primaryViewController:UIViewController!) -> Bool {
-        if let secondaryAsNavController = secondaryViewController as? UINavigationController {
-            if let topAsDetailController = secondaryAsNavController.topViewController as? DetailViewController {
-                if topAsDetailController.detailItem == nil {
-                    // Return true to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
-                    return true
-                }
-            }
-        }
-        return false
-    }
+    
     // MARK: - Core Data stack
 
     lazy var applicationDocumentsDirectory: NSURL = {

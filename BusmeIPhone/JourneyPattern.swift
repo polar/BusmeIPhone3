@@ -19,6 +19,7 @@ public class JourneyPattern : Storage {
     public var nameid : NameId?
     
     public init(id : String) {
+        super.init()
         self.id = id
     }
     
@@ -27,7 +28,7 @@ public class JourneyPattern : Storage {
         loadParsedXML(tag)
     }
     
-    func initWithCoder(decoder: NSCoder) -> Void {
+    public override func initWithCoder(decoder: NSCoder) -> Void {
         self.id = decoder.decodeObjectForKey("id") as String;
         self.nameid = decoder.decodeObjectForKey("nameid") as? NameId
         let ps = decoder.decodeObjectForKey("path") as? [GeoPointImpl]
