@@ -9,7 +9,7 @@
 import Foundation
 import CoreLocation
 
-public class BuspassApi : ApiBase {
+public class BuspassApi : ApiBase, EventsApi {
     public var apiURL : String
     public var master_slug : String
     public var appVersion : String
@@ -34,8 +34,8 @@ public class BuspassApi : ApiBase {
         self.master_slug = masterSlug
         self.appVersion = appVersion
         self.platformName = platformName
-        self.uiEvents = BuspassEventDistributor(name: "UIEvents\(masterSlug)")
-        self.bgEvents = BuspassEventDistributor(name: "BGEvents\(masterSlug)")
+        self.uiEvents = BuspassEventDistributor(name: "UIEvents(\(masterSlug))")
+        self.bgEvents = BuspassEventDistributor(name: "BGEvents(\(masterSlug))")
         super.init(httpClient: httpClient)
         self.loginManager = LoginManager(api: self)
     }

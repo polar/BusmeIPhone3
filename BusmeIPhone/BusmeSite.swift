@@ -10,7 +10,11 @@ import Foundation
 import CoreLocation
 import MapKit
 
-class BusmeSite : NSObject, MKOverlay {
+@objc protocol BusmeSite  {
+    var myPolygon : MKPolygon { get }
+}
+
+class BusmeSiteImpl : NSObject, MKOverlay, BusmeSite {
     var master : Master
     
     init(master : Master) {
@@ -40,12 +44,17 @@ class BusmeSite : NSObject, MKOverlay {
     }()
     
     lazy var boundingMapRect : MKMapRect = {
+        // MKMapRect is lower left oriented.
         let bbox = self.master.bbox!
-        let nw = MKMapPointForCoordinate(CLLocationCoordinate2D(latitude: bbox.north(), longitude: bbox.west()))
-        let se = MKMapPointForCoordinate(CLLocationCoordinate2D(latitude: bbox.south(), longitude: bbox.east()))
-        let lonDelta = abs(nw.x - se.x)
-        let latDelta = abs(nw.y - se.y)
-        return MKMapRect(origin: nw, size: MKMapSize(width: lonDelta, height: latDelta))
+        let sw = MKMapPointForCoordinate(CLLocationCoordinate2D(latitude: bbox.south(), longitude: bbox.west()))
+        let ne = MKMapPointForCoordinate(CLLocationCoordinate2D(latitude: bbox.north(), longitude: bbox.east()))
+        let m1 = MKMapRect(origin: sw, size: MKMapSize(width: 0, height: 0))
+        let m2 = MKMapRect(origin: ne, size: MKMapSize(width: 0, height: 0))
+        return MKMapRectUnion(m1, m2)
+        //let lonDelta = ne.x - sw.x
+        //let latDelta = ne.y - sw.y
+        //return MKMapRectMake(sw.x, ne.y, lonDelta, latDelta)
+        //return MKMapRect(origin: sw, size: MKMapSize(width: lonDelta, height: latDelta))
     }()
     
     func intersectsWithRect(mapRect : MKMapRect) -> Bool {

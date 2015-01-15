@@ -20,6 +20,12 @@ extension CLLocationCoordinate2D : GeoPoint {
     public func getLongitude() -> Double {
         return longitude
     }
+    public func getX() -> Double  {
+        return longitude
+    }
+    public func getY() -> Double{
+        return latitude
+    }
 }
 
 extension CGPoint : PointMutable {

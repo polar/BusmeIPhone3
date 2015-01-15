@@ -45,7 +45,9 @@ public class JourneyPostingController : BuspassEventListener {
                 evd.reason = JourneyEvent.R_NOT_AVAILABLE
                 api.bgEvents.postEvent("JourneyStopPosting", data: evd)
             } else if (response == "notloggedin") {
-                api.uiEvents.postEvent("ServerLogout")
+                // TODO: This is wrong!
+                let eventData = MainEventData()
+                api.uiEvents.postEvent("ServerLogout", data: eventData)
             }
         }
     }

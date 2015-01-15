@@ -10,7 +10,7 @@ import Foundation
 import Alamofire
 
 public class HttpClient {
-    private var queue: dispatch_queue_t?
+    public var queue: dispatch_queue_t?
     private var sem : dispatch_semaphore_t = dispatch_semaphore_create(0)
     private var entry : dispatch_semaphore_t = dispatch_semaphore_create(1)
     private var response: HttpResponse?

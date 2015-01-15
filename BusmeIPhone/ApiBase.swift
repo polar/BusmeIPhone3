@@ -9,7 +9,7 @@
 import Foundation;
 
 public class ApiBase {
-    var httpClient: HttpClient
+    public var httpClient: HttpClient
     
     public init(httpClient: HttpClient) {
         self.httpClient = httpClient

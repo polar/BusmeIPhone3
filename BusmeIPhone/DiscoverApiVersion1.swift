@@ -12,13 +12,9 @@ public class DiscoverApiVersion1 : DiscoverApi {
     public var initialUrl : String
     public var discoverUrl : String?
     public var masterUrl : String?
-    public var uiEvents : BuspassEventDistributor
-    public var bgEvents : BuspassEventDistributor
     
     public init(httpClient : HttpClient, initialUrl : String) {
         self.initialUrl = initialUrl
-        self.uiEvents = BuspassEventDistributor(name: "UIEvents(Search)")
-        self.bgEvents = BuspassEventDistributor(name: "BGEvents(Search)")
         super.init(httpClient: httpClient)
     }
     

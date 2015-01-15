@@ -8,25 +8,28 @@
 
 import Foundation
 import CoreLocation
+import CoreGraphics
 import UIKit
 import MapKit
 
 class BusmeSiteView : MKOverlayRenderer {
     
-    lazy var diagonalDistance = {
+    lazy var diagonalDistance : Double = {
         let brect = self.overlay.boundingMapRect
         let se = MKMapPointMake(brect.origin.x + brect.size.width,
             brect.origin.y + brect.size.height)
         let distance = MKMetersBetweenMapPoints(brect.origin, se)
         return distance
     }()
-    
+
+    override func drawMapRect(mapRect: MKMapRect, zoomScale: MKZoomScale, inContext context: CGContext!) {
+        drawSiteGraphic(mapRect, zoomscale: zoomScale, context: context)
+    }
     
     func drawSiteGraphic(mapRect : MKMapRect, zoomscale: MKZoomScale, context: CGContextRef) {
         let mpoint = MKMapPointForCoordinate(overlay.coordinate)
         let cgpoint = pointForMapPoint(mpoint)
-        let zoomlevel = pow(2,zoomscale)
-        let p = MKMapProjection(renderer: self, zoom: Int(zoomlevel), rect: mapRect)
+        let p = MKMapProjection(renderer: self, zoomScale: zoomscale, mapRect: mapRect)
         let cgrect = rectForMapRect(overlay.boundingMapRect)
         CGContextSaveGState(context)
         CGContextSetLineWidth(context, 2.0/zoomscale)
@@ -39,12 +42,13 @@ class BusmeSiteView : MKOverlayRenderer {
         } else {
             let dist = cgrect.size.height * zoomscale * cgrect.size.height * zoomscale + cgrect.size.width * zoomscale * cgrect.size.width * zoomscale
             let radius = sqrt(dist)
-            let mradius = [200.0, [10.0, radius].max].min
+            let mradius = min(200.0, max(10.0, radius))
             let boxwidth = mradius/zoomscale
-            let mrect = CGRect(cgpoint.x - boxwidth/2, cgpoint.y - boxwidth/2, boxwidth, boxwidth)
+            let mrect = CGRect(x: cgpoint.x - boxwidth/2, y: cgpoint.y - boxwidth/2, width: boxwidth, height: boxwidth)
             CGContextFillEllipseInRect(context, mrect)
             CGContextStrokeEllipseInRect(context, mrect)
         }
+        CGContextRestoreGState(context)
     }
 
 }

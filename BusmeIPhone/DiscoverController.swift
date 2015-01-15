@@ -21,6 +21,7 @@ public class DiscoverController : BuspassEventListener {
     public init(mainController : MainController) {
         self.mainController = mainController
         self.api = mainController.api
+        registerForEvents()
     }
     
     func registerForEvents() {
@@ -39,7 +40,7 @@ public class DiscoverController : BuspassEventListener {
     
     public func onBuspassEvent(event: BuspassEvent) {
         let eventData = event.eventData as? DiscoverEventData
-        if eventData == nil {
+        if eventData != nil {
             if event.eventName == "Search.init" {
                 onSearchInitEvent(eventData!)
             } else if event.eventName == "Search:discover" {

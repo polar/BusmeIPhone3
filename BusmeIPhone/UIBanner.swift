@@ -57,13 +57,13 @@ public class UIBanner : UIViewController {
             textView.text = bannerInfo.title
         }
         if bannerInfo.iconUrl != nil {
-            dispatch_async(GlobalUserInitiatedQueue, {
+            dispatch_async(api!.httpClient.queue!, {
                 let url = NSURL(string: self.bannerInfo.iconUrl!)
                 if url != nil {
                     let data = NSData(contentsOfURL: url!)
                     if (data != nil) {
                         let uiImage : UIImage = UIImage(data: data!)!
-                        dispatch_async(GlobalMainQueue, {
+                        dispatch_async(dispatch_get_main_queue(), {
                             self.imageView.image = uiImage
                             self.imageView.sizeThatFits(CGSize(width: uiImage.size.width, height: uiImage.size.height))
                         })

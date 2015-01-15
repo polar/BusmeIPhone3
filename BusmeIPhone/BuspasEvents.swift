@@ -87,11 +87,6 @@ public class BuspassEventDistributor {
             postEventListener!.onPostEvent(event);
         }
     }
-
-    public func postEvent(eventName : String) {
-        let event = BuspassEvent(name: eventName, data: nil)
-        postBuspassEvent(event)
-    }
     
     public func postEvent(eventName : String, data : AnyObject) {
         let event = BuspassEvent(name: eventName, data: data)
@@ -107,15 +102,18 @@ public class BuspassEventDistributor {
     }
     
     public func roll() -> BuspassEvent? {
-        let event : BuspassEvent? = self.eventQ.removeLast();
-        if (event != nil) {
-            let notifier = eventNotifiers[event!.eventName]
-            if (notifier != nil) {
-                notifier!.notifyEventListeners(event!)
+        // fatal error: cannot remove last from empty array.
+        if self.eventQ.count > 0 {
+            let event : BuspassEvent? = self.eventQ.removeLast();
+            if (event != nil) {
+                let notifier = eventNotifiers[event!.eventName]
+                if (notifier != nil) {
+                    notifier!.notifyEventListeners(event!)
+                }
+                return event!
             }
-            return event!
         }
-        return event
+        return nil
     }
     
     public func rollAll() {

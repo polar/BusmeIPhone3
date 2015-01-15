@@ -55,8 +55,9 @@ public class Projection {
 public class MKMapProjection : Projection {
     public var renderer : MKOverlayRenderer
     
-    public init(renderer: MKOverlayRenderer, zoom: Int, mapRect: MKMapRect) {
+    public init(renderer: MKOverlayRenderer, zoomScale: MKZoomScale, mapRect: MKMapRect) {
         self.renderer = renderer
+        let zoom = 22 + Int(log(zoomScale))  // MAX_ZOOM_LEVEL - -log(zoomScale)
         super.init(zoom: zoom, rect: Rect(mapRect: mapRect))
     }
     

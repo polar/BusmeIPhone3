@@ -67,8 +67,8 @@ public class MainController : BuspassEventListener {
                 let loc = configurator.getLastLocation()
                 if loc != nil {
                     eventData.location = loc!
-                    eventData.returnStatus = "Discover"
                 }
+                eventData.returnStatus = "Discover"
             }
         }
         api.uiEvents.postEvent("Main:Init:return", data: eventData)
@@ -81,7 +81,7 @@ public class MainController : BuspassEventListener {
             oldDiscoverController.unregisterForEvents()
         }
         eventData.returnStatus = "DiscoverReady"
-        api.uiEvents.postEvent("Main:Discover:Init:return")
+        api.uiEvents.postEvent("Main:Discover:Init:return", data: eventData)
     }
     
     func onMasterInit(eventData : MainEventData) {
@@ -97,6 +97,6 @@ public class MainController : BuspassEventListener {
             configurator.saveAsDefaultMaster(eventData.master!)
         }
         eventData.returnStatus = "MasterReady"
-        api.uiEvents.postEvent("Main:Master:Init:return")
+        api.uiEvents.postEvent("Main:Master:Init:return", data: eventData)
     }
 }

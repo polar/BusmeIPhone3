@@ -55,9 +55,6 @@
                <Test
                   Identifier = "BusmeIPhoneTests">
                </Test>
-               <Test
-                  Identifier = "HttpClientTest">
-               </Test>
             </SkippedTests>
          </TestableReference>
       </Testables>

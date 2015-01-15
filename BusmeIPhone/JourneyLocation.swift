@@ -43,7 +43,12 @@ public class JourneyLocation : GeoPoint {
     public func getLongitude() -> Double {
         return lon
     }
-    
+    public func getX() -> Double {
+        return lon
+    }
+    public func getY() -> Double {
+        return lat
+    }
     public func loadParsedXMLTag(tag : Tag) {
         self.routeId = tag.attributes["id"]
         self.lat = (tag.attributes["lat"]! as NSString).doubleValue

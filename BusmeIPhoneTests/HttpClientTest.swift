@@ -36,8 +36,13 @@ class HttpClientTest: XCTestCase {
         // This is an example of a functional test case.
         XCTAssert(true, "Pass")
         let response: HttpResponse = self.api!.getURLResponse(initialURL);
-        XCTAssert(response.getStatusLine().statusCode == 200, "Pass");
-        XCTAssert(response.getEntity()!.getContent() == "<API version='d1' discover='http://busme-apis.herokuapp.com/apis/d1/discover' master='http://busme-apis.herokuapp.com/apis/d1/master'/>", "Did not get right API structure");
+        XCTAssert(response.getStatusLine().statusCode == 200, "Did not Pass");
+        XCTAssert(response.getEntity() != nil, "No Entity")
+        if (response.getEntity() == nil) {
+            return
+        }
+
+        XCTAssert(response.getEntity()?.getContent() == "<API version='d1' discover='http://busme-apis.herokuapp.com/apis/d1/discover' master='http://busme-apis.herokuapp.com/apis/d1/master'/>", "Did not get right API structure");
     }
     func testArray() {
         NSLog("Starting testing testArray");
@@ -51,13 +56,23 @@ class HttpClientTest: XCTestCase {
     func testXMLParse1() {
         let response: HttpResponse = self.api!.getURLResponse(initialURL);
         XCTAssert(response.getStatusLine().statusCode == 200, "Pass");
+        XCTAssert(response.getEntity() != nil, "No Entity")
+        if (response.getEntity() == nil) {
+            return
+        }
+
         XCTAssert(response.getEntity()!.getContent() == "<API version='d1' discover='http://busme-apis.herokuapp.com/apis/d1/discover' master='http://busme-apis.herokuapp.com/apis/d1/master'/>", "Did not get right API structure");
     }
     
     func testXMLParse() {
         let response: HttpResponse = self.api!.getURLResponse(initialURL);
         XCTAssert(response.getStatusLine().statusCode == 200, "Pass");
-        XCTAssert(response.getEntity()!.getContent() == "<API version='d1' discover='http://busme-apis.herokuapp.com/apis/d1/discover' master='http://busme-apis.herokuapp.com/apis/d1/master'/>", "Did not get right API structure");
+        XCTAssert(response.getEntity() != nil, "No Entity")
+        if (response.getEntity() == nil) {
+            return
+        }
+
+        XCTAssert(response.getEntity()?.getContent() == "<API version='d1' discover='http://busme-apis.herokuapp.com/apis/d1/discover' master='http://busme-apis.herokuapp.com/apis/d1/master'/>", "Did not get right API structure");
         let tag = self.api!.xmlParse(response.getEntity());        XCTAssertNotNil(tag, "Tag empty");
         XCTAssertEqual(tag!.name, "API", "Not right tag");
         let version = tag!.attributes["version"];
@@ -68,7 +83,11 @@ class HttpClientTest: XCTestCase {
     func testXMLParseStructure() {
         let response: HttpResponse = self.api!.getURLResponse(initialURL);
         XCTAssert(response.getStatusLine().statusCode == 200, "Pass");
-        XCTAssert(response.getEntity()!.getContent() == "<API version='d1' discover='http://busme-apis.herokuapp.com/apis/d1/discover' master='http://busme-apis.herokuapp.com/apis/d1/master'/>", "Did not get right API structure");
+        XCTAssert(response.getEntity() != nil, "No Entity")
+        if (response.getEntity() == nil) {
+            return
+        }
+        XCTAssert(response.getEntity()?.getContent() == "<API version='d1' discover='http://busme-apis.herokuapp.com/apis/d1/discover' master='http://busme-apis.herokuapp.com/apis/d1/master'/>", "Did not get right API structure");
         let tag = self.api!.xmlParse(response.getEntity());
         let url = tag!.attributes["master"];
         let query = "\(url!)?slug=syracuse-university";

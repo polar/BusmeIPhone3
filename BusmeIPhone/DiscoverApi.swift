@@ -8,11 +8,16 @@
 
 import Foundation
 
-public class DiscoverApi : ApiBase {
+public class DiscoverApi : ApiBase, EventsApi {
+    public var uiEvents : BuspassEventDistributor
+    public var bgEvents : BuspassEventDistributor
     
     public override init(httpClient : HttpClient) {
+        self.uiEvents = BuspassEventDistributor(name: "UIEvents(Search)")
+        self.bgEvents = BuspassEventDistributor(name: "BGEvents(Search)")
         super.init(httpClient: httpClient)
     }
+    
     public func get() -> (HttpStatusLine, DiscoverApi?)  {
         return (HttpStatusLine(statusCode: 500, reasonPhrase: "Not initialized"),nil);
     }

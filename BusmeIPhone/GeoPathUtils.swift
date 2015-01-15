@@ -30,11 +30,11 @@ public class BoundingBox {
     public var southE6 : Int = 0
     
     
-    public init(array: [String]) {
-        setNorth((array[0] as NSString).doubleValue)
-        setEast((array[1] as NSString).doubleValue)
+    public init(array: [String]) { // E, S, W, N
+        setEast((array[0] as NSString).doubleValue)
+        setSouth((array[1] as NSString).doubleValue)
         setWest((array[2] as NSString).doubleValue)
-        setSouth((array[3] as NSString).doubleValue)
+        setNorth((array[3] as NSString).doubleValue)
     }
 
     public init(north: Double, east: Double, west: Double, south : Double) {
@@ -55,6 +55,10 @@ public class BoundingBox {
         return GeoRect(left: west(), top: north(), right: east(), bottom: south())
     }
     
+    public init( coder : NSCoder) {
+        initWithCoder(coder)
+    }
+    
     func initWithCoder( coder : NSCoder) {
         self.eastE6 = Int(coder.decodeIntForKey("eastE6"))
         self.westE6 = Int(coder.decodeIntForKey("westE6"))
@@ -70,35 +74,35 @@ public class BoundingBox {
     }
     
     public func east() -> Double {
-        return Double(eastE6) * 1E6
+        return Double(eastE6) / 1E6
     }
     
     public func west() -> Double {
-        return Double(westE6) * 1E6
+        return Double(westE6) / 1E6
     }
     
     public func north() -> Double {
-        return Double(northE6) * 1E6
+        return Double(northE6) / 1E6
     }
     
     public func south() -> Double {
-        return Double(southE6) * 1E6
+        return Double(southE6) / 1E6
     }
     
     public func setEast(x :Double) {
-        self.eastE6 = Int(x/1E6)
+        self.eastE6 = Int(x*1E6)
     }
     
     public func setWest(x :Double) {
-        self.eastE6 = Int(x/1E6)
+        self.westE6 = Int(x*1E6)
     }
     
     public func setNorth(x :Double) {
-        self.eastE6 = Int(x/1E6)
+        self.northE6 = Int(x*1E6)
     }
     
     public func setSouth(x :Double) {
-        self.eastE6 = Int(x/1E6)
+        self.southE6 = Int(x*1E6)
     }
     
     public func setEastE6(x :Int) {
@@ -106,15 +110,15 @@ public class BoundingBox {
     }
     
     public func setWestE6(x :Int) {
-        self.eastE6 = x
+        self.westE6 = x
     }
     
     public func setNorthE6(x :Int) {
-        self.eastE6 = x
+        self.northE6 = x
     }
     
     public func setSouthE6(x :Int) {
-        self.eastE6 = x    }
+        self.southE6 = x    }
 }
 
 public class GeoPointImpl : GeoPointMutable {

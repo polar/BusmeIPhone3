@@ -12,24 +12,54 @@ import CoreData
 let INITIAL_URL = "http://busme-apis.herokuapp.com/apis/d1/get"
 let APP_PLATFORM = "iOS"
 
-class RestartOnCancel : UIResponder, UIAlertViewDelegate {
-    var api : DiscoverApiVersion1
-    var eventName : String
-    var eventData : AnyObject?
+class ErrorDialogRestartOnCancel : UIResponder, UIAlertViewDelegate {
+    var dialog : UIAlertView
+    var duration : Int = 2
+    var restartDelay : Int = 2
     
-    init(api : DiscoverApiVersion1, eventName : String, eventData : AnyObject? = nil) {
-        self.api = api
-        self.eventName = eventName
-        self.eventData = eventData
+    init(dialog : UIAlertView, duration : Int) {
+        self.dialog = dialog
+        self.duration = duration
+        super.init()
+        self.dialog.delegate = self
+    }
+    
+    func show() {
+        dialog.show()
+        NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(duration),
+            target: self,
+            selector: "dismissDialog",
+            userInfo: nil,
+            repeats: false)
+    }
+    
+    func dismissDialog() {
+        dialog.dismissWithClickedButtonIndex(0, animated: true)
+    }
+    
+    var completion : (() -> Void)?
+    
+    func setOnCancel(restartDelay: Int, completion: () -> Void) {
+        self.restartDelay = restartDelay
+        self.completion = completion
     }
     
     func alertView(alertView: UIAlertView, willDismissWithButtonIndex buttonIndex: Int) {
         if buttonIndex == 0 {
-            NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(2), target: self, selector: "restart:", userInfo: nil, repeats: false)
+            if (completion != nil) {
+                NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(restartDelay),
+                    target: self,
+                    selector: "restart",
+                    userInfo: nil,
+                    repeats: false)
+            }
         }
     }
+    
     func restart() {
-        api.uiEvents.postEvent(eventName, data: eventData!)
+        if completion != nil {
+            completion!()
+        }
     }
 }
 
@@ -42,6 +72,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
     var navigationController : UINavigationController!
     var mainController : MainController?
     var httpClient : HttpClient?
+    
+    var eventsController : EventsController = EventsController()
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -56,19 +88,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
         self.navigationController = UINavigationController(rootViewController: mainViewController)
         window!.rootViewController = navigationController
         
-        self.httpClient = HttpClient(queue: GlobalBackgroundQueue)
+        var httpQ : dispatch_queue_t = dispatch_queue_create("http", DISPATCH_QUEUE_SERIAL);
+    
+        self.httpClient = HttpClient(queue: httpQ)
         self.api = DiscoverApiVersion1(httpClient: httpClient!, initialUrl: INITIAL_URL)
         self.mainController = MainController(configurator: configurator, discoverApi: api)
         
         registerForEvents()
         
-        let eventData = MainEventData()
-        eventData.dialog = searchDialog("Contacting Bus Server", message: "")
-        api.uiEvents.postEvent("Main:init", data: eventData)
+        contactBusServer()
         return true
     }
     
+    func contactBusServer() {
+        let eventData = MainEventData()
+        eventData.dialog = searchDialog("Contacting Bus Server", message: "")
+        eventData.dialog!.show()
+        api.bgEvents.postEvent("Main:init", data: eventData)
+    }
+    
     func registerForEvents() {
+        eventsController.register(api)
         api.uiEvents.registerForEvent("Main:Init:return", listener: self)
         api.uiEvents.registerForEvent("Main:Discover:Init:return", listener: self)
         api.uiEvents.registerForEvent("Main:Master:Init:return", listener: self)
@@ -76,7 +116,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
     
     func searchDialog(title : String, message : String) -> UIAlertView {
         let dialog =  UIAlertView(title: title, message: message, delegate: nil, cancelButtonTitle: nil)
-        dialog.show()
         return dialog
     }
     
@@ -92,28 +131,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
         }
     }
     
-    var networkErrorDialog : UIAlertView?
-    
-    func showTemporaryNetworkingError(title: String, message: String) {
-        self.networkErrorDialog = UIAlertView(title: title,
+    func showTemporaryNetworkingError(title: String, message: String, completion: () -> Void) {
+        let networkErrorDialog = UIAlertView(title: title,
             message: message,
             delegate: self,
             cancelButtonTitle: "OK"
         )
-        self.networkErrorDialog?.show()
-        
-        NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(2),
-            target: self,
-            selector: "killNetworkDialog:",
-            userInfo: nil,
-            repeats: false)
+        let errorDialog = ErrorDialogRestartOnCancel(dialog: networkErrorDialog, duration: 2)
+        let eventData = MainEventData()
+        eventData.dialog = networkErrorDialog
+        errorDialog.setOnCancel(10, completion)
+        errorDialog.show()
     }
-    
-    func killNetworkDialog() {
-        self.networkErrorDialog?.dismissWithClickedButtonIndex(0, animated: true)
-        self.networkErrorDialog = nil
-    }
-    
     
     func onMainInitReturn(eventData : MainEventData) {
         if eventData.dialog != nil {
@@ -121,15 +150,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
             eventData.dialog = nil
         }
         if eventData.returnStatus == "Error" {
-            showTemporaryNetworkingError("Network Error", message: eventData.error!.reasonPhrase)
+            showTemporaryNetworkingError("Network Error",
+                message: eventData.error!.reasonPhrase, completion: {
+                    self.contactBusServer()
+            })
         } else if eventData.returnStatus == "Discover" {
             eventData.returnStatus = nil
             api.bgEvents.postEvent("Main:Discover:init", data: eventData)
         } else if eventData.returnStatus == "Master" {
-            eventData.dialog = searchDialog("Welcome", message: eventData.master!.name!)
-            api.bgEvents.postEvent("Main:Master:init", data: eventData)
+            doMasterInit(eventData.master!)
         }
         
+    }
+    
+    func doMasterInit(master : Master) {
+        let eventData = MainEventData()
+        eventData.master = master
+        eventData.dialog = searchDialog("Welcome", message: eventData.master!.name!)
+        api.bgEvents.postEvent("Main:Master:init", data: eventData)
     }
     
     var discoverScreen : DiscoverScreen?
@@ -148,12 +186,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
             eventData.dialog = nil
         }
         if eventData.returnStatus == "Error" {
-            showTemporaryNetworkingError("Network Problem", message: eventData.error!.reasonPhrase)
+            showTemporaryNetworkingError("Network Problem", message: eventData.error!.reasonPhrase, completion: {
+                self.doMasterInit(eventData.master!)
+            })
         } else {
             let master = eventData.master
             if (master != nil) {
+                if mainController?.masterController != nil {
+                    eventsController.unregister(mainController!.masterController!.api)
+                }
                 navigationController.popToRootViewControllerAnimated(true)
                 let bapi = BuspassApi(httpClient: httpClient!, url: master!.apiUrl!, masterSlug: master!.slug!, appVersion: APP_VERSION, platformName: APP_PLATFORM)
+                eventsController.register(bapi)
                 let masterController = MasterController(api: bapi, master: master!, mainController: mainController)
                 let masterMapScreen = MasterMapScreen(masterController: masterController)
                 navigationController.pushViewController(masterMapScreen, animated: true)

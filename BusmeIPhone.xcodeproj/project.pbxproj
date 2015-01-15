@@ -40,7 +40,6 @@
 		F33B69BC1A5C3CD3004C7742 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33B69BB1A5C3CD3004C7742 /* Route.swift */; };
 		F3406A441A65B0AC000C04F4 /* FGBannerPresentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3406A431A65B0AC000C04F4 /* FGBannerPresentController.swift */; };
 		F3406A461A65B3D9000C04F4 /* UIBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3406A451A65B3D9000C04F4 /* UIBanner.swift */; };
-		F3406A481A65C0BE000C04F4 /* CGD.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3406A471A65C0BE000C04F4 /* CGD.swift */; };
 		F3406A4A1A65C8D8000C04F4 /* MasterMapScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3406A491A65C8D8000C04F4 /* MasterMapScreen.swift */; };
 		F3406A561A661DC5000C04F4 /* DiscoverScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3406A551A661DC5000C04F4 /* DiscoverScreen.swift */; };
 		F35E28E81A647CBA004DF0D7 /* MarkerRequestProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35E28E71A647CBA004DF0D7 /* MarkerRequestProcessor.swift */; };
@@ -78,6 +77,8 @@
 		F39802081A5A08A400D6C2B0 /* BuspasEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39802071A5A08A400D6C2B0 /* BuspasEvents.swift */; };
 		F398020A1A5A40FF00D6C2B0 /* MessageSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39802091A5A40FF00D6C2B0 /* MessageSpec.swift */; };
 		F398020C1A5A424200D6C2B0 /* MarkerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F398020B1A5A424200D6C2B0 /* MarkerInfo.swift */; };
+		F3C250381A68135B003B642C /* EventsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C250371A68135B003B642C /* EventsController.swift */; };
+		F3C2503A1A6816AD003B642C /* EventsApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C250391A6816AD003B642C /* EventsApi.swift */; };
 		F3C33CDE1A6627E600EF8E24 /* DiscoverEventData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C33CDD1A6627E600EF8E24 /* DiscoverEventData.swift */; };
 		F3C33CE11A663CAD00EF8E24 /* DiscoverController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C33CE01A663CAD00EF8E24 /* DiscoverController.swift */; };
 		F3C33CE31A663D9200EF8E24 /* MastersTableScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C33CE21A663D9200EF8E24 /* MastersTableScreen.swift */; };
@@ -183,7 +184,6 @@
 		F33B69BB1A5C3CD3004C7742 /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
 		F3406A431A65B0AC000C04F4 /* FGBannerPresentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FGBannerPresentController.swift; sourceTree = "<group>"; };
 		F3406A451A65B3D9000C04F4 /* UIBanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIBanner.swift; sourceTree = "<group>"; };
-		F3406A471A65C0BE000C04F4 /* CGD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGD.swift; sourceTree = "<group>"; };
 		F3406A491A65C8D8000C04F4 /* MasterMapScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterMapScreen.swift; sourceTree = "<group>"; };
 		F3406A551A661DC5000C04F4 /* DiscoverScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverScreen.swift; sourceTree = "<group>"; };
 		F35E28E71A647CBA004DF0D7 /* MarkerRequestProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerRequestProcessor.swift; sourceTree = "<group>"; };
@@ -220,6 +220,8 @@
 		F39802071A5A08A400D6C2B0 /* BuspasEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuspasEvents.swift; sourceTree = "<group>"; };
 		F39802091A5A40FF00D6C2B0 /* MessageSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSpec.swift; sourceTree = "<group>"; };
 		F398020B1A5A424200D6C2B0 /* MarkerInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerInfo.swift; sourceTree = "<group>"; };
+		F3C250371A68135B003B642C /* EventsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventsController.swift; sourceTree = "<group>"; };
+		F3C250391A6816AD003B642C /* EventsApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventsApi.swift; sourceTree = "<group>"; };
 		F3C33CDD1A6627E600EF8E24 /* DiscoverEventData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverEventData.swift; sourceTree = "<group>"; };
 		F3C33CE01A663CAD00EF8E24 /* DiscoverController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverController.swift; sourceTree = "<group>"; };
 		F3C33CE21A663D9200EF8E24 /* MastersTableScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MastersTableScreen.swift; sourceTree = "<group>"; };
@@ -315,8 +317,8 @@
 			children = (
 				F3406A541A661D9F000C04F4 /* Discover */,
 				F35E28FB1A65731F004DF0D7 /* RequestController.swift */,
-				F3406A471A65C0BE000C04F4 /* CGD.swift */,
 				F3406A4D1A65E5C9000C04F4 /* MasterMapScreen */,
+				F3C250371A68135B003B642C /* EventsController.swift */,
 			);
 			name = UserInteraction;
 			sourceTree = "<group>";
@@ -473,6 +475,7 @@
 				F3140F5B1A61AAC00024A65D /* Location.swift */,
 				F3F87A311A5ED18600EB1EC1 /* Platform */,
 				F37FCE5A1A672E6B009DB82B /* Configurator.swift */,
+				F3C250391A6816AD003B642C /* EventsApi.swift */,
 			);
 			name = api;
 			sourceTree = "<group>";
@@ -724,6 +727,7 @@
 				F3ED41A81A5F0E3500C6FFC9 /* MarkerPresentationController.swift in Sources */,
 				F37633BB1A5AFACC005AFB8F /* JourneyPattern.swift in Sources */,
 				F3406A441A65B0AC000C04F4 /* FGBannerPresentController.swift in Sources */,
+				F3C2503A1A6816AD003B642C /* EventsApi.swift in Sources */,
 				F3C8FE8B1A535B0D009FF404 /* HttpResponse.swift in Sources */,
 				F35E28EF1A6493CA004DF0D7 /* MainController.swift in Sources */,
 				F37633B71A5AF9F3005AFB8F /* Storage.swift in Sources */,
@@ -767,6 +771,7 @@
 				F3140F4E1A6057EB0024A65D /* Projection.swift in Sources */,
 				F3140F481A5FA03E0024A65D /* JourneyDisplay.swift in Sources */,
 				F36316A11A5D8DB0002CAE61 /* RemoteInvocation.swift in Sources */,
+				F3C250381A68135B003B642C /* EventsController.swift in Sources */,
 				F35E28ED1A647D94004DF0D7 /* JourneyCurrentLocationsRequestProcessor.swift in Sources */,
 				F3406A461A65B3D9000C04F4 /* UIBanner.swift in Sources */,
 				F37633B31A5ACEFF005AFB8F /* Time.swift in Sources */,
@@ -791,7 +796,6 @@
 				F3F87A391A5EF7A800EB1EC1 /* PriorityQueue.swift in Sources */,
 				F3C8FE8E1A535B0D009FF404 /* Tag.swift in Sources */,
 				F3140F4C1A6055630024A65D /* JourneyDisplayUtils.swift in Sources */,
-				F3406A481A65C0BE000C04F4 /* CGD.swift in Sources */,
 				F3140F541A61878B0024A65D /* Extensions.swift in Sources */,
 				F33B69B41A5B022C004C7742 /* GeoPathUtils.swift in Sources */,
 				F3140F3B1A5F398F0024A65D /* MasterMessagePresentationController.swift in Sources */,
