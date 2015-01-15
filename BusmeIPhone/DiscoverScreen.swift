@@ -13,9 +13,9 @@ import MapKit
 let APP_VERSION = "1.0.0"
 let PLATFORM_NAME = "iOS"
 
-public class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDelegate {
+public class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDelegate, BuspassEventListener {
     public let mapView : MKMapView!
-    public var api : DiscoverApi
+    public var api : DiscoverApiVersion1
     public var mainController : MainController
     
     required public init(coder aDecoder: NSCoder) {
@@ -30,24 +30,62 @@ public class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDe
         self.mapView = MKMapView(frame: UIScreen.mainScreen().bounds)
         self.view = mapView
         self.mapView.delegate = self
+        
+        registerForEvents()
     }
     
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+        initializeTouches()
+    }
+    
+    public func registerForEvents() {
+        api.uiEvents.registerForEvent("Search:Init:return", listener: self)
+        api.uiEvents.registerForEvent("Search:Discover:return", listener: self)
+        api.uiEvents.registerForEvent("Search:Find:return", listener: self)
+    }
+    
+    public func onBuspassEvent(event: BuspassEvent) {
+        let eventName = event.eventName
+        let eventData = event.eventData as? DiscoverEventData
+        if eventData != nil {
+            if eventName == "Search:Init:return" {
+                onInitReturn(eventData!)
+            } else if eventName == "Search:Discover:return" {
+                onDiscoverReturn(eventData!)
+            } else if eventName == "Search:Find:return" {
+                onFindReturn(eventData!)
+            }
+        }
+    }
+    
+    func onInitReturn(eventData : DiscoverEventData) {
+        
+    }
+    func onDiscoverReturn(eventData : DiscoverEventData) {
+        
+    }
     func initializeTouches() {
-        var tapR = UITapGestureRecognizer(target: self, action: "onClick")
+        var tapR = UITapGestureRecognizer(target: self, action: "onClick:")
         tapR.numberOfTapsRequired = 1
         tapR.numberOfTouchesRequired = 1
         view.addGestureRecognizer(tapR)
         
-        var pressR = UILongPressGestureRecognizer(target: self, action: "onPress")
+        var pressR = UILongPressGestureRecognizer(target: self, action: "onPress:")
         view.addGestureRecognizer(pressR)
     }
     
+    // Touches
+    
     func onClick(gestureRecognizer : UIGestureRecognizer) {
-        
+        performFind(gestureRecognizer)
     }
+    
     func onPress(gestureRecognizer : UIGestureRecognizer) {
         performDiscover(gestureRecognizer)
     }
+    
+    // Dialogs
     
     func searchDialog(title : String, message : String) -> UIAlertView {
         let alertView = UIAlertView(title: title, message: message, delegate: nil, cancelButtonTitle: nil)
@@ -62,11 +100,16 @@ public class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDe
         return alertView
     }
     
+    // UIAlertViewDelegate
+    
     public func alertView(alertView: UIAlertView, willDismissWithButtonIndex buttonIndex: Int) {
         self.discoverInProgress = false
     }
     
+    // Discover
+    
     var discoverInProgress : Bool = false
+    
     func performDiscover(gestureRecognizer : UIGestureRecognizer ) {
         if !discoverInProgress {
             self.discoverInProgress = true
@@ -89,6 +132,8 @@ public class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDe
         mainController.api.bgEvents.postEvent("Search:discover", data: eventData)
     }
     
+    // Find
+    
     func performFind(gestureRecognizer : UIGestureRecognizer ) {
         if !discoverInProgress {
             self.discoverInProgress = true
@@ -101,24 +146,32 @@ public class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDe
     
     func performFindFromLoc(loc : CLLocationCoordinate2D) {
         let eventData = DiscoverEventData(loc: loc, dialog: nil)
-        mainController.api.bgEvents.postEvent("Search:find", data: eventData)
+        api.bgEvents.postEvent("Search:find", data: eventData)
     }
     
-    func onFind(eventData : DiscoverEventData) {
+    func onFindReturn(eventData : DiscoverEventData) {
         if eventData.error != nil {
             if (BLog.WARN) {BLog.logger.warn("error from find \(eventData.error?.reasonPhrase)")}
             errorDialog("Error", message: eventData.error!.reasonPhrase)
         }
         if eventData.master != nil {
             let master = eventData.master!
-            let masteApi = BuspassApi(httpClient: api.httpClient, url: master.apiUrl!, masterSlug: master.slug!, appVersion: APP_VERSION, platformName: PLATFORM_NAME)
+            doMasterInit(master)
         } else if !discoverInProgress {
             let discoverController = mainController.discoverController
             if !discoverController.getMasters().isEmpty {
-                let mastersTableScreen = MastersTableScreen(
-                
+                let mastersTableScreen = MastersTableScreen(discoverController: discoverController)
+                self.navigationController?.pushViewController(mastersTableScreen, animated: true)
             }
         }
+    }
+    
+    func doMasterInit(master : Master) {
+        self.navigationController?.popViewControllerAnimated(true)
+        let eventData = MainEventData()
+        eventData.master = master
+        eventData.dialog = searchDialog("Welcome", message: master.name!)
+        api.bgEvents.postEvent("Main:Master:init", data: eventData)
     }
     
 }

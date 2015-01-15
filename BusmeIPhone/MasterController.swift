@@ -96,4 +96,8 @@ public class MasterController : BuspassEventListener {
     public func onBuspassEvent(event: BuspassEvent) {
         
     }
+    
+    public func storeMaster() {
+        
+    }
 }

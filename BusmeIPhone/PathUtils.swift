@@ -31,6 +31,13 @@ public struct Rect {
         self.bottom = bottom
     }
     
+    public init(boundingBox : BoundingBox) {
+        self.left = boundingBox.west()
+        self.top = boundingBox.north()
+        self.right = boundingBox.east()
+        self.bottom = boundingBox.south()
+    }
+    
     public func dup() -> Rect {
         return Rect(left: left, top: top, right: right, bottom: bottom)
     }
@@ -45,6 +52,10 @@ public struct Rect {
     
     public func height() -> Double {
         return bottom - top
+    }
+    
+    public func area() -> Double {
+        return width() * height()
     }
     
     public mutating func offsetTo(x : Double, y : Double) {
@@ -84,6 +95,10 @@ public struct Rect {
     
     public func containsXY(x : Double, y : Double) -> Bool {
         return left < x && x < right && top < y && y < bottom
+    }
+    
+    public func containsPoint(point : Point) -> Bool {
+        return containsXY(point.getX(), y: point.getY())
     }
     
     public func intersectRect(rect :Rect) -> Bool {

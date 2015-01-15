@@ -11,7 +11,7 @@ import CoreLocation
 import CoreGraphics
 import MapKit
 
-public protocol GeoPoint {
+public protocol GeoPoint : Point {
     func getLatitude() -> Double
     func getLongitude() -> Double
 }
@@ -133,6 +133,12 @@ public class GeoPointImpl : GeoPointMutable {
     public func setLongitude(lon: Double) {
         self.longitude = lon
     }
+    public func getX() -> Double {
+        return self.longitude
+    }
+    public func getY() -> Double {
+        return self.latitude
+    }
 
     public init() {
     }
@@ -181,6 +187,13 @@ public class GeoRect {
         self.top = top
         self.right = right
         self.bottom = bottom
+    }
+    
+    public init(boundingBox : BoundingBox) {
+        self.top = boundingBox.north()
+        self.left = boundingBox.west()
+        self.right = boundingBox.east()
+        self.bottom = boundingBox.south()
     }
     
     func initWithCoder(decoder : NSCoder) {
