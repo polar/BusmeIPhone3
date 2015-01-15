@@ -75,8 +75,21 @@ public class MastersTableScreen : UITableViewController, UITableViewDelegate, UI
             master = masters[indexPath.row]
         }
         
-        eventData!.master = master
-        discoverController!.api.uiEvents.postEvent("Search:Find:return", data: eventData!)
+        doMasterInit(master)
+    }
+    
+    func searchDialog(title : String, message : String) -> UIAlertView {
+        let alertView = UIAlertView(title: title, message: message, delegate: nil, cancelButtonTitle: nil)
+        alertView.show()
+        return alertView
+    }
+    
+    func doMasterInit(master : Master) {
+        self.navigationController?.popViewControllerAnimated(true)
+        let eventData = MainEventData()
+        eventData.master = master
+        eventData.dialog = searchDialog("Welcome", message: master.name!)
+        discoverController!.api.bgEvents.postEvent("Main:Master:init", data: eventData)
     }
     
     // Searchable

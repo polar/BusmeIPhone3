@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import MapKit
 
 
 // PointImpl is an extension of a native type.
@@ -36,6 +37,13 @@ public struct Rect {
         self.top = boundingBox.north()
         self.right = boundingBox.east()
         self.bottom = boundingBox.south()
+    }
+    
+    public init(mapRect : MKMapRect) {
+        self.left = mapRect.origin.x
+        self.top = mapRect.origin.y
+        self.right = left + mapRect.size.width
+        self.bottom = top - mapRect.size.height
     }
     
     public func dup() -> Rect {

@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreGraphics
+import MapKit
 
 public class Projection {
     let MAX_ZOOM_LEVEL = 22
@@ -49,4 +50,17 @@ public class Projection {
         return out
     }
     
+}
+
+public class MKMapProjection : Projection {
+    public var renderer : MKOverlayRenderer
+    
+    public init(renderer: MKOverlayRenderer, zoom: Int, mapRect: MKMapRect) {
+        self.renderer = renderer
+        super.init(zoom: zoom, rect: Rect(mapRect: mapRect))
+    }
+    
+    public override func translatePoint(projectedPoint: Point, reuse: PointMutable?) -> PointMutable {
+        return renderer.pointForMapPoint(projectedPoint as MKMapPoint)
+    }
 }

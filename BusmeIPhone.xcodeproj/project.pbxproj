@@ -71,6 +71,8 @@
 		F37633B91A5AFA57005AFB8F /* JourneyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37633B81A5AFA57005AFB8F /* JourneyStore.swift */; };
 		F37633BB1A5AFACC005AFB8F /* JourneyPattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37633BA1A5AFACC005AFB8F /* JourneyPattern.swift */; };
 		F37FCE5B1A672E6B009DB82B /* Configurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37FCE5A1A672E6B009DB82B /* Configurator.swift */; };
+		F37FCE5E1A6781FB009DB82B /* BusmeSite.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37FCE5D1A6781FB009DB82B /* BusmeSite.swift */; };
+		F37FCE601A678876009DB82B /* BusmeSiteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37FCE5F1A678876009DB82B /* BusmeSiteView.swift */; };
 		F39802011A59FEB400D6C2B0 /* Buspass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39802001A59FEB400D6C2B0 /* Buspass.swift */; };
 		F39802061A5A075600D6C2B0 /* BuspassApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39802051A5A075600D6C2B0 /* BuspassApi.swift */; };
 		F39802081A5A08A400D6C2B0 /* BuspasEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39802071A5A08A400D6C2B0 /* BuspasEvents.swift */; };
@@ -211,6 +213,8 @@
 		F37633B81A5AFA57005AFB8F /* JourneyStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JourneyStore.swift; sourceTree = "<group>"; };
 		F37633BA1A5AFACC005AFB8F /* JourneyPattern.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JourneyPattern.swift; sourceTree = "<group>"; };
 		F37FCE5A1A672E6B009DB82B /* Configurator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Configurator.swift; sourceTree = "<group>"; };
+		F37FCE5D1A6781FB009DB82B /* BusmeSite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BusmeSite.swift; sourceTree = "<group>"; };
+		F37FCE5F1A678876009DB82B /* BusmeSiteView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BusmeSiteView.swift; sourceTree = "<group>"; };
 		F39802001A59FEB400D6C2B0 /* Buspass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buspass.swift; sourceTree = "<group>"; };
 		F39802051A5A075600D6C2B0 /* BuspassApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuspassApi.swift; sourceTree = "<group>"; };
 		F39802071A5A08A400D6C2B0 /* BuspasEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuspasEvents.swift; sourceTree = "<group>"; };
@@ -300,6 +304,8 @@
 			children = (
 				F3406A551A661DC5000C04F4 /* DiscoverScreen.swift */,
 				F3C33CE21A663D9200EF8E24 /* MastersTableScreen.swift */,
+				F37FCE5D1A6781FB009DB82B /* BusmeSite.swift */,
+				F37FCE5F1A678876009DB82B /* BusmeSiteView.swift */,
 			);
 			name = Discover;
 			sourceTree = "<group>";
@@ -711,6 +717,7 @@
 				F3F87A3B1A5F067C00EB1EC1 /* MarkerBasket.swift in Sources */,
 				F35E28F31A649BDB004DF0D7 /* ExternalStorageController.swift in Sources */,
 				F3140F501A6058B30024A65D /* ScreenPathUtils.swift in Sources */,
+				F37FCE601A678876009DB82B /* BusmeSiteView.swift in Sources */,
 				F3F87A301A5ED10600EB1EC1 /* BannerEvent.swift in Sources */,
 				F3140F391A5F38CA0024A65D /* MasterMessageStore.swift in Sources */,
 				F37633B91A5AFA57005AFB8F /* JourneyStore.swift in Sources */,
@@ -788,6 +795,7 @@
 				F3140F541A61878B0024A65D /* Extensions.swift in Sources */,
 				F33B69B41A5B022C004C7742 /* GeoPathUtils.swift in Sources */,
 				F3140F3B1A5F398F0024A65D /* MasterMessagePresentationController.swift in Sources */,
+				F37FCE5E1A6781FB009DB82B /* BusmeSite.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
