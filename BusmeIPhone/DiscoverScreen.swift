@@ -175,7 +175,8 @@ public class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDe
         } else {
             let discoverController = mainController.discoverController
             if !discoverController.getMasters().isEmpty {
-                let mastersTableScreen = MastersTableScreen(discoverController: discoverController)
+                let mastersTableScreen = MastersTableScreen()
+                mastersTableScreen.setDiscoverController(discoverController)
                 self.navigationController?.pushViewController(mastersTableScreen, animated: true)
             }
         }

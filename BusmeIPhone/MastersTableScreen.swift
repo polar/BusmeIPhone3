@@ -9,20 +9,19 @@
 import Foundation
 import UIKit
 
-public class MastersTableScreen : UITableViewController, UITableViewDelegate, UISearchDisplayDelegate {
+public class MastersTableScreen : UITableViewController, UITableViewDelegate,UISearchDisplayDelegate {
     weak var discoverController : DiscoverController?
-    
     public var masters : [Master] = [Master]()
 
-    public init(discoverController :DiscoverController) {
+    public func setDiscoverController(discoverController :DiscoverController) {
         self.discoverController = discoverController
         self.masters = discoverController.getMasters()
-        super.init()
         makeSearchable()
     }
-
-    required public init(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+        tableView.tableHeaderView = searchBar
     }
     
     public var eventData : DiscoverEventData?
@@ -47,7 +46,11 @@ public class MastersTableScreen : UITableViewController, UITableViewDelegate, UI
     
     override public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         //ask for a reusable cell from the tableview, the tableview will create a new one if it doesn't have any
-        let cell = self.tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
+        var cell : UITableViewCell? = self.tableView.dequeueReusableCellWithIdentifier("Cell") as? UITableViewCell
+        
+        if cell == nil {
+            cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: "Cell")
+        }
         
         // Get the corresponding candy from our candies array
         var master : Master
@@ -59,10 +62,10 @@ public class MastersTableScreen : UITableViewController, UITableViewDelegate, UI
         }
         
         // Configure the cell
-        cell.textLabel!.text = master.name
-        cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+        cell!.textLabel!.text = master.name
+        cell!.accessoryType = UITableViewCellAccessoryType.None
         
-        return cell
+        return cell!
     }
     
     override public func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -105,14 +108,22 @@ public class MastersTableScreen : UITableViewController, UITableViewDelegate, UI
     }
     
     func searchDisplayController(controller: UISearchDisplayController!, shouldReloadTableForSearchString searchString: String!) -> Bool {
-        self.filterContentForSearchText(searchString)
+        filterContentForSearchText(searchString)
+        return true
+    }
+    
+    func searchDisplayController(controller: UISearchDisplayController!, shouldReloadTableForSearchScope searchOption: Int) -> Bool {
+        let scope = controller.searchBar.scopeButtonTitles as [String]
+        filterContentForSearchText(controller.searchBar.text)
         return true
     }
     
     private var tableSearchController : UISearchDisplayController!
+    private var searchBar : UISearchBar!
     
     func makeSearchable() {
-        self.tableSearchController = UISearchDisplayController(searchBar: createSearchBar(), contentsController: self)
+        self.searchBar = createSearchBar()
+        self.tableSearchController = UISearchDisplayController(searchBar: searchBar, contentsController: self)
         
     }
     
