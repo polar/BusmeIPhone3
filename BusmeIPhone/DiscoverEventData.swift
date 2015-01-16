@@ -18,6 +18,10 @@ public class DiscoverEventData {
     public var masters : [Master]?
     public var error: HttpStatusLine?
     
+    public init(master: Master) {
+        self.master = master
+    }
+    
     public init(loc : GeoPoint, buf : Double, dialog : UIAlertView?) {
         self.dialog = dialog
         self.loc = loc

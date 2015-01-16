@@ -17,9 +17,20 @@ public class MainEventData {
     public var location : GeoPoint?
     public var discoverApi: DiscoverApiVersion1?
     public var masterApi: BuspassApi?
+    public var oldController : MasterController?
     public var saveAsDefault : Bool = false
+    
     public init() {
         
+    }
+    
+    public init(master : Master) {
+        self.master = master
+    }
+    
+    public init(masterApi : BuspassApi, master : Master) {
+        self.masterApi = masterApi
+        self.master = master
     }
 }
 
@@ -87,6 +98,7 @@ public class MainController : BuspassEventListener {
     func onMasterInit(eventData : MainEventData) {
         let oldMasterController : MasterController? = masterController
         if oldMasterController != nil {
+            // TODO Posible Error
             oldMasterController!.storeMaster()
         }
         self.masterController = MasterController(api: eventData.masterApi!, master: eventData.master!, mainController: self)
@@ -94,8 +106,10 @@ public class MainController : BuspassEventListener {
             oldMasterController!.unregisterForEvents()
         }
         if eventData.saveAsDefault {
+            // TODO Possible Error
             configurator.saveAsDefaultMaster(eventData.master!)
         }
+        eventData.oldController = oldMasterController
         eventData.returnStatus = "MasterReady"
         api.uiEvents.postEvent("Main:Master:Init:return", data: eventData)
     }

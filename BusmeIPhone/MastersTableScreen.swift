@@ -89,10 +89,8 @@ public class MastersTableScreen : UITableViewController, UITableViewDelegate,UIS
     
     func doMasterInit(master : Master) {
         self.navigationController?.popViewControllerAnimated(true)
-        let eventData = MainEventData()
-        eventData.master = master
-        eventData.dialog = searchDialog("Welcome", message: master.name!)
-        discoverController!.api.bgEvents.postEvent("Main:Master:init", data: eventData)
+        let eventData = MainEventData(master: master)
+        discoverController!.api.uiEvents.postEvent("Main:Discover:return", data: eventData)
     }
     
     // Searchable

@@ -74,6 +74,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
     var httpClient : HttpClient?
     
     var eventsController : EventsController = EventsController()
+    
+    
+    var discoverScreen : DiscoverScreen?
+    var masterMapScreen : MasterMapScreen?
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -81,12 +85,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
         
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         window?.makeKeyAndVisible()
-        
-        
-        let mainViewController = UIViewController()
-        
-        self.navigationController = UINavigationController(rootViewController: mainViewController)
-        window!.rootViewController = navigationController
         
         var httpQ : dispatch_queue_t = dispatch_queue_create("http", DISPATCH_QUEUE_SERIAL);
     
@@ -111,6 +109,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
         eventsController.register(api)
         api.uiEvents.registerForEvent("Main:Init:return", listener: self)
         api.uiEvents.registerForEvent("Main:Discover:Init:return", listener: self)
+        api.uiEvents.registerForEvent("Main:Discover:return", listener: self)
         api.uiEvents.registerForEvent("Main:Master:Init:return", listener: self)
     }
     
@@ -126,6 +125,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
             onMainInitReturn(eventData!)
         } else if ("Main:Discover:Init:return" == eventName) {
             onDiscoverInitReturn(eventData!)
+        } else if ("Main:Discover:return" == eventName) {
+            onDiscoverReturn(eventData!)
         } else if ("Main:Master:Init:return" == eventName) {
             onMasterInitReturn(eventData!)
         }
@@ -164,45 +165,55 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
     }
     
     func doMasterInit(master : Master) {
-        let eventData = MainEventData()
-        eventData.master = master
-        eventData.dialog = searchDialog("Welcome", message: eventData.master!.name!)
-        api.bgEvents.postEvent("Main:Master:init", data: eventData)
+        let masterApi = BuspassApi(httpClient: httpClient!, url: master.apiUrl!, masterSlug: master.slug!, appVersion: APP_VERSION, platformName: APP_PLATFORM)
+        eventsController.register(masterApi)
+        // Initialize the MainController with the Master, set up a MasterController
+        let evd = MainEventData(masterApi : masterApi, master: master)
+        api.bgEvents.postEvent("Main:Master:init", data: evd)
     }
     
-    var discoverScreen : DiscoverScreen?
     func onDiscoverInitReturn(eventData : MainEventData) {
         if eventData.dialog != nil {
             eventData.dialog!.dismissWithClickedButtonIndex(0, animated: true)
             eventData.dialog = nil
         }
         self.discoverScreen = DiscoverScreen(mainController: mainController!)
-        navigationController.pushViewController(discoverScreen!, animated: true)
+        navigationController?.popViewControllerAnimated(false)
+        self.navigationController = UINavigationController(rootViewController: discoverScreen!)
+        window!.rootViewController = navigationController
+
     }
     
+    // The Discover Screen has selected a master, maybe.
+    func onDiscoverReturn(eventData : MainEventData) {
+        if eventData.error == nil {
+            if eventData.master != nil {
+                doMasterInit(eventData.master!)
+            } else {
+                if (BLog.WARN) { BLog.logger.warn("No master selected") }
+            }
+        } else {
+            if (BLog.WARN) { BLog.logger.warn("Error \(eventData.error!.reasonPhrase)") }
+        }
+    }
+    
+    // The MasterController has been set up. Assocate the MasterScreen
     func onMasterInitReturn(eventData : MainEventData) {
         if eventData.dialog != nil {
             eventData.dialog!.dismissWithClickedButtonIndex(0, animated: true)
             eventData.dialog = nil
         }
-        if eventData.returnStatus == "Error" {
-            showTemporaryNetworkingError("Network Problem", message: eventData.error!.reasonPhrase, completion: {
-                self.doMasterInit(eventData.master!)
-            })
-        } else {
-            let master = eventData.master
-            if (master != nil) {
-                if mainController?.masterController != nil {
-                    eventsController.unregister(mainController!.masterController!.api)
-                }
-                navigationController.popToRootViewControllerAnimated(true)
-                let bapi = BuspassApi(httpClient: httpClient!, url: master!.apiUrl!, masterSlug: master!.slug!, appVersion: APP_VERSION, platformName: APP_PLATFORM)
-                eventsController.register(bapi)
-                let masterController = MasterController(api: bapi, master: master!, mainController: mainController)
-                let masterMapScreen = MasterMapScreen(masterController: masterController)
-                navigationController.pushViewController(masterMapScreen, animated: true)
-            }
+        let master = eventData.master!
+        if eventData.oldController != nil {
+            eventsController.unregister(eventData.oldController!.api)
         }
+        self.masterMapScreen = MasterMapScreen()
+        masterMapScreen!.setMasterController(mainController!.masterController!)
+    
+        navigationController?.popViewControllerAnimated(false)
+        self.navigationController = UINavigationController(rootViewController: masterMapScreen!)
+        window!.rootViewController = navigationController
+
     }
     
     func applicationWillResignActive(application: UIApplication) {
