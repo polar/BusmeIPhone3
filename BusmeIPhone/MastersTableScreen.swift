@@ -105,6 +105,8 @@ public class MastersTableScreen : UITableViewController, UITableViewDelegate,UIS
             let stringMatch = master.name!.rangeOfString(searchText)
             return (stringMatch != nil)
         })
+        let count = self.filteredMasters.count
+        return
     }
     
     func searchDisplayController(controller: UISearchDisplayController!, shouldReloadTableForSearchString searchString: String!) -> Bool {
@@ -124,7 +126,9 @@ public class MastersTableScreen : UITableViewController, UITableViewDelegate,UIS
     func makeSearchable() {
         self.searchBar = createSearchBar()
         self.tableSearchController = UISearchDisplayController(searchBar: searchBar, contentsController: self)
-        
+        tableSearchController.delegate = self
+        tableSearchController.searchResultsDataSource = self;
+        tableSearchController.searchResultsDelegate = self;
     }
     
     func createSearchBar() -> UISearchBar {
