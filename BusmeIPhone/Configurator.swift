@@ -20,4 +20,8 @@ public class Configurator {
     public func saveAsDefaultMaster(master : Master)  {
         
     }
+    
+    public func removeAsDefault(master : Master) {
+        
+    }
 }

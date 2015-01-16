@@ -12,6 +12,30 @@ import CoreData
 let INITIAL_URL = "http://busme-apis.herokuapp.com/apis/d1/get"
 let APP_PLATFORM = "iOS"
 
+class Toast : UIResponder, UIAlertViewDelegate {
+    var dialog : UIAlertView?
+    var duration : Int = 2
+
+    init(title: String, message: String, duration: Int) {
+        self.duration = duration
+        super.init()
+        self.dialog = UIAlertView(title: title, message: message, delegate: self, cancelButtonTitle: "OK")
+    }
+    
+    func show() {
+        dialog?.show()
+        NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(duration),
+            target: self,
+            selector: "dismissDialog",
+            userInfo: nil,
+            repeats: false)
+    }
+    
+    func dismissDialog() {
+        dialog?.dismissWithClickedButtonIndex(0, animated: true)
+    }
+}
+
 class ErrorDialogRestartOnCancel : UIResponder, UIAlertViewDelegate {
     var dialog : UIAlertView
     var duration : Int = 2
@@ -139,8 +163,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
             cancelButtonTitle: "OK"
         )
         let errorDialog = ErrorDialogRestartOnCancel(dialog: networkErrorDialog, duration: 2)
-        let eventData = MainEventData()
-        eventData.dialog = networkErrorDialog
         errorDialog.setOnCancel(10, completion)
         errorDialog.show()
     }

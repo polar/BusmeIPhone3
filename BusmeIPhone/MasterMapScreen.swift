@@ -53,6 +53,7 @@ public class MasterMapScreen : UIViewController, MKMapViewDelegate {
     }
 
     func openMenu() {
-        
+        let menuScreen = MasterMainMenu().initWithMasterController(masterController!)
+        navigationController?.pushViewController(menuScreen, animated: true)
     }
 }

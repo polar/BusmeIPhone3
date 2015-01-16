@@ -41,6 +41,7 @@ public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJo
     public init(api : BuspassApi, controller : JourneyDisplayController) {
         self.api = api
         self.journeyDisplayController = controller
+        stateStack.append(VisualState())
     }
     
     public func getJourneyDisplays() -> [JourneyDisplay]{
