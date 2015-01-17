@@ -147,6 +147,10 @@ public class GeoPointImpl : GeoPointMutable {
     public init() {
     }
     
+    public init( coder : NSCoder ) {
+        initWithCoder(coder)
+    }
+    
     public func set(lat: Double, lon: Double) -> GeoPointMutable {
         self.latitude = lat
         self.longitude = lon
@@ -186,6 +190,13 @@ public class GeoRect {
     public var right : Double
     public var bottom : Double
     
+    public init( coder : NSCoder ) {
+        self.left = coder.decodeDoubleForKey("left")
+        self.top = coder.decodeDoubleForKey("top")
+        self.right = coder.decodeDoubleForKey("right")
+        self.bottom = coder.decodeDoubleForKey("bottom")
+    }
+    
     public init(left : Double, top : Double, right : Double, bottom : Double) {
         self.left = left
         self.top = top
@@ -198,13 +209,6 @@ public class GeoRect {
         self.left = boundingBox.west()
         self.right = boundingBox.east()
         self.bottom = boundingBox.south()
-    }
-    
-    func initWithCoder(decoder : NSCoder) {
-        self.left = decoder.decodeDoubleForKey("left")
-        self.top = decoder.decodeDoubleForKey("top")
-        self.right = decoder.decodeDoubleForKey("right")
-        self.bottom = decoder.decodeDoubleForKey("bottom")
     }
     
     public func encodeWithCoder(encoder : NSCoder) {

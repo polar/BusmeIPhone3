@@ -27,16 +27,28 @@ public protocol InvocationProgress {
     func onUpdateFinish(makeRequest : Bool, time : TimeValue64)
 }
 
+public struct InvocationProgressEvent {
+    public static let U_START = 1
+    public static let U_ARG_START = 2
+    public static let U_ARG_FIN = 3
+    public static let U_REQ_START = 4
+    public static let U_REQ_IOERROR = 5
+    public static let U_REQ_FIN = 6
+    public static let U_RESP_START = 7
+    public static let U_RESP_FIN = 8
+    public static let U_FINISH = 9
+}
+
 public class InvocationProgressListener : InvocationProgress {
-    let U_START = 1
-    let U_ARG_START = 2
-    let U_ARG_FIN = 3
-    let U_REQ_START = 4
-    let U_REQ_IOERROR = 5
-    let U_REQ_FIN = 6
-    let U_RESP_START = 7
-    let U_RESP_FIN = 8
-    let U_FINISH = 9
+    let U_START = InvocationProgressEvent.U_START
+    let U_ARG_START = InvocationProgressEvent.U_ARG_START
+    let U_ARG_FIN = InvocationProgressEvent.U_ARG_FIN
+    let U_REQ_START = InvocationProgressEvent.U_REQ_START
+    let U_REQ_IOERROR = InvocationProgressEvent.U_REQ_IOERROR
+    let U_REQ_FIN = InvocationProgressEvent.U_REQ_FIN
+    let U_RESP_START = InvocationProgressEvent.U_RESP_START
+    let U_RESP_FIN = InvocationProgressEvent.U_RESP_FIN
+    let U_FINISH = InvocationProgressEvent.U_FINISH
 
     public func onUpdateStart(time : TimeValue64, isForced : Bool) { }
     public func onArgumentsStart() { }

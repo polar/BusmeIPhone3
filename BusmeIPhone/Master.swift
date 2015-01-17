@@ -19,6 +19,10 @@ public class Master {
     public var bbox : BoundingBox?
     public var timeFormat : String = "%l:%M %P"
     
+    public init( coder : NSCoder ) {
+        initWithCoder(coder)
+    }
+    
     public init(tag : Tag) {
         loadParsedXML(tag)
     }

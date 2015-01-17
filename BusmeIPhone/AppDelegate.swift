@@ -135,6 +135,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
         api.uiEvents.registerForEvent("Main:Discover:Init:return", listener: self)
         api.uiEvents.registerForEvent("Main:Discover:return", listener: self)
         api.uiEvents.registerForEvent("Main:Master:Init:return", listener: self)
+        api.uiEvents.registerForEvent("Main:Master:return", listener: self)
     }
     
     func searchDialog(title : String, message : String) -> UIAlertView {
@@ -153,6 +154,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
             onDiscoverReturn(eventData!)
         } else if ("Main:Master:Init:return" == eventName) {
             onMasterInitReturn(eventData!)
+        } else if ("Main:Master:return" == eventName) {
+            onMasterReturn(eventData!)
         }
     }
     
@@ -236,6 +239,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
         self.navigationController = UINavigationController(rootViewController: masterMapScreen!)
         window!.rootViewController = navigationController
 
+    }
+    
+    func onMasterReturn(eventData : MainEventData) {
+        if eventData.dialog != nil {
+            eventData.dialog!.dismissWithClickedButtonIndex(0, animated: true)
+            eventData.dialog = nil
+        }
+        // Set up timers.
     }
     
     func applicationWillResignActive(application: UIApplication) {

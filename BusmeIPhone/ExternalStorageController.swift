@@ -26,6 +26,7 @@ public class ExternalStorageController {
         it = it.stringByReplacingOccurrencesOfString("*", withString: ".")
         return it
     }
+    
     public func isAvailable() -> Bool {
         return available
     }
@@ -36,9 +37,10 @@ public class ExternalStorageController {
         return directory
     }
     public func serializeObjectToFile(store: Storage, file : String) -> Bool {
-        return NSKeyedArchiver.archiveRootObject(store, toFile: file)
+
+        return NSKeyedArchiver.archiveRootObject(store, toFile: legalize(file))
     }
     public func deserializeObjectFromFile(store: Storage, file :String) -> Storage? {
-        return NSKeyedUnarchiver.unarchiveObjectWithFile(file) as? Storage
+        return NSKeyedUnarchiver.unarchiveObjectWithFile(legalize(file)) as? Storage
     }
 }

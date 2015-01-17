@@ -40,6 +40,7 @@ public class MasterController : BuspassEventListener {
     public var journeyPostingController : JourneyPostingController
     
     public var updateRemoteInvocation : UpdateRemoteInvocation
+    public var journeySyncRemoteInvocation : JourneySyncRemoteInvocation
     
     
     
@@ -74,6 +75,8 @@ public class MasterController : BuspassEventListener {
         
         self.updateRemoteInvocation = UpdateRemoteInvocation(api: api, bannerBasket: bannerBasket, markerBasket: markerBasket, masterMessageBasket: masterMessageBasket, journeyDisplayController: journeyDisplayController)
         
+        self.journeySyncRemoteInvocation = JourneySyncRemoteInvocation(api: api, journeyDisplayController: journeyDisplayController, journeySyncProgressListener: JourneySyncProgressListener(api: api))
+        
         registerForEvents()
     }
 
@@ -83,6 +86,9 @@ public class MasterController : BuspassEventListener {
         api.bgEvents.registerForEvent("Master:store", listener: self)
         api.bgEvents.registerForEvent("Master:resetSeenMarkers", listener: self)
         api.bgEvents.registerForEvent("Master:resetSeenMessages", listener: self)
+        
+        api.bgEvents.registerForEvent("JourneySync", listener: self)
+        api.bgEvents.registerForEvent("Update", listener: self)
     }
     
     public func unregisterForEvents() {
@@ -91,9 +97,20 @@ public class MasterController : BuspassEventListener {
         api.bgEvents.unregisterForEvent("Master:store", listener: self)
         api.bgEvents.unregisterForEvent("Master:resetSeenMarkers", listener: self)
         api.bgEvents.unregisterForEvent("Master:resetSeenMessages", listener: self)
+        
+        api.bgEvents.unregisterForEvent("JourneySync", listener: self)
+        api.bgEvents.unregisterForEvent("Update", listener: self)
     }
     
     public func onBuspassEvent(event: BuspassEvent) {
+        let eventName = event.eventName
+        if eventName == "JourneySync" {
+            let eventData = event.eventData as JourneySyncEventData
+            journeySyncRemoteInvocation.perform(eventData.isForced)
+        } else if eventName == "Update" {
+            let eventData = event.eventData as UpdateEventData
+            updateRemoteInvocation.perform(eventData.isForced)
+        }
         
     }
     

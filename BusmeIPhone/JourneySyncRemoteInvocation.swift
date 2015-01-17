@@ -8,6 +8,13 @@
 
 import Foundation
 
+class JourneySyncEventData {
+    var isForced : Bool
+    init(isForced : Bool) {
+        self.isForced = isForced
+    }
+}
+
 public class JourneySyncUpdateProgressListener : InvocationProgressListener {
     var journeySyncProgressListener : JourneySyncProgressListener
     
