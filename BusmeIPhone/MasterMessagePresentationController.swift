@@ -48,7 +48,7 @@ public class MasterMessagePresentationController {
                 self.currentMasterMessage = nil
             }
         }
-        var masterMessage = masterMessageQ!.poll()
+        var masterMessage = masterMessageQ.poll()
         while masterMessage != nil {
             if masterMessage!.shouldBeSeen(now) {
                 presentMasterMessage(masterMessage!)

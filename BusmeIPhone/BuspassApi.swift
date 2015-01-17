@@ -164,7 +164,7 @@ public class BuspassApi : ApiBase, EventsApi {
                 if query.isEmpty {
                     query = args!
                 } else {
-                    query += "&\(args)"
+                    query += "&\(args!)"
                 }
             }
         }
@@ -188,7 +188,7 @@ public class BuspassApi : ApiBase, EventsApi {
         if isReady() {
             login.url = buspass!.authUrl!
             var params = [String:[String]]()
-            params["access_token"] = [ "\(login.authToken)" ]
+            params["access_token"] = [ "\(login.authToken!)" ]
             params["role_intent"] = [ login.roleIntent ]
             params["app_version"] = [ busmeAppVersionString ]
             let response = postURLResponse(login.url!, parameters: params)
@@ -343,19 +343,19 @@ public class BuspassApi : ApiBase, EventsApi {
     
     public func getRouteDefinition(nameid : NameId) -> Route? {
         if isReady() {
-            var journeyPatterUrl = buspass!.getRouteDefinitionUrl
-            if journeyPatterUrl != nil{
+            var routeDefUrl = buspass!.getRouteDefinitionUrl
+            if routeDefUrl != nil{
                 let query = getDefaultQuery()
                 query.add("id=\(nameid.id)")
-                query.add("type=\(nameid.type)")
-                let url = journeyPatterUrl! + query.toString()
+                query.add("type=\(nameid.type!)")
+                let url = routeDefUrl! + query.toString()
                 let response = getURLResponse(url)
                 let status = response.getStatusLine()
                 if status.statusCode == 200 {
                     let tag = xmlParse(response.getEntity())
-                    if (tag != nil && "pattern" == tag!.name.lowercaseString) {
-                        var pattern = Route(tag: tag!)
-                        return pattern
+                    if (tag != nil && "route" == tag!.name.lowercaseString) {
+                        var route = Route(tag: tag!)
+                        return route
                     }
                 } else {
                     if (BLog.DEBUG) { BLog.logger.debug(status.toString()) }

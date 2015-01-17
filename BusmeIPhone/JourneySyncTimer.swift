@@ -8,12 +8,13 @@
 
 import Foundation
 
-class JourneySyncTimer : BuspassEventListener {
+class JourneySyncTimer : NSObject, BuspassEventListener {
     var masterController : MasterController
     var pleaseStop : Bool = false
     
     init(masterController : MasterController) {
         self.masterController = masterController
+        super.init()
         masterController.api.uiEvents.registerForEvent("JourneySyncProgress", listener: self)
     }
     
@@ -23,16 +24,18 @@ class JourneySyncTimer : BuspassEventListener {
     
     func onBuspassEvent(event: BuspassEvent) {
         let eventName = event.eventName
-        if eventName == "JourneySyncProgess" {
+        if eventName == "JourneySyncProgress" {
             let eventData = event.eventData as JourneySyncProgressEventData
             if eventData.action == JourneySyncProgressEvent.P_DONE {
-                scheduleUpdate(masterController.api.syncRate)
+                if !pleaseStop {
+                    scheduleUpdate(masterController.api.syncRate/1000)
+                }
             }
         }
     }
     
     func start(isForced : Bool) {
-        self.pleaseStop = true
+        self.pleaseStop = false
         postUpdate(isForced)
     }
     

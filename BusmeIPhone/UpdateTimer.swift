@@ -8,12 +8,13 @@
 
 import Foundation
 
-class UpdateTimer : BuspassEventListener {
+class UpdateTimer : NSObject, BuspassEventListener {
     var masterController : MasterController
     var pleaseStop : Bool = false
     
     init(masterController : MasterController) {
         self.masterController = masterController
+        super.init()
         masterController.api.uiEvents.registerForEvent("UpdateProgress", listener: self)
     }
     
@@ -30,7 +31,7 @@ class UpdateTimer : BuspassEventListener {
             switch(eventData.action) {
             case InvocationProgressEvent.U_FINISH:
                 if !pleaseStop {
-                    scheduleUpdate(masterController.api.updateRate)
+                    scheduleUpdate(masterController.api.updateRate/1000)
                 }
                 break
             default:

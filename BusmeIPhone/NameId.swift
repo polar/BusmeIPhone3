@@ -50,8 +50,8 @@ public class NameId {
     }
     
     public init(args: [String]) {
-        self.id = args[0].stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-        self.name = args[1].stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+        self.name = args[0].stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+        self.id = args[1].stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
         if (args.count > 2) {
             self.type = args[2].stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
 

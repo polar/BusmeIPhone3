@@ -172,8 +172,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
         } else if ("Master:Init:return" == eventName) {
             let eventData = event.eventData as? MasterEventData
             onMasterInitReturn(eventData!)
-        } else if ("JourneySyncProgress" == eventName) {
-            onJourneySyncProgress(event.eventData as JourneySyncProgressEventData!)
+        } else if ("UpdateProgress" == eventName) {
+            onUpdateProgress(event.eventData as UpdateProgressEventData!)
         }
     }
     
@@ -294,22 +294,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
         }
     }
     
+    // Timers
+    
     var bannerTimer : BannerTimer?
     var updateTimer : UpdateTimer?
     var syncTimer : JourneySyncTimer?
     func startTimers() {
         bannerTimer?.start()
         updateTimer?.start(false)
-        mainController?.masterController!.api.uiEvents.registerForEvent("JourneySyncProgress", listener: self)
+        mainController?.masterController!.api.uiEvents.registerForEvent("UpdateProgress", listener: self)
     }
     func stopTimers() {
         bannerTimer?.stop()
         updateTimer?.stop()
         syncTimer?.stop()
     }
-    func onJourneySyncProgress(eventData:JourneySyncProgressEventData) {
-        if eventData.action == JourneySyncProgressEvent.P_DONE {
+    func onUpdateProgress(eventData:UpdateProgressEventData) {
+        if eventData.action == InvocationProgressEvent.U_FINISH {
             syncTimer?.start(true)
+            mainController?.masterController!.api.uiEvents.unregisterForEvent("UpdateProgress", listener: self)
         }
     }
     

@@ -113,6 +113,14 @@ public class UpdateRemoteInvocation : RemoteInvocation {
         self.busApi = api as BuspassApi
         self.updateProgressListener = UpdateRemoteInvocationProgressListener(api: api)
         super.init(api: api, url: "")
+        self.addArgumentPreparer(banners)
+        self.addArgumentPreparer(markers)
+        self.addArgumentPreparer(messages)
+        self.addArgumentPreparer(journeys)
+        self.addResponseProcessor(banners)
+        self.addResponseProcessor(markers)
+        self.addResponseProcessor(messages)
+        self.addResponseProcessor(journeys)
     }
     
     public func perform(isForced : Bool) {

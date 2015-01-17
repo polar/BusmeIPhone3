@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 class BannerTimerEventData  {
     var forced : Bool
@@ -15,7 +16,7 @@ class BannerTimerEventData  {
     }
 }
 
-class BannerTimer : BuspassEventListener {
+class BannerTimer : UIResponder, BuspassEventListener {
     var masterController : MasterController
     var pleaseStop : Bool = false
     var interval : Int
@@ -23,6 +24,7 @@ class BannerTimer : BuspassEventListener {
     init(masterController : MasterController, interval : Int) {
         self.masterController = masterController
         self.interval = interval
+        super.init()
         masterController.api.bgEvents.registerForEvent("Banner:roll", listener: self)
     }
     
