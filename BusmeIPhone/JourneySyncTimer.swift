@@ -17,6 +17,10 @@ class JourneySyncTimer : BuspassEventListener {
         masterController.api.uiEvents.registerForEvent("JourneySyncProgress", listener: self)
     }
     
+    func unregisterForEvents() {
+        masterController.api.uiEvents.unregisterForEvent("JourneySyncProgress", listener: self)
+    }
+    
     func onBuspassEvent(event: BuspassEvent) {
         let eventName = event.eventName
         if eventName == "JourneySyncProgess" {

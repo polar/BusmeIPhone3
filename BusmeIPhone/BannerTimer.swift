@@ -26,6 +26,10 @@ class BannerTimer : BuspassEventListener {
         masterController.api.bgEvents.registerForEvent("Banner:roll", listener: self)
     }
     
+    func unregisterForEvents() {
+        masterController.api.bgEvents.unregisterForEvent("Banner:roll", listener: self)
+    }
+    
     func onBuspassEvent(event: BuspassEvent) {
         let eventName = event.eventName
         if eventName == "Banner:roll" {
@@ -56,7 +60,9 @@ class BannerTimer : BuspassEventListener {
     }
     
     func doTimedUpdate() {
-        doBannerUpdate(false)
+        if !pleaseStop {
+            doBannerUpdate(false)
+        }
     }
     
 }

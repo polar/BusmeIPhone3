@@ -51,11 +51,17 @@ public class PriorityQueue<T : AnyObject> {
     }
     
     public func poll() -> T? {
-        return elems.removeLast()
+        if elems.count > 0 {
+            return elems.removeLast()
+        }
+        return nil
     }
     
     public func peek() -> T? {
-        return elems.last
+        if elems.count > 0 {
+            return elems.last
+        }
+        return nil
     }
     
     public func delete(elem : T) -> T? {

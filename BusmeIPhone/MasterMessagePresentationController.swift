@@ -12,7 +12,7 @@ public class MasterMessagePresentationController {
     public var api : BuspassApi
     public var masterMessageBasket : MasterMessageBasket
     public var currentMasterMessage : MasterMessage?
-    public var masterMessageQ : PriorityQueue<MasterMessage>?
+    public var masterMessageQ : PriorityQueue<MasterMessage>!
     
     public init(api : BuspassApi, basket: MasterMessageBasket) {
         self.api = api
@@ -21,8 +21,8 @@ public class MasterMessagePresentationController {
     }
     
     public func addMasterMessage(masterMessage: MasterMessage) {
-        if (!masterMessageQ!.doesInclude(masterMessage)) {
-            masterMessageQ!.push(masterMessage)
+        if (!masterMessageQ.doesInclude(masterMessage)) {
+            masterMessageQ.push(masterMessage)
         }
     }
     
@@ -30,11 +30,11 @@ public class MasterMessagePresentationController {
         if (currentMasterMessage === masterMessage) {
             abandonMasterMessage(masterMessage)
         }
-        masterMessageQ!.delete(masterMessage)
+        masterMessageQ.delete(masterMessage)
     }
     
     public func doesContain(masterMessage: MasterMessage) -> Bool {
-        return masterMessageQ!.doesInclude(masterMessage)
+        return masterMessageQ.doesInclude(masterMessage)
     }
     
     public func roll(removeCurrent : Bool, now : TimeValue64 = UtilsTime.current()) {
@@ -44,7 +44,7 @@ public class MasterMessagePresentationController {
             } else {
                 abandonMasterMessage(currentMasterMessage!)
                 currentMasterMessage!.onDismiss(true, time: now)
-                masterMessageQ!.delete(currentMasterMessage!)
+                masterMessageQ.delete(currentMasterMessage!)
                 self.currentMasterMessage = nil
             }
         }
@@ -56,7 +56,7 @@ public class MasterMessagePresentationController {
                 self.currentMasterMessage = masterMessage
                 return
             }
-            masterMessage = masterMessageQ!.poll()
+            masterMessage = masterMessageQ.poll()
         }
     }
     
@@ -77,31 +77,17 @@ public class MasterMessagePresentationController {
             if (masterMessage.point == nil ||
                 GeoCalc.getGeoAngle(location, c2: masterMessage.point!) < masterMessage.radius) {
                     if masterMessage.shouldBeSeen(now) {
-                        masterMessageQ!.push(masterMessage)
+                        masterMessageQ.push(masterMessage)
                     }
             }
         }
     }
     
-    func cmp(a1 : TimeValue64, a2 : TimeValue64) -> Int {
-        if (a1 == a2) {
-            return 0;
-        }
-        if (a1 < a2) {
-            return -1
-        }
-        if (a1 > a2) {
-            return 1
-        }
-        return 0
-    }
-    
-    
     func compare(b1 : MasterMessage, b2: MasterMessage) -> Int {
         let now = UtilsTime.current()
-        let time = cmp(b1.nextTime(now), a2: b2.nextTime(now))
+        let time = cmp(b1.nextTime(now), b2.nextTime(now))
         if time == 0 {
-            return cmp(Int64(b1.priority), a2: Int64(b2.priority))
+            return cmp(b1.priority, b2.priority)
         } else {
             return time
         }

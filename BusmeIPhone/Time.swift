@@ -8,6 +8,22 @@
 
 import Foundation
 
+
+
+func cmp(i1 : Int, i2 : Int) -> Int {
+    return i1 < i2 ? -1 : i1 == i2 ? 0 : 1
+}
+
+
+func cmp(i1 : Double, i2 : Double) -> Int {
+    return i1 < i2 ? -1 : i1 == i2 ? 0 : 1
+}
+
+
+func cmp(i1 : TimeValue64, i2 : TimeValue64) -> Int {
+    return i1 < i2 ? -1 : i1 == i2 ? 0 : 1
+}
+
 public struct UtilsTime {
     public static func current() -> TimeValue64 {
         let now = Int64(NSDate().timeIntervalSince1970)

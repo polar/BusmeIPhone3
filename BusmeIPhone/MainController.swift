@@ -110,7 +110,7 @@ public class MainController : BuspassEventListener {
             configurator.saveAsDefaultMaster(eventData.master!)
         }
         eventData.oldController = oldMasterController
-        eventData.returnStatus = "MasterReady"
+        eventData.returnStatus = "MasterInitialized"
         api.uiEvents.postEvent("Main:Master:Init:return", data: eventData)
     }
 }

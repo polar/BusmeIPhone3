@@ -14,13 +14,14 @@ public class MarkerPresentationController {
     public var markerBasket : MarkerBasket
     public var currentMarkers : [MarkerInfo] = [MarkerInfo]()
     public var removeMarkers : [MarkerInfo] = [MarkerInfo]()
-    public var markerQ : PriorityQueue<MarkerInfo>?
+    public var markerQ : PriorityQueue<MarkerInfo>!
     public var markerPresentationLimit : Int = 10;
     
     public init(api : BuspassApi, markerBasket : MarkerBasket) {
         self.api = api
         self.markerBasket = markerBasket
         markerBasket.markerController = self
+        self.markerQ = PriorityQueue<MarkerInfo>(compare: { (m1, m2) in self.compare(m1, m2: m2) })
     }
     
     func removeFromCurrentMarkers(marker : MarkerInfo) {
@@ -46,17 +47,17 @@ public class MarkerPresentationController {
                 }
             }
         }
-        for m in markerQ!.getElements() {
+        for m in markerQ.getElements() {
             if (m.id == marker.id) {
                 found = true
                 if (m.version < marker.version) {
-                    markerQ!.delete(m)
+                    markerQ.delete(m)
                     replace = true
                 }
             }
         }
         if (replace || found) {
-            markerQ!.push(marker)
+            markerQ.push(marker)
         }
     }
     
@@ -85,8 +86,8 @@ public class MarkerPresentationController {
         }
         var backOnQueue : [MarkerInfo] = [MarkerInfo]()
         for m in currentMarkers {
-            if (!markerQ!.doesInclude(m)) {
-                markerQ!.push(m)
+            if (!markerQ.doesInclude(m)) {
+                markerQ.push(m)
             }
         }
         self.currentMarkers.removeAll(keepCapacity: true)
@@ -117,8 +118,17 @@ public class MarkerPresentationController {
             }
         }
         for m in backOnQueue {
-            markerQ!.push(m)
+            markerQ.push(m)
         }
+    }
+    
+    func compare(m1 : MarkerInfo, m2 : MarkerInfo) -> Int {
+        let now = UtilsTime.current()
+        let priority = cmp(m1.priority, m2.priority)
+        if priority == 0 {
+            return cmp(m1.nextTime(now), m2.nextTime(now))
+        }
+        return priority
     }
     
     public func presentMarker(marker : MarkerInfo) {

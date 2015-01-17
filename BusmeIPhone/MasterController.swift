@@ -7,6 +7,17 @@
 //
 
 import Foundation
+import UIKit
+
+class MasterEventData {
+    var dialog : UIAlertView?
+    var error : HttpStatusLine?
+    var returnStatus : String?
+    var getTries : Int = 0
+    init(dialog : UIAlertView) {
+        self.dialog = dialog
+    }
+}
 
 public class MasterController : BuspassEventListener {
     public var api : BuspassApi
@@ -104,6 +115,10 @@ public class MasterController : BuspassEventListener {
     
     public func onBuspassEvent(event: BuspassEvent) {
         let eventName = event.eventName
+        if eventName == "Master:init" {
+            let eventData = event.eventData as MasterEventData
+            onMasterInit(eventData)
+        }
         if eventName == "JourneySync" {
             let eventData = event.eventData as JourneySyncEventData
             journeySyncRemoteInvocation.perform(eventData.isForced)
@@ -112,6 +127,17 @@ public class MasterController : BuspassEventListener {
             updateRemoteInvocation.perform(eventData.isForced)
         }
         
+    }
+    
+    func onMasterInit(eventData : MasterEventData) {
+        let (error, good) = api.get()
+        if !good {
+            eventData.error = error
+            eventData.returnStatus = "Error"
+        } else {
+            eventData.returnStatus = "MasterReady"
+        }
+        api.uiEvents.postEvent("Master:Init:return", data: eventData)
     }
     
     public func storeMaster() {

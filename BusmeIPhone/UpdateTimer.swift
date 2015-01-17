@@ -17,6 +17,10 @@ class UpdateTimer : BuspassEventListener {
         masterController.api.uiEvents.registerForEvent("UpdateProgress", listener: self)
     }
     
+    func unregisterForEvents() {
+        masterController.api.uiEvents.unregisterForEvent("UpdateProgress", listener: self)
+    }
+    
     func onBuspassEvent(event: BuspassEvent) {
         let eventName = event.eventName
         

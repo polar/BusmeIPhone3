@@ -138,6 +138,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
         api.uiEvents.registerForEvent("Main:Master:return", listener: self)
     }
     
+    func registerForMasterEvents(api : BuspassApi) {
+        api.uiEvents.registerForEvent("Master:Init:return", listener: self)
+        api.uiEvents.registerForEvent("JourneySyncProgress", listener: self)
+        api.uiEvents.registerForEvent("UpdateProgress", listener: self)
+    }
+    
+    func unregisterForMasterEvents(api : BuspassApi) {
+        api.uiEvents.unregisterForEvent("Master:Init:return", listener: self)
+        api.uiEvents.unregisterForEvent("JourneySyncProgress", listener: self)
+        api.uiEvents.unregisterForEvent("UpdateProgress", listener: self)
+    }
+    
     func searchDialog(title : String, message : String) -> UIAlertView {
         let dialog =  UIAlertView(title: title, message: message, delegate: nil, cancelButtonTitle: nil)
         return dialog
@@ -145,17 +157,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
     
     func onBuspassEvent(event: BuspassEvent) {
         let eventName = event.eventName
-        let eventData = event.eventData as? MainEventData
         if ("Main:Init:return" == eventName) {
+            let eventData = event.eventData as? MainEventData
             onMainInitReturn(eventData!)
         } else if ("Main:Discover:Init:return" == eventName) {
+            let eventData = event.eventData as? MainEventData
             onDiscoverInitReturn(eventData!)
         } else if ("Main:Discover:return" == eventName) {
+            let eventData = event.eventData as? MainEventData
             onDiscoverReturn(eventData!)
         } else if ("Main:Master:Init:return" == eventName) {
+            let eventData = event.eventData as? MainEventData
+            onMainMasterInitReturn(eventData!)
+        } else if ("Master:Init:return" == eventName) {
+            let eventData = event.eventData as? MasterEventData
             onMasterInitReturn(eventData!)
-        } else if ("Main:Master:return" == eventName) {
-            onMasterReturn(eventData!)
+        } else if ("JourneySyncProgress" == eventName) {
+            onJourneySyncProgress(event.eventData as JourneySyncProgressEventData!)
         }
     }
     
@@ -223,7 +241,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
     }
     
     // The MasterController has been set up. Assocate the MasterScreen
-    func onMasterInitReturn(eventData : MainEventData) {
+    func onMainMasterInitReturn(eventData : MainEventData) {
         if eventData.dialog != nil {
             eventData.dialog!.dismissWithClickedButtonIndex(0, animated: true)
             eventData.dialog = nil
@@ -232,26 +250,73 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
         if eventData.oldController != nil {
             eventsController.unregister(eventData.oldController!.api)
         }
+        
+        registerForMasterEvents(mainController!.masterController!.api)
+        
         self.masterMapScreen = MasterMapScreen()
         masterMapScreen!.setMasterController(mainController!.masterController!)
-    
+        
         navigationController?.popViewControllerAnimated(false)
         self.navigationController = UINavigationController(rootViewController: masterMapScreen!)
         window!.rootViewController = navigationController
-
+        
+        let dialog = UIAlertView(title: "Welcome to \(master.name!)", message: "", delegate: nil, cancelButtonTitle: nil)
+        dialog.show()
+        let evd = MasterEventData(dialog: dialog)
+        mainController!.masterController!.api.bgEvents.postEvent("Master:init", data: evd)
     }
     
-    func onMasterReturn(eventData : MainEventData) {
-        if eventData.dialog != nil {
-            eventData.dialog!.dismissWithClickedButtonIndex(0, animated: true)
-            eventData.dialog = nil
+    func onMasterInitReturn(eventData : MasterEventData) {
+        if eventData.error != nil {
+            if eventData.getTries < 2 {
+                Toast(title: "Error", message: eventData.error!.reasonPhrase, duration: 2)
+                eventData.error = nil
+                eventData.returnStatus = nil
+                eventData.getTries += 1
+                mainController!.masterController!.api.bgEvents.postEvent("Master:init", data: eventData)
+            } else {
+                if eventData.dialog != nil {
+                    eventData.dialog!.dismissWithClickedButtonIndex(0, animated: true)
+                    eventData.dialog = nil
+                }        // Set up timers.
+
+                Toast(title: "Giving Up", message: eventData.error!.reasonPhrase, duration: 2)
+            }
+        } else {
+            if eventData.dialog != nil {
+                eventData.dialog!.dismissWithClickedButtonIndex(0, animated: true)
+                eventData.dialog = nil
+            }        // Set up timers.
+            self.bannerTimer = BannerTimer(masterController: mainController!.masterController!, interval: 10)
+            self.updateTimer = UpdateTimer(masterController: mainController!.masterController!)
+            self.syncTimer = JourneySyncTimer(masterController: mainController!.masterController!)
+            startTimers()
         }
-        // Set up timers.
+    }
+    
+    var bannerTimer : BannerTimer?
+    var updateTimer : UpdateTimer?
+    var syncTimer : JourneySyncTimer?
+    func startTimers() {
+        bannerTimer?.start()
+        updateTimer?.start(false)
+        mainController?.masterController!.api.uiEvents.registerForEvent("JourneySyncProgress", listener: self)
+    }
+    func stopTimers() {
+        bannerTimer?.stop()
+        updateTimer?.stop()
+        syncTimer?.stop()
+    }
+    func onJourneySyncProgress(eventData:JourneySyncProgressEventData) {
+        if eventData.action == JourneySyncProgressEvent.P_DONE {
+            syncTimer?.start(true)
+        }
     }
     
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+        stopTimers()
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
@@ -265,12 +330,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
 
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        if (mainController?.masterController != nil) {
+             startTimers()
+        }
     }
 
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
         self.saveContext()
+        if (mainController?.masterController != nil) {
+            stopTimers()
+        }
     }
     
     // MARK: - Core Data stack

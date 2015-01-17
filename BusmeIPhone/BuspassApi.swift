@@ -52,12 +52,12 @@ public class BuspassApi : ApiBase, EventsApi {
         self.loginCredentials = nil
     }
     
-    public func get() -> Bool {
+    public func get() -> (HttpStatusLine?, Bool) {
         if isReady() {
-            return true
+            return (nil, true)
         } else {
             let (status, api) = forceGet()
-            return api != nil
+            return (status, api != nil)
         }
     }
     
@@ -143,6 +143,7 @@ public class BuspassApi : ApiBase, EventsApi {
                     self.offRouteCountThreshold = bp.offRouteCountThreshold != nil ? (bp.offRouteCountThreshold! as NSString).integerValue : 10 // milliseconds
                     self.offRouteDistanceThreshold = bp.offRouteDistanceThreshold != nil ? (bp.offRouteDistanceThreshold! as NSString).integerValue : 200
                     self.offRouteTimeThreshold = bp.offRouteTimeThreshold != nil ? (bp.offRouteTimeThreshold! as NSString).integerValue : 20000 // milliseconds
+                    self.buspass = bp
                     self.ready = true
                     return (response.getStatusLine(), self)
                 } else {
