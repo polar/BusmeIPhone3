@@ -17,6 +17,9 @@ class MasterEventData {
     init(dialog : UIAlertView) {
         self.dialog = dialog
     }
+    init() {
+        
+    }
 }
 
 public class MasterController : BuspassEventListener {

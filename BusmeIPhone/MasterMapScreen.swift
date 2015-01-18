@@ -18,6 +18,9 @@ public class MasterMapScreen : UIViewController, MKMapViewDelegate {
     public var menuButton : UIBarButtonItem!
     public var master : Master!
     
+    var routesView : RoutesView?
+    var tabButton : TabButton?
+    
 
     public var api : BuspassApi!
     public var masterController : MasterController!
@@ -45,6 +48,12 @@ public class MasterMapScreen : UIViewController, MKMapViewDelegate {
         self.menuButton = UIBarButtonItem(title: "Menu", style: UIBarButtonItemStyle.Plain, target: self, action: "openMenu")
         self.navigationItem.leftBarButtonItem = menuButton
         self.navigationItem.title = master.name!
+        
+        self.tabButton = TabButton()
+        self.routesView = RoutesView(masterController: masterController, masterMapScreen: self, tabButton: tabButton!)
+        view.addSubview(routesView!.view)
+        view.addSubview(tabButton!)
+        view.autoresizesSubviews = false
     }
 
     override public func didReceiveMemoryWarning() {

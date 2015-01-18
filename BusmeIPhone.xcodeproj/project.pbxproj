@@ -98,6 +98,9 @@
 		F3E8A9591A69BE110034F17E /* BannerTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E8A9581A69BE110034F17E /* BannerTimer.swift */; };
 		F3E8A95B1A69C2C90034F17E /* UpdateTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E8A95A1A69C2C90034F17E /* UpdateTimer.swift */; };
 		F3E8A95D1A69DA490034F17E /* JourneySyncTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E8A95C1A69DA490034F17E /* JourneySyncTimer.swift */; };
+		F3E8A95F1A6C2D7F0034F17E /* RouteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E8A95E1A6C2D7F0034F17E /* RouteCell.swift */; };
+		F3E8A9611A6C555D0034F17E /* RoutesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E8A9601A6C555D0034F17E /* RoutesView.swift */; };
+		F3E8A9631A6C62340034F17E /* TabButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E8A9621A6C62340034F17E /* TabButton.swift */; };
 		F3ED41A81A5F0E3500C6FFC9 /* MarkerPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3ED41A71A5F0E3500C6FFC9 /* MarkerPresentationController.swift */; };
 		F3F87A2D1A5EBDEC00EB1EC1 /* BLogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F87A2C1A5EBDEC00EB1EC1 /* BLogTests.swift */; };
 		F3F87A301A5ED10600EB1EC1 /* BannerEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F87A2F1A5ED10600EB1EC1 /* BannerEvent.swift */; };
@@ -251,6 +254,9 @@
 		F3E8A9581A69BE110034F17E /* BannerTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BannerTimer.swift; sourceTree = "<group>"; };
 		F3E8A95A1A69C2C90034F17E /* UpdateTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateTimer.swift; sourceTree = "<group>"; };
 		F3E8A95C1A69DA490034F17E /* JourneySyncTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JourneySyncTimer.swift; sourceTree = "<group>"; };
+		F3E8A95E1A6C2D7F0034F17E /* RouteCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteCell.swift; sourceTree = "<group>"; };
+		F3E8A9601A6C555D0034F17E /* RoutesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutesView.swift; sourceTree = "<group>"; };
+		F3E8A9621A6C62340034F17E /* TabButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabButton.swift; sourceTree = "<group>"; };
 		F3ED41A71A5F0E3500C6FFC9 /* MarkerPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerPresentationController.swift; sourceTree = "<group>"; };
 		F3F87A2C1A5EBDEC00EB1EC1 /* BLogTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLogTests.swift; sourceTree = "<group>"; };
 		F3F87A2F1A5ED10600EB1EC1 /* BannerEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BannerEvent.swift; sourceTree = "<group>"; };
@@ -311,6 +317,9 @@
 				F3E8A9581A69BE110034F17E /* BannerTimer.swift */,
 				F3E8A95A1A69C2C90034F17E /* UpdateTimer.swift */,
 				F3E8A95C1A69DA490034F17E /* JourneySyncTimer.swift */,
+				F3E8A95E1A6C2D7F0034F17E /* RouteCell.swift */,
+				F3E8A9601A6C555D0034F17E /* RoutesView.swift */,
+				F3E8A9621A6C62340034F17E /* TabButton.swift */,
 			);
 			name = MasterMapScreen;
 			sourceTree = "<group>";
@@ -776,6 +785,7 @@
 				F3C8FE891A535B0D009FF404 /* HttpClient.swift in Sources */,
 				F39802011A59FEB400D6C2B0 /* Buspass.swift in Sources */,
 				F3F87A3D1A5F06A700EB1EC1 /* MarkerStore.swift in Sources */,
+				F3E8A9631A6C62340034F17E /* TabButton.swift in Sources */,
 				F3F87A351A5EEB7800EB1EC1 /* BannerStore.swift in Sources */,
 				F3C8FE841A535B0D009FF404 /* ApiBase.swift in Sources */,
 				F3E8A9561A696EFC0034F17E /* MasterMainMenu.swift in Sources */,
@@ -790,6 +800,7 @@
 				F3140F481A5FA03E0024A65D /* JourneyDisplay.swift in Sources */,
 				F36316A11A5D8DB0002CAE61 /* RemoteInvocation.swift in Sources */,
 				F3C250381A68135B003B642C /* EventsController.swift in Sources */,
+				F3E8A95F1A6C2D7F0034F17E /* RouteCell.swift in Sources */,
 				F35E28ED1A647D94004DF0D7 /* JourneyCurrentLocationsRequestProcessor.swift in Sources */,
 				F3406A461A65B3D9000C04F4 /* UIBanner.swift in Sources */,
 				F37633B31A5ACEFF005AFB8F /* Time.swift in Sources */,
@@ -816,6 +827,7 @@
 				F3F87A391A5EF7A800EB1EC1 /* PriorityQueue.swift in Sources */,
 				F3C8FE8E1A535B0D009FF404 /* Tag.swift in Sources */,
 				F3140F4C1A6055630024A65D /* JourneyDisplayUtils.swift in Sources */,
+				F3E8A9611A6C555D0034F17E /* RoutesView.swift in Sources */,
 				F3140F541A61878B0024A65D /* Extensions.swift in Sources */,
 				F33B69B41A5B022C004C7742 /* GeoPathUtils.swift in Sources */,
 				F3140F3B1A5F398F0024A65D /* MasterMessagePresentationController.swift in Sources */,

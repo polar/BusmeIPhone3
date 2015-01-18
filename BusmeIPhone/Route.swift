@@ -16,7 +16,7 @@ public class Route : Storage {
     public var type : String?
     public var id : String?
     public var code : String?
-    public var direction : Double?
+    public var direction : String?
     public var distance : Double?
     public var vid : String?
     public var workingVid : String?
@@ -59,7 +59,7 @@ public class Route : Storage {
         self.type = coder.decodeObjectForKey("type") as? String
         self.id = coder.decodeObjectForKey("id") as? String
         self.code = coder.decodeObjectForKey("code") as? String
-        self.direction = coder.decodeDoubleForKey("direction")
+        self.direction = coder.decodeDoubleForKey("direction") as? String
         self.distance = coder.decodeDoubleForKey("distance")
         self.vid = coder.decodeObjectForKey("vid") as? String
         self.workingVid = coder.decodeObjectForKey("workingVid") as? String
@@ -95,7 +95,7 @@ public class Route : Storage {
         if (type != nil) { coder.encodeObject(type!, forKey: "type") }
         if (id != nil) { coder.encodeObject(id!, forKey: "id") }
         if (code != nil) { coder.encodeObject(code!, forKey: "code") }
-        if (direction != nil) { coder.encodeDouble(direction!, forKey: "direction") }
+        if (direction != nil) { coder.encodeObject(direction!, forKey: "direction") }
         if (distance != nil) { coder.encodeDouble(distance!, forKey: "distance") }
         if (vid != nil) { coder.encodeObject(vid!, forKey: "vid") }
         if (workingVid != nil) { coder.encodeObject(workingVid!, forKey: "workingVid") }
