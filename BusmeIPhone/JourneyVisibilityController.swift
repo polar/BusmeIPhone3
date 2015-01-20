@@ -41,6 +41,8 @@ public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJo
     public init(api : BuspassApi, controller : JourneyDisplayController) {
         self.api = api
         self.journeyDisplayController = controller
+        controller.onJourneyDisplayAddedListener = self
+        controller.onJourneyDisplayRemovedListener = self
         stateStack.append(VisualState())
     }
     
@@ -148,9 +150,11 @@ public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJo
         display.setNameHighlighted(true)
         display.setPathHighlighted(true)
         journeysHighlighted.append(display)
+        if (BLog.DEBUG) { BLog.logger.debug("Highlight journeysHighlighted \(journeysHighlighted.count)")}
     }
     
     public func unhighlightAll() {
+        if (BLog.DEBUG) { BLog.logger.debug("Unhightlight all journeysHighlighted \(journeysHighlighted.count)")}
         for display in journeysHighlighted {
             display.setNameHighlighted(false)
             display.setPathHighlighted(false)
@@ -256,7 +260,7 @@ public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJo
             }
         }
         var newState = VisualState()
-        newState.state = newState.S_VEHICLE
+        newState.state = newState.S_ROUTE
         newState.nearBy = state.nearBy
         newState.onlyActive = state.onlyActive
         newState.selectedRouteCode = code

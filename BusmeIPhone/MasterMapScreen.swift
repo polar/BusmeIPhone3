@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreLocation
 import UIKit
 import MapKit
 
@@ -54,15 +55,27 @@ public class MasterMapScreen : UIViewController, MKMapViewDelegate {
         view.addSubview(routesView!.view)
         view.addSubview(tabButton!)
         view.autoresizesSubviews = false
+        routesView!.viewWillAppear(false)
     }
 
     override public func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    override public func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent) {
+        if (motion == UIEventSubtype.MotionShake) {
+            routesView?.toggleSlide()
+            routesView?.reload()
+        }
+    }
 
     func openMenu() {
         let menuScreen = MasterMainMenu().initWithMasterController(masterController!)
         navigationController?.pushViewController(menuScreen, animated: true)
+    }
+    
+    func setCenter(point : CLLocationCoordinate2D, animated : Bool ) {
+        mapView.setCenterCoordinate(point, animated: animated)
     }
 }

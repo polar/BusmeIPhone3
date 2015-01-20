@@ -59,7 +59,7 @@ public class Route : Storage {
         self.type = coder.decodeObjectForKey("type") as? String
         self.id = coder.decodeObjectForKey("id") as? String
         self.code = coder.decodeObjectForKey("code") as? String
-        self.direction = coder.decodeDoubleForKey("direction") as? String
+        self.direction = coder.decodeObjectForKey("direction") as? String
         self.distance = coder.decodeDoubleForKey("distance")
         self.vid = coder.decodeObjectForKey("vid") as? String
         self.workingVid = coder.decodeObjectForKey("workingVid") as? String
@@ -143,8 +143,16 @@ public class Route : Storage {
         return "route" == type!
     }
     
+    // Set by JourneyBasket.
+    
+    private var activeJourney : Bool = false
+    public func setActive(active: Bool) {
+        activeJourney = active
+    }
     public func isActiveJourney() -> Bool {
-        return isJourney() && lastKnownLocation != nil
+        // TODO This might be a litle different. The fact that it shows up in the sync, should
+        // mean it's active.
+        return isJourney() && activeJourney // lastKnownLocation != nil
     }
     public func isReporting() -> Bool {
         return reporting
@@ -371,7 +379,7 @@ public class Route : Storage {
         
         let dir = tag.attributes["dir"] as NSString?
         if (dir != nil) {
-            self.direction = dir!.doubleValue
+            self.direction = dir!
         }
         
         let version = tag.attributes["version"] as NSString?

@@ -29,8 +29,7 @@ class TabButton : UIButton {
         routesView!.slideIn()
     }
     
-    private var viewOrigin = CGPoint()
-    private var viewIsOut : Bool = true
+    var viewOrigin = CGPoint()
     
     func slideOut() {
         viewOrigin = self.frame.origin
@@ -40,7 +39,6 @@ class TabButton : UIButton {
             self.alpha = 0
             self.frame.origin = CGPoint(x: origin.x + size.width + 10, y: origin.y)
         })
-        viewIsOut = true
     }
     
     func slideIn() {
@@ -48,7 +46,6 @@ class TabButton : UIButton {
             self.frame.origin = self.viewOrigin
             self.alpha = 1.0
         })
-        viewIsOut = false
     }
     
 }

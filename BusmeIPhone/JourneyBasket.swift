@@ -135,9 +135,11 @@ public class JourneyBasket {
         newJourneys += addedJourneys
         setJourneys(newJourneys)
         for route in removedJourneys {
+            route.setActive(false)
             notifyOnJourneyRemovedListeners(route)
         }
         for route in addedJourneys {
+            route.setActive(true)
             notifyOnJourneyAddedListeners(route)
         }
         notifyOnBasketUpdateListeners()

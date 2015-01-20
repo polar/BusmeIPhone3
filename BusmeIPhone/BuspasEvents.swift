@@ -82,6 +82,9 @@ public class BuspassEventDistributor {
     }
     
     public func postBuspassEvent(event : BuspassEvent) {
+        
+        if (BLog.DEBUG) { BLog.logger.debug("\(event.eventName)") }
+
         eventQ.insert(event, atIndex: 0);
         if (postEventListener != nil) {
             postEventListener!.onPostEvent(event);

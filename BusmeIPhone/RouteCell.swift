@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 class RouteCell : UITableViewCell {
+    var journeyDisplay : JourneyDisplay?
     
     let ICONS = ["route_icon.png",
         "route_icon_active.png",
@@ -34,14 +35,14 @@ class RouteCell : UITableViewCell {
     var routeCodeLabel : UILabel
 
     var vidLabel : UILabel!
-    var vidLabelView : UILabel!
+    var vidLabelView : UIView!
     var timesLabel : UILabel!
     
     var labelFontSize : CGFloat
     var labelFont : UIFont
     var contentConstraints : [AnyObject]
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    init(style: UITableViewCellStyle) {
         self.timeFormat = "%H:%S %P"
         self.labelFontSize = UIFont.labelFontSize() - 4
         self.labelFont = UIFont.systemFontOfSize(labelFontSize)
@@ -58,18 +59,21 @@ class RouteCell : UITableViewCell {
         self.nameCenterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         self.routeCodeLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         self.vidLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
-        self.vidLabelView = UILabel(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+        self.vidLabelView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         self.timesLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         self.contentConstraints = [AnyObject]()
         
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        super.init(style: style, reuseIdentifier: "RouteCell")
         
         contentView.bounds = CGRect(x: 0, y: 0, width: 999999, height: 999999)
         imageView?.removeFromSuperview()
         textLabel?.removeFromSuperview()
         detailTextLabel?.removeFromSuperview()
+        
         nameView.addSubview(routeNameLabel)
         nameView.addSubview(dirLabel)
+        
+        vidLabelView.addSubview(vidLabel)
 
 
         dirLabel.textAlignment = NSTextAlignment.Right
@@ -95,7 +99,7 @@ class RouteCell : UITableViewCell {
         
     }
     
-    func willDisplay(journeyDisplay : JourneyDisplay) {
+    func handleJourneyDisplay(journeyDisplay : JourneyDisplay) {
         iconView.image = UIImage(named: ICONS[journeyDisplay.getIcon()-1])
         if journeyDisplay.route.isJourney() {
             prepareJourney(journeyDisplay)
@@ -115,7 +119,7 @@ class RouteCell : UITableViewCell {
         constraints.extend(NSLayoutConstraint.constraintsWithVisualFormat("H:|[vid]|",
             options: NSLayoutFormatOptions.allZeros, metrics: [NSObject:AnyObject](), views: views))
         
-        vidLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
+        vidLabelView.setTranslatesAutoresizingMaskIntoConstraints(false)
         vidLabelView.addConstraints(constraints)
     }
     
@@ -149,19 +153,20 @@ class RouteCell : UITableViewCell {
 
 
     func prepareJourney(journeyDisplay : JourneyDisplay) {
+        self.journeyDisplay = journeyDisplay
         let route = journeyDisplay.route
         
         var fullSize : [NSObject:AnyObject] = [ NSFontAttributeName : labelFont.fontWithSize(labelFontSize)]
         if journeyDisplay.isNameHighlighted() {
-            fullSize[NSForegroundColorAttributeName] = UIColor.redColor().CGColor
+            fullSize[NSForegroundColorAttributeName] = UIColor.redColor()
         }
         var smallSize : [NSObject:AnyObject] = [ NSFontAttributeName : labelFont.fontWithSize(labelFontSize - 4)]
         if journeyDisplay.isNameHighlighted() {
-            smallSize[NSForegroundColorAttributeName] = UIColor.redColor().CGColor
+            smallSize[NSForegroundColorAttributeName] = UIColor.redColor()
         }
         var tinySize : [NSObject:AnyObject] = [ NSFontAttributeName : labelFont.fontWithSize(labelFontSize - 6)]
         if journeyDisplay.isNameHighlighted() {
-            tinySize[NSForegroundColorAttributeName] = UIColor.redColor().CGColor
+            tinySize[NSForegroundColorAttributeName] = UIColor.redColor()
         }
         
         let routeCode : NSAttributedString = NSAttributedString(string: route.code!, attributes: fullSize)
@@ -178,7 +183,7 @@ class RouteCell : UITableViewCell {
         let vid = route.vid == nil ? "" : route.vid
         let vidText = NSAttributedString(string: route.name!, attributes: fullSize)
         vidLabel.attributedText = vidText
-        vidLabel.hidden = false
+        vidLabelView.hidden = false
         
         let dirText = NSAttributedString(string: route.direction!, attributes: fullSize)
         routeNameLabel.attributedText = dirText
@@ -215,11 +220,13 @@ class RouteCell : UITableViewCell {
     }
     
     func prepareRouteDefinition(journeyDisplay : JourneyDisplay) {
+        self.journeyDisplay = journeyDisplay
+
         let route = journeyDisplay.route
         
         var fullSize : [NSObject:AnyObject] = [ NSFontAttributeName : labelFont.fontWithSize(labelFontSize)]
         if journeyDisplay.isNameHighlighted() {
-            fullSize[NSForegroundColorAttributeName] = UIColor.redColor().CGColor
+            fullSize[NSForegroundColorAttributeName] = UIColor.redColor()
         }
         
         let routeCode : NSAttributedString = NSAttributedString(string: route.code!, attributes: fullSize)
@@ -233,7 +240,7 @@ class RouteCell : UITableViewCell {
         routeNameLabel.frame.size = routeNameLabelSize.size
         
         vidLabel.attributedText = nil
-        vidLabel.hidden = true
+        vidLabelView.hidden = true
         
         dirLabel.attributedText = nil
         dirLabel.hidden = true

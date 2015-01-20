@@ -49,11 +49,11 @@ public class JourneyDisplay {
     }
     
     public func isActive() -> Bool {
-        return route.isActiveJourney() && isFinished() || isStartingJourney()
+        return route.isActiveJourney() && !isFinished() || isStartingJourney()
     }
     
     public func isNameVisible() -> Bool {
-        return nameVisible && route.isFinished()
+        return nameVisible && !route.isFinished()
     }
     
     public func isPathVisible() -> Bool {

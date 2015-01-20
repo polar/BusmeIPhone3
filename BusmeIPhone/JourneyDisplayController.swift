@@ -43,6 +43,8 @@ public class JourneyDisplayController : OnJourneyAddedListener, OnJourneyRemoved
     public init(api :BuspassApi, basket : JourneyBasket) {
         self.api = api
         self.journeyBasket = basket
+        basket.addOnJourneyAddedListeners(self)
+        basket.addOnJourneyRemovedListeners(self)
     }
     
     public func getJourneyDisplays() -> [JourneyDisplay] {

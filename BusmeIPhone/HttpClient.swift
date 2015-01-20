@@ -21,9 +21,9 @@ public class HttpClient {
     
 
     public func getURLResponse(url: String) -> HttpResponse {
+        dispatch_semaphore_wait(self.entry, DISPATCH_TIME_FOREVER);
         Alamofire.request(.GET, url)
             .response(queue: self.queue,  serializer: Request.stringResponseSerializer(encoding: NSUTF8StringEncoding), completionHandler: {(request, response, data, error) in
-                dispatch_semaphore_wait(self.entry, DISPATCH_TIME_FOREVER);
                 self.response = HttpResponse(response: response, data: data, error: error);
                 dispatch_semaphore_signal(self.sem);
             });
@@ -39,13 +39,15 @@ public class HttpClient {
     }
     
     public func postURLResponse(url: String, parameters: [String: AnyObject]?) -> HttpResponse {
+        dispatch_semaphore_wait(self.entry, DISPATCH_TIME_FOREVER);
         Alamofire.request(.POST, url, parameters: parameters)
             .response(queue: self.queue,  serializer: Request.stringResponseSerializer(encoding: NSUTF8StringEncoding), completionHandler: {(request, response, data, error) in
-                dispatch_semaphore_wait(self.entry, DISPATCH_TIME_FOREVER);
-                self.response = HttpResponse(response: response!, data: data, error: error);
+                self.response = HttpResponse(response: response, data: data, error: error);
+                if (BLog.DEBUG) { BLog.logger.debug("postURLResponse return; signal sem") }
                 dispatch_semaphore_signal(self.sem);
             });
-        
+                
+        if (BLog.DEBUG) { BLog.logger.debug("postURLResponse wait sem") }
         dispatch_semaphore_wait(self.sem, DISPATCH_TIME_FOREVER);
         let result = self.response;
         dispatch_semaphore_signal(self.entry);
