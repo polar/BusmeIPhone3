@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import CoreLocation
 
 let INITIAL_URL = "http://busme-apis.herokuapp.com/apis/d1/get"
 let APP_PLATFORM = "iOS"
@@ -291,6 +292,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
             self.updateTimer = UpdateTimer(masterController: mainController!.masterController!)
             self.syncTimer = JourneySyncTimer(masterController: mainController!.masterController!)
             startTimers()
+
+            // Testing
+            mainController!.masterController!.api.lastKnownLocation = CLLocationCoordinate2D(latitude: mainController!.masterController!.master.lat!, longitude: mainController!.masterController!.master.lon!)
         }
     }
     

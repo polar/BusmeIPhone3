@@ -188,7 +188,7 @@ public class MessageBase : MessageSpec {
         self.goUrl = tag.attributes["go_url"]
         if (goUrl == nil) { self.goUrl = tag.attributes["goUrl"] }
         self.iconUrl = tag.attributes["icon_url"]
-        if (iconUrl == nil) { self.iconUrl = tag.attributes["goUrl"] }
+        if (iconUrl == nil) { self.iconUrl = tag.attributes["iconUrl"] }
         
         // BannerInfo
         let duration = tag.attributes["length"] as NSString?

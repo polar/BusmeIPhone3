@@ -11,16 +11,15 @@ import CoreLocation
 
 public class BannerBasket {
     public var bannerStore : BannerStore
-    public var bannerController : BannerPresentationController?
-    
-    public var banners : [String:BannerInfo] = [String:BannerInfo]()
-    
+    weak var bannerController : BannerPresentationController?
+        
     public init(bannerStore : BannerStore) {
         self.bannerStore = bannerStore
     }
     
     public func addBanner(banner : BannerInfo) {
         bannerStore.storeBanner(banner);
+        bannerController?.addBanner(banner)
     }
     
     public func removeBanner(id : String) {
@@ -37,6 +36,6 @@ public class BannerBasket {
     }
     
     public func getBanners() -> [BannerInfo] {
-        return banners.values.array
+        return bannerStore.banners.values.array
     }
 }

@@ -18,6 +18,7 @@ public class BannerPresentationController {
         self.api = api
         self.bannerBasket = basket
         self.bannerQ = PriorityQueue<BannerInfo>(compare: self.compare)
+        bannerBasket.bannerController = self
     }
     
     public func addBanner(banner: BannerInfo) {

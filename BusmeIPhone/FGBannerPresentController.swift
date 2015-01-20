@@ -7,9 +7,12 @@
 //
 
 import Foundation
+import CoreGraphics
 
 public class FGBannerPresentController : BuspassEventListener {
 
+    let BANNER_HEIGHT = CGFloat(40)
+    
     weak var api : BuspassApi!
     weak var masterMapScreen : MasterMapScreen!
     weak var masterController : MasterController!
@@ -18,8 +21,20 @@ public class FGBannerPresentController : BuspassEventListener {
         self.masterMapScreen = masterMapScreen
         self.masterController = masterMapScreen.masterController
         self.api = masterMapScreen.api
+        registerForEvents()
+        
     }
     
+    func registerForEvents() {
+        api.uiEvents.registerForEvent("BannerPresent:display", listener: self)
+        api.uiEvents.registerForEvent("BannerPresent:dismiss", listener: self)
+    }
+    
+    
+    func unregisterForEvents() {
+        api.uiEvents.unregisterForEvent("BannerPresent:display", listener: self)
+        api.uiEvents.unregisterForEvent("BannerPresent:dismiss", listener: self)
+    }
     
     
     public func onBuspassEvent(event: BuspassEvent) {
@@ -35,13 +50,21 @@ public class FGBannerPresentController : BuspassEventListener {
     
     private var currentBanner : UIBanner?
     public func presentBanner(eventData : BannerEventData) {
+        let newBanner = UIBanner(bannerInfo: eventData.bannerInfo, masterMapScreen: masterMapScreen)
+        newBanner.view.frame = CGRect(x: -masterMapScreen.view.frame.size.width, y: CGFloat(masterMapScreen.view.frame.size.height - BANNER_HEIGHT), width: CGFloat(masterMapScreen.view.frame.size.width), height: BANNER_HEIGHT)
         if (currentBanner != nil) {
-            abandonedBanners.append(currentBanner!)
-            self.currentBanner = nil
-            clearBanners()
+            let banner = currentBanner!
+            self.currentBanner = newBanner
+            masterMapScreen.view.addSubview(currentBanner!.view)
+            banner.slide_out({(finished: Bool) in
+                banner.removeFromParentViewController()
+                self.currentBanner!.slide_in({(x) in })
+            })
+        } else {
+            self.currentBanner = newBanner
+            masterMapScreen.view.addSubview(currentBanner!.view)
+            self.currentBanner!.slide_in({(x) in })
         }
-        self.currentBanner = UIBanner(bannerInfo: eventData.bannerInfo, masterMapScreen: masterMapScreen)
-        masterMapScreen.view.addSubview(currentBanner!.view)
     }
     
     private var abandonedBanners : [UIBanner] = [UIBanner]()
@@ -56,8 +79,11 @@ public class FGBannerPresentController : BuspassEventListener {
     
     public func abandonBanner(eventData : BannerEventData) {
         if currentBanner != nil {
-            abandonedBanners.append(currentBanner!)
+            let banner = currentBanner!
+            self.currentBanner = nil
+            banner.slide_out({(y) in
+                banner.removeFromParentViewController()
+            })
         }
-        self.currentBanner!.slide_out({(finished: Bool) in self.clearBanners() })
     }
 }
