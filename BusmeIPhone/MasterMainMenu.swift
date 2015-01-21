@@ -230,8 +230,7 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
     func reload(menuItem : MenuItem) {
         let title = menuItem.title
         if title == "Reload All" {
-            masterController!.api.bgEvents.postEvent("Master:reload", data: MainEventData())
-            masterController!.api.bgEvents.postEvent("JourneySync", data: MainEventData())
+            masterController!.api.bgEvents.postEvent("Master:reload", data: MasterEventData())
             Toast(title: "Reload All", message: "", duration: 1).show()
         } else if title == "Reset Seen Markers" {
             masterController!.api.bgEvents.postEvent("Master:resetSeenMarkers", data: MainEventData())

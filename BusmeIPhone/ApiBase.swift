@@ -42,7 +42,12 @@ public class ApiBase {
         if (entity != nil) {
             let s = entity!.getContent();
             let rxml = RXMLElement.elementFromXMLString(s, encoding: NSUTF8StringEncoding) as RXMLElement;
-            return Tag(tag: rxml);
+            if rxml.isValid {
+                return Tag(tag: rxml);
+            } else {
+                if (BLog.ERROR) { BLog.logger.error("XML not valid from '\(s)'") }
+                return nil
+            }
         } else {
             return nil;
         }

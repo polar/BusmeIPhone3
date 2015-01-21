@@ -19,6 +19,8 @@ public class MasterMapScreen : UIViewController, MKMapViewDelegate {
     public var menuButton : UIBarButtonItem!
     public var master : Master!
     
+    var syncProgressDialogController : SyncProgressDialogController!
+    
     var routesView : RoutesView?
     var tabButton : TabButton?
     
@@ -31,6 +33,7 @@ public class MasterMapScreen : UIViewController, MKMapViewDelegate {
         self.masterController = masterController
         self.api = masterController.api
         self.master = masterController.master
+        self.syncProgressDialogController = SyncProgressDialogController(api: api, master: master)
         self.fgBannerPresentationController = FGBannerPresentController(masterMapScreen: self)
     }
     

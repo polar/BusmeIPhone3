@@ -18,8 +18,17 @@ public class BannerBasket {
     }
     
     public func addBanner(banner : BannerInfo) {
-        bannerStore.storeBanner(banner);
-        bannerController?.addBanner(banner)
+        let b = bannerStore.banners[banner.id]
+        if b != nil {
+            if b!.version < banner.version {
+                bannerController?.removeBanner(b!)
+                bannerStore.storeBanner(banner);
+                bannerController?.addBanner(banner)
+            }
+        } else {
+            bannerStore.storeBanner(banner);
+            bannerController?.addBanner(banner)
+        }
     }
     
     public func removeBanner(id : String) {
@@ -37,5 +46,11 @@ public class BannerBasket {
     
     public func getBanners() -> [BannerInfo] {
         return bannerStore.banners.values.array
+    }
+    
+    public func empty() {
+        for banner in getBanners() {
+            removeBanner(banner)
+        }
     }
 }

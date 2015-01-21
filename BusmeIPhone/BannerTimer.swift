@@ -36,7 +36,7 @@ class BannerTimer : UIResponder, BuspassEventListener {
         let eventName = event.eventName
         if eventName == "Banner:roll" {
             let now = UtilsTime.current()
-            masterController.bannerPresentationController.roll(true, now: now)
+            masterController.bannerPresentationController.roll(false, now: now)
             masterController.markerPresentationController.roll(now: now)
             masterController.masterMessagePresentationController.roll(false, now: now)
         }

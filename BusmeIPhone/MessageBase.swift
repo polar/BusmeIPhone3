@@ -223,7 +223,7 @@ public class MessageBase : MessageSpec {
         
         let expiryTime = tag.attributes["expiryTime"] as NSString?
         if (expiryTime != nil) {
-            self.expiryTime = Int64(expiryTime!.integerValue) as TimeValue64
+            self.expiryTime = Int64(expiryTime!.integerValue)*1000 as TimeValue64
         }
         
         let priority = tag.attributes["priority"] as NSString?

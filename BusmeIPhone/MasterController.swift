@@ -128,6 +128,9 @@ public class MasterController : BuspassEventListener {
         } else if eventName == "Update" {
             let eventData = event.eventData as UpdateEventData
             updateRemoteInvocation.perform(eventData.isForced)
+        } else if eventName == "Master:reload" {
+            let eventData = event.eventData as MasterEventData
+            onMasterReload(eventData)
         }
         
     }
@@ -141,6 +144,15 @@ public class MasterController : BuspassEventListener {
             eventData.returnStatus = "MasterReady"
         }
         api.uiEvents.postEvent("Master:Init:return", data: eventData)
+    }
+    
+    func onMasterReload(eventData : MasterEventData) {
+        if (BLog.DEBUG) { BLog.logger.debug("emptying all baskets and stores") }
+        journeyBasket.empty()
+        journeyStore.empty()
+        bannerBasket.empty()
+        markerBasket.empty()
+        masterMessageBasket.empty()
     }
     
     public func storeMaster() {

@@ -26,16 +26,23 @@ public class MasterMessageBasket {
         }
     }
     
+    public func empty() {
+        for msg in getMasterMessages() {
+            removeMasterMessage(msg)
+        }
+    }
+    
     public func addMasterMessage(masterMessage : MasterMessage) {
         let m = masterMessageStore.getMasterMessage(masterMessage.id)
         if (m != nil) {
             if (m!.version < masterMessage.version) {
                 masterMessageStore.removeMasterMessage(masterMessage.id)
-                masterMessageController?.removeMasterMessage(masterMessage)
+                masterMessageController?.addMasterMessage(masterMessage)
                 masterMessageStore.storeMasterMessage(masterMessage)
             }
         } else {
             masterMessageStore.storeMasterMessage(masterMessage)
+            masterMessageController?.addMasterMessage(masterMessage)
         }
     }
     

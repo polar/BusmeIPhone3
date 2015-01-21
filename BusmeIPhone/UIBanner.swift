@@ -57,7 +57,7 @@ public class UIBanner : UIViewController {
     }
     
     public func addTapRecognizer() {
-        var recognizer = UITapGestureRecognizer(target: self, action: "onClick")
+        var recognizer = UITapGestureRecognizer(target: self, action: "onClick:")
         recognizer.numberOfTapsRequired = 1
         recognizer.numberOfTouchesRequired = 1
         view.addGestureRecognizer(recognizer)

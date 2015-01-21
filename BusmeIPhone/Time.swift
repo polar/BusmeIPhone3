@@ -26,14 +26,14 @@ func cmp(i1 : TimeValue64, i2 : TimeValue64) -> Int {
 
 public struct UtilsTime {
     public static func current() -> TimeValue64 {
-        let now = Int64(NSDate().timeIntervalSince1970)
+        let now = Int64(NSDate().timeIntervalSince1970) * 1000
         return now
     }
     
     public static func stringForTime(time : TimeValue64) -> String {
         let date_formatter = NSDateFormatter()
         date_formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-        let date = NSDate(timeIntervalSince1970: NSTimeInterval(time))
+        let date = NSDate(timeIntervalSince1970: NSTimeInterval(time/1000))
         let today = date_formatter.stringFromDate(date)
         return today
     }
@@ -58,7 +58,7 @@ public struct UtilsTime {
         }
         let tstr = String(format: "%@%@:%@:%@", dateT, xs[0], xs[1], xs[2])
         let date : NSDate = date_formatter.dateFromString(tstr)!
-        let result = Int64(date.timeIntervalSince1970)
+        let result = Int64(date.timeIntervalSince1970) * 1000
         NSLog("Date for %@ is %@ %d", tstr, date, result)
         return result
     }

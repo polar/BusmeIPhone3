@@ -16,6 +16,13 @@ public class MarkerBasket {
         self.markerStore = markerStore
     }
     
+    public func empty() {
+        for marker in markerStore.getMarkers() {
+            markerController?.removeMarker(marker)
+        }
+        markerStore.empty()
+    }
+    
     public func getMarkers() -> [MarkerInfo] {
         return markerStore.getMarkers()
     }
@@ -34,12 +41,13 @@ public class MarkerBasket {
         let m = markerStore.getMarkerInfo(marker.id)
         if (m != nil) {
             if (m!.version < marker.version) {
-                markerStore.removeMarker(marker.id)
-                markerController?.removeMarker(marker)
+                markerStore.removeMarker(m!.id)
+                markerController?.addMarker(marker)
                 markerStore.storeMarker(marker)
             }
         } else {
             markerStore.storeMarker(marker)
+            markerController?.addMarker(marker)
         }
     }
     

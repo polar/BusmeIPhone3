@@ -11,7 +11,7 @@ import Foundation
 public class BannerInfo : MessageBase, StorageProtocol {
     
     public override func isValid() -> Bool {
-        return title != nil && description != nil
+        return !(id.isEmpty) && title != nil && description != nil
     }
     
     public func preSerialize(api: ApiBase, time: TimeValue64) {

@@ -42,7 +42,7 @@ public class JourneySyncRemoteInvocation : RemoteInvocation {
     public init(api : BuspassApi, journeyDisplayController : JourneyDisplayController, journeySyncProgressListener : JourneySyncProgressListener) {
         self.journeyDisplayController = journeyDisplayController
         self.journeySyncProgressListener = journeySyncProgressListener
-        self.journeySyncRequestProcessor = JourneySyncRequestProcessor(journeyBasket: journeyDisplayController.journeyBasket)
+        self.journeySyncRequestProcessor = JourneySyncRequestProcessor(journeyBasket: journeyDisplayController.journeyBasket, progressListener: journeySyncProgressListener)
         self.journeySyncUpdateProgressListener = JourneySyncUpdateProgressListener(journeySyncProgressListener: journeySyncProgressListener)
         self.busApi = api
         super.init(api: api, url: nil)

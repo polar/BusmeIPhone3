@@ -33,7 +33,7 @@ public class BannerRequestProcessor : ArgumentPreparer, ResponseProcessor {
             if child.name.lowercaseString == "banners" {
                 for bspec in child.childNodes {
                     if bspec.name.lowercaseString == "banner" {
-                        if bspec.attributes["destroy"]? == "1" {
+                        if bspec.attributes["destroy"]? == "1"  || bspec.attributes["destroy"]? == "true" {
                             let id = bspec.attributes["id"]
                             if id != nil {
                                 banners[id!] = nil
