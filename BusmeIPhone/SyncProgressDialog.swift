@@ -35,7 +35,9 @@ class SyncProgressDialogController : NSObject, UIAlertViewDelegate, BuspassEvent
         if eventData != nil {
             switch(eventData!.action) {
             case JourneySyncProgressEvent.P_BEGIN:
+                if (BLog.DEBUG) { BLog.logger.debug("JourneySyncProgress: P_BEGIN \(eventData!.isForced)") }
                 if eventData!.isForced {
+                    dialog.message = ""
                     dialog.show()
                 }
                 break
@@ -47,6 +49,7 @@ class SyncProgressDialogController : NSObject, UIAlertViewDelegate, BuspassEvent
                 break
             case JourneySyncProgressEvent.P_DONE:
                 dialog.dismissWithClickedButtonIndex(0, animated: true)
+                break
             default:
                 break
             }

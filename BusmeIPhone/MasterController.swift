@@ -132,7 +132,6 @@ public class MasterController : BuspassEventListener {
             let eventData = event.eventData as MasterEventData
             onMasterReload(eventData)
         }
-        
     }
     
     func onMasterInit(eventData : MasterEventData) {
@@ -153,6 +152,7 @@ public class MasterController : BuspassEventListener {
         bannerBasket.empty()
         markerBasket.empty()
         masterMessageBasket.empty()
+        api.uiEvents.postEvent("Master:Reload:return", data: eventData)
     }
     
     public func storeMaster() {

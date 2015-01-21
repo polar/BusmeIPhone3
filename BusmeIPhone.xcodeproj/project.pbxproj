@@ -43,6 +43,12 @@
 		F3406A4A1A65C8D8000C04F4 /* MasterMapScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3406A491A65C8D8000C04F4 /* MasterMapScreen.swift */; };
 		F3406A561A661DC5000C04F4 /* DiscoverScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3406A551A661DC5000C04F4 /* DiscoverScreen.swift */; };
 		F3529ECD1A6F102200036288 /* SyncProgressDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3529ECC1A6F102200036288 /* SyncProgressDialog.swift */; };
+		F3529ED21A6F607D00036288 /* MarkerAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3529ED11A6F607D00036288 /* MarkerAnnotation.swift */; };
+		F3529ED51A6F624000036288 /* MarkerAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3529ED41A6F624000036288 /* MarkerAnnotationView.swift */; };
+		F3529ED71A6F659F00036288 /* UIMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3529ED61A6F659F00036288 /* UIMarker.swift */; };
+		F3529ED91A701B4400036288 /* MarkerMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3529ED81A701B4400036288 /* MarkerMessageViewController.swift */; };
+		F3529EDB1A7020E200036288 /* WebScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3529EDA1A7020E200036288 /* WebScreen.swift */; };
+		F3529EDD1A70265800036288 /* FGMarkerPresentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3529EDC1A70265800036288 /* FGMarkerPresentController.swift */; };
 		F35E28E81A647CBA004DF0D7 /* MarkerRequestProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35E28E71A647CBA004DF0D7 /* MarkerRequestProcessor.swift */; };
 		F35E28EB1A647D2A004DF0D7 /* MasterMessageRequestProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35E28EA1A647D2A004DF0D7 /* MasterMessageRequestProcessor.swift */; };
 		F35E28ED1A647D94004DF0D7 /* JourneyCurrentLocationsRequestProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35E28EC1A647D94004DF0D7 /* JourneyCurrentLocationsRequestProcessor.swift */; };
@@ -196,6 +202,12 @@
 		F3406A491A65C8D8000C04F4 /* MasterMapScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterMapScreen.swift; sourceTree = "<group>"; };
 		F3406A551A661DC5000C04F4 /* DiscoverScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverScreen.swift; sourceTree = "<group>"; };
 		F3529ECC1A6F102200036288 /* SyncProgressDialog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncProgressDialog.swift; sourceTree = "<group>"; };
+		F3529ED11A6F607D00036288 /* MarkerAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerAnnotation.swift; sourceTree = "<group>"; };
+		F3529ED41A6F624000036288 /* MarkerAnnotationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerAnnotationView.swift; sourceTree = "<group>"; };
+		F3529ED61A6F659F00036288 /* UIMarker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIMarker.swift; sourceTree = "<group>"; };
+		F3529ED81A701B4400036288 /* MarkerMessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerMessageViewController.swift; sourceTree = "<group>"; };
+		F3529EDA1A7020E200036288 /* WebScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebScreen.swift; sourceTree = "<group>"; };
+		F3529EDC1A70265800036288 /* FGMarkerPresentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FGMarkerPresentController.swift; sourceTree = "<group>"; };
 		F35E28E71A647CBA004DF0D7 /* MarkerRequestProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerRequestProcessor.swift; sourceTree = "<group>"; };
 		F35E28EA1A647D2A004DF0D7 /* MasterMessageRequestProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterMessageRequestProcessor.swift; sourceTree = "<group>"; };
 		F35E28EC1A647D94004DF0D7 /* JourneyCurrentLocationsRequestProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JourneyCurrentLocationsRequestProcessor.swift; sourceTree = "<group>"; };
@@ -314,6 +326,7 @@
 			children = (
 				F3406A491A65C8D8000C04F4 /* MasterMapScreen.swift */,
 				F3406A431A65B0AC000C04F4 /* FGBannerPresentController.swift */,
+				F3529EDC1A70265800036288 /* FGMarkerPresentController.swift */,
 				F3406A451A65B3D9000C04F4 /* UIBanner.swift */,
 				F3E8A9551A696EFC0034F17E /* MasterMainMenu.swift */,
 				F3E8A9581A69BE110034F17E /* BannerTimer.swift */,
@@ -323,6 +336,11 @@
 				F3E8A9601A6C555D0034F17E /* RoutesView.swift */,
 				F3E8A9621A6C62340034F17E /* TabButton.swift */,
 				F3529ECC1A6F102200036288 /* SyncProgressDialog.swift */,
+				F3529ED11A6F607D00036288 /* MarkerAnnotation.swift */,
+				F3529ED41A6F624000036288 /* MarkerAnnotationView.swift */,
+				F3529ED61A6F659F00036288 /* UIMarker.swift */,
+				F3529ED81A701B4400036288 /* MarkerMessageViewController.swift */,
+				F3529EDA1A7020E200036288 /* WebScreen.swift */,
 			);
 			name = MasterMapScreen;
 			sourceTree = "<group>";
@@ -743,7 +761,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3529ED21A6F607D00036288 /* MarkerAnnotation.swift in Sources */,
 				F3140F341A5F1D0E0024A65D /* MarkerEvent.swift in Sources */,
+				F3529EDD1A70265800036288 /* FGMarkerPresentController.swift in Sources */,
 				F3F87A3B1A5F067C00EB1EC1 /* MarkerBasket.swift in Sources */,
 				F35E28F31A649BDB004DF0D7 /* ExternalStorageController.swift in Sources */,
 				F3140F501A6058B30024A65D /* ScreenPathUtils.swift in Sources */,
@@ -756,6 +776,7 @@
 				F3406A441A65B0AC000C04F4 /* FGBannerPresentController.swift in Sources */,
 				F3C2503A1A6816AD003B642C /* EventsApi.swift in Sources */,
 				F3C8FE8B1A535B0D009FF404 /* HttpResponse.swift in Sources */,
+				F3529EDB1A7020E200036288 /* WebScreen.swift in Sources */,
 				F35E28EF1A6493CA004DF0D7 /* MainController.swift in Sources */,
 				F37633B71A5AF9F3005AFB8F /* Storage.swift in Sources */,
 				F3140F581A618C840024A65D /* MasterController.swift in Sources */,
@@ -788,6 +809,7 @@
 				F3C8FE891A535B0D009FF404 /* HttpClient.swift in Sources */,
 				F39802011A59FEB400D6C2B0 /* Buspass.swift in Sources */,
 				F3F87A3D1A5F06A700EB1EC1 /* MarkerStore.swift in Sources */,
+				F3529ED51A6F624000036288 /* MarkerAnnotationView.swift in Sources */,
 				F3E8A9631A6C62340034F17E /* TabButton.swift in Sources */,
 				F3F87A351A5EEB7800EB1EC1 /* BannerStore.swift in Sources */,
 				F3C8FE841A535B0D009FF404 /* ApiBase.swift in Sources */,
@@ -813,7 +835,9 @@
 				F35E28F11A649B85004DF0D7 /* StoageSerializeController.swift in Sources */,
 				F3140F5A1A618E070024A65D /* LoginForeground.swift in Sources */,
 				F3140F681A644EE20024A65D /* BannerRequestProcessor.swift in Sources */,
+				F3529ED91A701B4400036288 /* MarkerMessageViewController.swift in Sources */,
 				F3406A4A1A65C8D8000C04F4 /* MasterMapScreen.swift in Sources */,
+				F3529ED71A6F659F00036288 /* UIMarker.swift in Sources */,
 				F3140F411A5F92D50024A65D /* JourneySyncProgressEvent.swift in Sources */,
 				F3C8FE8C1A535B0D009FF404 /* HttpStatusLine.swift in Sources */,
 				F3140F4A1A6055110024A65D /* JourneyDisplaySelectionController.swift in Sources */,

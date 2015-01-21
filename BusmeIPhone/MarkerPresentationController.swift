@@ -56,7 +56,7 @@ public class MarkerPresentationController {
                 }
             }
         }
-        if (replace || found) {
+        if (replace || !found) {
             markerQ.push(marker)
         }
     }
@@ -116,6 +116,7 @@ public class MarkerPresentationController {
                     abandonMarker(marker!)
                 }
             }
+            marker = markerQ!.poll()
         }
         for m in backOnQueue {
             markerQ.push(m)

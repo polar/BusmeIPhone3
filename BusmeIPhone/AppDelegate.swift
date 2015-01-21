@@ -142,13 +142,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
     func registerForMasterEvents(api : BuspassApi) {
         api.uiEvents.registerForEvent("Master:Init:return", listener: self)
         api.uiEvents.registerForEvent("JourneySyncProgress", listener: self)
-        api.uiEvents.registerForEvent("UpdateProgress", listener: self)
+        api.uiEvents.registerForEvent("Master:Reload:return", listener: self)
+        api.uiEvents.registerForEvent("StopTimers", listener: self)
     }
     
     func unregisterForMasterEvents(api : BuspassApi) {
         api.uiEvents.unregisterForEvent("Master:Init:return", listener: self)
         api.uiEvents.unregisterForEvent("JourneySyncProgress", listener: self)
-        api.uiEvents.unregisterForEvent("UpdateProgress", listener: self)
+        api.uiEvents.unregisterForEvent("Master:Reload:return", listener: self)
+        api.uiEvents.unregisterForEvent("StopTimers", listener: self)
     }
     
     func searchDialog(title : String, message : String) -> UIAlertView {
@@ -173,8 +175,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
         } else if ("Master:Init:return" == eventName) {
             let eventData = event.eventData as? MasterEventData
             onMasterInitReturn(eventData!)
-        } else if ("UpdateProgress" == eventName) {
-            onUpdateProgress(event.eventData as UpdateProgressEventData!)
+        } else if ("Master:Reload:return" == eventName) {
+            onMasterReloadReturn(event.eventData as MasterEventData!)
+        } else if ("StopTimers" == eventName) {
+            onStopTimers(event.eventData as MainEventData!)
         }
     }
     
@@ -303,21 +307,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
     var bannerTimer : BannerTimer?
     var updateTimer : UpdateTimer?
     var syncTimer : JourneySyncTimer?
+    var timersRunning : Bool = false
     func startTimers() {
-        bannerTimer?.start()
-        updateTimer?.start(false)
-        mainController?.masterController!.api.uiEvents.registerForEvent("UpdateProgress", listener: self)
+        if !timersRunning {
+            timersRunning = true
+            bannerTimer?.start()
+            updateTimer?.start(false)
+            syncTimer?.start(true)
+        }
     }
     func stopTimers() {
         bannerTimer?.stop()
         updateTimer?.stop()
         syncTimer?.stop()
+        timersRunning = false
     }
-    func onUpdateProgress(eventData:UpdateProgressEventData) {
-        if eventData.action == InvocationProgressEvent.U_FINISH {
-            syncTimer?.start(true)
-            mainController?.masterController!.api.uiEvents.unregisterForEvent("UpdateProgress", listener: self)
-        }
+    
+    func onStopTimers(eventData : MainEventData) {
+        stopTimers()
+    }
+    
+    func onMasterReloadReturn(eventData : MasterEventData) {
+        startTimers()
     }
     
     func applicationWillResignActive(application: UIApplication) {

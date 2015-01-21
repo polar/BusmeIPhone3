@@ -118,8 +118,8 @@ public class MessageBase : MessageSpec {
     }
     
     public func shouldBeSeen(time: TimeValue64) -> Bool {
-        let nonExpired = (time < expiryTime)
-        let remindPast = remindTime < time
+        let nonExpired : Bool = (time < expiryTime)
+        let remindPast : Bool = remindTime < time
         return nonExpired && (!seen || (displayed || (remindable && remindPast)))
     }
     
@@ -134,10 +134,10 @@ public class MessageBase : MessageSpec {
             if (remindable) {
                 return remindTime
             } else {
-                return now + (10 * 365 * 24 * 60 * 60 * 1000)
+                return now + Int64(10 * 365 * 24 * 60 * 60) * Int64(1000)
             }
         } else {
-            return now + (10 * 365 * 24 * 60 * 60 * 1000)
+            return now + Int64(10 * 365 * 24 * 60 * 60) * Int64(1000)
         }
     }
     

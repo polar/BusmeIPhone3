@@ -59,9 +59,10 @@ class RoutesView : UITableViewController, BuspassEventListener {
         
     }
     func reload() {
-        journeyDisplays = masterController.journeyDisplayController.getJourneyDisplays()
-        journeyDisplays = journeyDisplays.filter({(jd : JourneyDisplay) in jd.isNameVisible() })
-        journeyDisplays.sort({(jd1 :JourneyDisplay, jd2 :JourneyDisplay) in jd1.compareTo(jd2) < 0})
+        let jds  = masterController.journeyDisplayController.getJourneyDisplays()
+        var jds2 = jds.filter({(jd : JourneyDisplay) in jd.isNameVisible() })
+        jds2.sort({(jd1 :JourneyDisplay, jd2 :JourneyDisplay) in jd1.compareTo(jd2) < 0})
+        journeyDisplays = jds2
         tableView.reloadData()
     }
 

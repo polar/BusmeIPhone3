@@ -28,6 +28,7 @@ public class MasterMapScreen : UIViewController, MKMapViewDelegate {
     public var api : BuspassApi!
     public var masterController : MasterController!
     public var fgBannerPresentationController : FGBannerPresentController!
+    public var fgMarkerPresentationController : FGMarkerPresentController!
     
     public func setMasterController(masterController : MasterController) {
         self.masterController = masterController
@@ -35,6 +36,7 @@ public class MasterMapScreen : UIViewController, MKMapViewDelegate {
         self.master = masterController.master
         self.syncProgressDialogController = SyncProgressDialogController(api: api, master: master)
         self.fgBannerPresentationController = FGBannerPresentController(masterMapScreen: self)
+        self.fgMarkerPresentationController = FGMarkerPresentController(masterMapScreen: self)
     }
     
     override public func viewDidLoad() {
@@ -80,5 +82,22 @@ public class MasterMapScreen : UIViewController, MKMapViewDelegate {
     
     func setCenter(point : CLLocationCoordinate2D, animated : Bool ) {
         mapView.setCenterCoordinate(point, animated: animated)
+    }
+    
+    func addMarkerAnnotation(annotation : MarkerAnnotation) {
+        mapView.addAnnotation(annotation)
+    }
+    
+    func removeMarkerAnnotation(annotation : MarkerAnnotation) {
+        mapView.removeAnnotation(annotation)
+    }
+    
+    public func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+        if annotation.isKindOfClass(MarkerAnnotation) {
+            let maview = MarkerAnnotationView(markerAnnotation: annotation as MarkerAnnotation)
+            maview.masterMapScreen = self
+            return maview
+        }
+        return nil
     }
 }
