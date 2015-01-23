@@ -399,12 +399,12 @@ public class BuspassApi : ApiBase, EventsApi {
     
     public func getMarkerClickThru(id : String) -> String? {
         if isReady() {
-            var clickThru = buspass!.messageClickThru
+            var clickThru = buspass!.markerClickThru
             if clickThru != nil {
                 let url = clickThru! + getDefaultQuery().toString()
-                var params = [String:[String]]()
-                params["marker_id"] = [id]
-                params["master_slug"] = [buspass!.slug!]
+                var params = [String:String]()
+                params["marker_id"] = id
+                params["master_slug"] = buspass!.slug!
                 let response = postURLResponse(url, parameters: params)
                 let status = response.getStatusLine()
                 if status.statusCode == 200 {
@@ -429,9 +429,9 @@ public class BuspassApi : ApiBase, EventsApi {
             var clickThru = buspass!.messageClickThru
             if clickThru != nil {
                 let url = clickThru! + getDefaultQuery().toString()
-                var params = [String:[String]]()
-                params["message_id"] = [id]
-                params["master_slug"] = [buspass!.slug!]
+                var params = [String:String]()
+                params["message_id"] = id
+                params["master_slug"] = buspass!.slug!
                 let response = postURLResponse(url, parameters: params)
                 let status = response.getStatusLine()
                 if status.statusCode == 200 {
@@ -456,9 +456,9 @@ public class BuspassApi : ApiBase, EventsApi {
             var clickThru = buspass!.bannerClickThru
             if clickThru != nil {
                 let url = clickThru! + getDefaultQuery().toString()
-                var params = [String:[String]]()
-                params["banner_id"] = [id]
-                params["master_slug"] = [buspass!.slug!]
+                var params = [String:String]()
+                params["banner_id"] = id
+                params["master_slug"] = buspass!.slug!
                 let response = postURLResponse(url, parameters: params)
                 let status = response.getStatusLine()
                 if status.statusCode == 200 {

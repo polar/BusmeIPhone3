@@ -27,6 +27,8 @@ public class MarkerEventData {
     public var markerInfo : MarkerInfo
     public var resolve : Int = MarkerEvent.R_CANCEL
     public var resolveData : AnyObject?
+    public var time : TimeValue64 = 0
+
     
     public init(markerInfo : MarkerInfo) {
         self.markerInfo = markerInfo
@@ -38,6 +40,7 @@ public class MarkerEventData {
         evd.resolve = resolve
         evd.thruUrl = thruUrl
         evd.resolveData = resolveData
+        evd.time = time
         return evd
     }
     
@@ -51,6 +54,7 @@ public class MarkerEventData {
 
 public class MarkerForeground : BuspassEventListener {
     public var api : BuspassApi
+    weak var markerPresentationController : MarkerPresentationController?
     
     public init(api: BuspassApi) {
         self.api = api
@@ -88,22 +92,24 @@ public class MarkerForeground : BuspassEventListener {
     // From the Marker click, MarkerPresentationController sends this event.
     
     func onResolve(eventData : MarkerEventData) {
-        let marker = eventData.markerInfo
+        let markerInfo = eventData.markerInfo
+        let time = eventData.time != 0 ? eventData.time : UtilsTime.current()
         
         switch(eventData.resolve) {
         case MarkerEvent.R_CANCEL:
+            markerPresentationController?.onDismiss(true, markerInfo: markerInfo, time: time)
             break;
         case MarkerEvent.R_GO:
             let evd = eventData.dup()
             api.bgEvents.postEvent("MarkerEvent", data: evd)
             break;
         case MarkerEvent.R_REMIND:
-            marker.onDismiss(true)
-            api.uiEvents.postEvent("MarkerPresent:dismiss", data: eventData)
+            markerPresentationController?.onDismiss(true, markerInfo: markerInfo, time: time)
+            api.uiEvents.postEvent("MarkerEvent", data: eventData)
             break;
         case MarkerEvent.R_REMOVE:
-            marker.onDismiss(false)
-            api.uiEvents.postEvent("MarkerPresent:dismiss", data: eventData)
+            markerPresentationController?.onDismiss(false, markerInfo: markerInfo, time: time)
+            api.uiEvents.postEvent("MarkerEvent", data: eventData)
             break;
         default:
             break;
@@ -112,27 +118,24 @@ public class MarkerForeground : BuspassEventListener {
     
     // From the MarkerBackground Thread
     func onResolved(eventData : MarkerEventData) {
-        switch(eventData.resolve) {
-        case MarkerEvent.R_CANCEL:
-            break;
-        case MarkerEvent.R_GO:
-            break;
-        case MarkerEvent.R_REMIND:
-            break;
-        case MarkerEvent.R_REMOVE:
-            break;
-        default:
-            break;
-        }
         let evd = eventData.dup()
-        evd.state = MarkerEvent.S_DONE
+        api.uiEvents.postEvent("MarkerPresent:webDisplay", data: evd)
+        evd.state = MasterMessageEvent.S_DONE
         api.bgEvents.postEvent("MarkerEvent", data: evd)
     }
     
     func onError(eventData : MarkerEventData) {
+        let markerInfo = eventData.markerInfo
+        let time = eventData.time != 0 ? eventData.time : UtilsTime.current()
+        markerPresentationController?.onDismiss(false, markerInfo: markerInfo, time: time)
     }
     
     func onDone(eventData : MarkerEventData) {
+        let markerInfo = eventData.markerInfo
+        let time = eventData.time != 0 ? eventData.time : UtilsTime.current()
+        if BLog.DEBUG { BLog.logger.debug("MarkerEvent DONE \(eventData.markerInfo.title)") }
+        markerPresentationController?.onDismiss(false, markerInfo: markerInfo, time: time)
+
     }
 }
 
@@ -185,10 +188,12 @@ public class MarkerBackground : BuspassEventListener {
     }
     
     func onError(eventData : MarkerEventData) {
-        api.uiEvents.postEvent("MarkerEvent", data: eventData)
+        let evd = eventData.dup()
+        evd.state = MarkerEvent.S_ERROR
+        api.uiEvents.postEvent("MarkerEvent", data: evd)
     }
     
     func onDone(eventData : MarkerEventData) {
-        api.uiEvents.postEvent("MarkerEvent", data: eventData)
+        if BLog.DEBUG { BLog.logger.debug("MasterMessageEvent Background DONE \(eventData.markerInfo.title)") }
     }
 }

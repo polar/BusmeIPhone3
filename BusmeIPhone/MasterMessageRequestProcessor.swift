@@ -23,16 +23,16 @@ public class MasterMessageRequestProcessor : ArgumentPreparer, ResponseProcessor
             ids.append(masterMessage.getId())
             versions.append("\(masterMessage.version)")
         }
-        args["masterMessage_ids[]"] = ids
-        args["masterMessage_versions[]"] = versions
+        args["message_ids"] = ids
+        args["message_versions"] = versions
         return args
     }
     public func onResponse(response: Tag) {
         var masterMessages = [String : MasterMessage]()
         for child in response.childNodes {
-            if child.name.lowercaseString == "masterMessages" {
+            if child.name.lowercaseString == "messages" {
                 for bspec in child.childNodes {
-                    if bspec.name.lowercaseString == "masterMessage" {
+                    if bspec.name.lowercaseString == "message" {
                         if bspec.attributes["destroy"]? == "1" {
                             let id = bspec.attributes["id"]
                             if id != nil {

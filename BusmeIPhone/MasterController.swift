@@ -32,6 +32,9 @@ public class MasterController : BuspassEventListener {
     public var bannerPresentationController : BannerPresentationController
     public var bannerStore : BannerStore
     
+    public var bannerForeground : BannerForeground
+    public var bannerBackground : BannerBackground
+    
     public var journeyBasket : JourneyBasket
     public var journeyDisplayController : JourneyDisplayController
     public var journeyStore : JourneyStore
@@ -42,9 +45,15 @@ public class MasterController : BuspassEventListener {
     public var markerPresentationController : MarkerPresentationController
     public var markerStore : MarkerStore
     
+    public var markerForeground : MarkerForeground
+    public var markerBackground : MarkerBackground
+    
     public var masterMessageBasket : MasterMessageBasket
     public var masterMessagePresentationController : MasterMessagePresentationController
     public var masterMessageStore : MasterMessageStore
+    
+    public var masterMessageForeground : MasterMessageForeground
+    public var masterMessageBackground : MasterMessageBackground
     
     public var loginForeground : LoginForeground
     public var loginBackground : LoginBackground
@@ -66,14 +75,24 @@ public class MasterController : BuspassEventListener {
         self.bannerStore = BannerStore()
         self.bannerBasket = BannerBasket(bannerStore: bannerStore)
         self.bannerPresentationController = BannerPresentationController(api: api, basket: bannerBasket)
+        self.bannerForeground = BannerForeground(api: api)
+        self.bannerForeground.bannerPresentationController = bannerPresentationController
+        self.bannerBackground = BannerBackground(api: api)
         
         self.markerStore = MarkerStore()
         self.markerBasket = MarkerBasket(markerStore: markerStore)
         self.markerPresentationController = MarkerPresentationController(api: api, markerBasket: markerBasket)
+        self.markerForeground = MarkerForeground(api: api)
+        self.markerForeground.markerPresentationController = markerPresentationController
+        self.markerBackground = MarkerBackground(api: api)
         
         self.masterMessageStore = MasterMessageStore()
         self.masterMessageBasket = MasterMessageBasket(masterMessageStore: masterMessageStore)
         self.masterMessagePresentationController = MasterMessagePresentationController(api: api, basket: masterMessageBasket)
+        self.masterMessageBasket.masterMessageController = masterMessagePresentationController
+        self.masterMessageForeground = MasterMessageForeground(api: api)
+        self.masterMessageForeground.masterMessagePresentationController = masterMessagePresentationController
+        self.masterMessageBackground = MasterMessageBackground(api: api)
         
         self.journeyStore = JourneyStore()
         self.journeyBasket = JourneyBasket(api: api, journeyStore: journeyStore)
@@ -131,6 +150,12 @@ public class MasterController : BuspassEventListener {
         } else if eventName == "Master:reload" {
             let eventData = event.eventData as MasterEventData
             onMasterReload(eventData)
+        } else if eventName == "Master:resetSeenMarkers" {
+            let eventData = event.eventData as MasterEventData
+            onMasterResetSeenMarkers(eventData)
+        } else if eventName == "Master:resetSeenMessages" {
+            let eventData = event.eventData as MasterEventData
+            onMasterResetSeenMessages(eventData)
         }
     }
     
@@ -153,6 +178,16 @@ public class MasterController : BuspassEventListener {
         markerBasket.empty()
         masterMessageBasket.empty()
         api.uiEvents.postEvent("Master:Reload:return", data: eventData)
+    }
+    
+    func onMasterResetSeenMarkers(eventData : MasterEventData) {
+        if (BLog.DEBUG) { BLog.logger.debug("reseting all markers") }
+        markerBasket.resetMarkers(now: UtilsTime.current())
+    }
+    
+    func onMasterResetSeenMessages(eventData : MasterEventData) {
+        if (BLog.DEBUG) { BLog.logger.debug("reseting all messages") }
+        masterMessageBasket.resetMasterMessages(now: UtilsTime.current())
     }
     
     public func storeMaster() {

@@ -44,18 +44,11 @@ class MarkerAnnotationView : MKAnnotationView {
     
     override func prepareForReuse() {
         if BLog.DEBUG { BLog.logger.debug (" prepare for Reuse" ) }
-        if markerMessageViewController != nil {
-            markerMessageViewController?.dismiss()
-            self.markerMessageViewController = nil
-        }
+        masterMapScreen?.fgMarkerPresentationController.dismissMessage(uiMarker!.markerInfo)
     }
     
-    private var markerMessageViewController : MarkerMessageViewController?
     func onButtonClicked(sender : UIButton!) {
-        if markerMessageViewController == nil {
-            self.markerMessageViewController = MarkerMessageViewController(masterMapScreen: masterMapScreen!, markerInfo: uiMarker!.markerInfo)
-        }
-        markerMessageViewController?.display()
+        masterMapScreen?.fgMarkerPresentationController.displayMessage(uiMarker!.markerInfo)
     }
     
     func getCenterOffset() -> CGPoint {
@@ -76,6 +69,4 @@ class MarkerAnnotationView : MKAnnotationView {
         let point3 = CGPoint(x: 0, y: 0 - uiMarker!.frame.size.height)
         return point3
     }
-    
-    
 }

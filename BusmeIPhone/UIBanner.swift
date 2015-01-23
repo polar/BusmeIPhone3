@@ -94,6 +94,8 @@ public class UIBanner : UIViewController {
     public func onClick(recognizer : UIGestureRecognizer) {
         if(BLog.DEBUG) { BLog.logger.debug("OnClick!") }
         let eventData = BannerEventData(bannerInfo: bannerInfo, state: BannerEvent.S_RESOLVE)
+        eventData.resolve = BannerEvent.R_GO
+        eventData.time = UtilsTime.current()
         api!.uiEvents.postEvent("BannerEvent", data: eventData)
     }
     
@@ -109,5 +111,17 @@ public class UIBanner : UIViewController {
             self.view.alpha = 0
             self.view.frame.origin = CGPoint(x: UIScreen.mainScreen().bounds.width, y: self.view.frame.origin.y)
             }, completion: completion)
+    }
+    
+    func displayWebPage(url : String?) {
+        var theURL = url
+        if theURL == nil {
+            theURL = bannerInfo.goUrl
+        }
+        if theURL != nil {
+            let webScreen = WebScreen()
+            webScreen.openUrl(theURL!)
+            masterMapScreen?.navigationController?.pushViewController(webScreen, animated: true)
+        }
     }
 }

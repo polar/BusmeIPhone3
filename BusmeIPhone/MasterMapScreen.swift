@@ -29,6 +29,7 @@ public class MasterMapScreen : UIViewController, MKMapViewDelegate {
     public var masterController : MasterController!
     public var fgBannerPresentationController : FGBannerPresentController!
     public var fgMarkerPresentationController : FGMarkerPresentController!
+    public var fgMasterMessagePresentationController : FGMasterMessagePresentController!
     
     public func setMasterController(masterController : MasterController) {
         self.masterController = masterController
@@ -37,6 +38,7 @@ public class MasterMapScreen : UIViewController, MKMapViewDelegate {
         self.syncProgressDialogController = SyncProgressDialogController(api: api, master: master)
         self.fgBannerPresentationController = FGBannerPresentController(masterMapScreen: self)
         self.fgMarkerPresentationController = FGMarkerPresentController(masterMapScreen: self)
+        self.fgMasterMessagePresentationController = FGMasterMessagePresentController(masterMapScreen: self)
     }
     
     override public func viewDidLoad() {

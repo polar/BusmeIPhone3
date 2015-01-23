@@ -28,12 +28,14 @@ public class FGBannerPresentController : BuspassEventListener {
     func registerForEvents() {
         api.uiEvents.registerForEvent("BannerPresent:display", listener: self)
         api.uiEvents.registerForEvent("BannerPresent:dismiss", listener: self)
+        api.uiEvents.registerForEvent("BannerPresent:webDisplay", listener: self)
     }
     
     
     func unregisterForEvents() {
         api.uiEvents.unregisterForEvent("BannerPresent:display", listener: self)
         api.uiEvents.unregisterForEvent("BannerPresent:dismiss", listener: self)
+        api.uiEvents.unregisterForEvent("BannerPresent:webDisplay", listener: self)
     }
     
     
@@ -44,6 +46,8 @@ public class FGBannerPresentController : BuspassEventListener {
                 presentBanner(eventData!);
             } else if event.eventName == "BannerPresent:dismiss" {
                 abandonBanner(eventData!);
+            } else if event.eventName == "BannerPresent:webDisplay" {
+                onWebDisplay(eventData!);
             }
         }
     }
@@ -81,9 +85,21 @@ public class FGBannerPresentController : BuspassEventListener {
         if currentBanner != nil {
             let banner = currentBanner!
             self.currentBanner = nil
-            banner.slide_out({(y) in
-                banner.removeFromParentViewController()
-            })
+            if eventData.bannerInfo === currentBanner!.bannerInfo {
+                banner.slide_out({(y) in
+                    banner.removeFromParentViewController()
+                })
+            }
+        }
+    }
+    
+    func onWebDisplay(eventData : BannerEventData) {
+        if currentBanner != nil {
+            let banner = currentBanner!
+            if banner.bannerInfo === eventData.bannerInfo {
+                banner.displayWebPage(eventData.thruUrl)
+                //abandonBanner(eventData)
+            }
         }
     }
 }

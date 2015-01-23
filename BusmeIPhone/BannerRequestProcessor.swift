@@ -23,8 +23,8 @@ public class BannerRequestProcessor : ArgumentPreparer, ResponseProcessor {
             ids.append(banner.getId())
             versions.append("\(banner.version)")
         }
-        args["banner_ids[]"] = ids
-        args["banner_versions[]"] = versions
+        args["banner_ids"] = ids
+        args["banner_versions"] = versions
         return args
     }
     public func onResponse(response: Tag) {

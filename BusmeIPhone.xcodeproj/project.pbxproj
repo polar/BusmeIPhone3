@@ -34,6 +34,8 @@
 		F3140F641A64445E0024A65D /* JourneyPostingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3140F631A64445E0024A65D /* JourneyPostingController.swift */; };
 		F3140F681A644EE20024A65D /* BannerRequestProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3140F671A644EE20024A65D /* BannerRequestProcessor.swift */; };
 		F31E4BCA1A58760E00E2F0A2 /* HttpClientTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31E4BC91A58760E00E2F0A2 /* HttpClientTest.swift */; };
+		F320FF3C1A714D1100924F8D /* FGMasterMessagePresentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F320FF3B1A714D1100924F8D /* FGMasterMessagePresentController.swift */; };
+		F320FF3F1A7151A900924F8D /* MasterMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F320FF3E1A7151A900924F8D /* MasterMessageViewController.swift */; };
 		F326F1051A5EAFC000CBCE28 /* BLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F326F1041A5EAFC000CBCE28 /* BLog.swift */; };
 		F33B69B41A5B022C004C7742 /* GeoPathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33B69B31A5B022C004C7742 /* GeoPathUtils.swift */; };
 		F33B69BA1A5B43D2004C7742 /* IPUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33B69B91A5B43D2004C7742 /* IPUtils.swift */; };
@@ -193,6 +195,8 @@
 		F3140F631A64445E0024A65D /* JourneyPostingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JourneyPostingController.swift; sourceTree = "<group>"; };
 		F3140F671A644EE20024A65D /* BannerRequestProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BannerRequestProcessor.swift; sourceTree = "<group>"; };
 		F31E4BC91A58760E00E2F0A2 /* HttpClientTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpClientTest.swift; sourceTree = "<group>"; };
+		F320FF3B1A714D1100924F8D /* FGMasterMessagePresentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FGMasterMessagePresentController.swift; sourceTree = "<group>"; };
+		F320FF3E1A7151A900924F8D /* MasterMessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterMessageViewController.swift; sourceTree = "<group>"; };
 		F326F1041A5EAFC000CBCE28 /* BLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLog.swift; sourceTree = "<group>"; };
 		F33B69B31A5B022C004C7742 /* GeoPathUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeoPathUtils.swift; sourceTree = "<group>"; };
 		F33B69B91A5B43D2004C7742 /* IPUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPUtils.swift; sourceTree = "<group>"; };
@@ -341,6 +345,8 @@
 				F3529ED61A6F659F00036288 /* UIMarker.swift */,
 				F3529ED81A701B4400036288 /* MarkerMessageViewController.swift */,
 				F3529EDA1A7020E200036288 /* WebScreen.swift */,
+				F320FF3B1A714D1100924F8D /* FGMasterMessagePresentController.swift */,
+				F320FF3E1A7151A900924F8D /* MasterMessageViewController.swift */,
 			);
 			name = MasterMapScreen;
 			sourceTree = "<group>";
@@ -773,6 +779,7 @@
 				F37633B91A5AFA57005AFB8F /* JourneyStore.swift in Sources */,
 				F3ED41A81A5F0E3500C6FFC9 /* MarkerPresentationController.swift in Sources */,
 				F37633BB1A5AFACC005AFB8F /* JourneyPattern.swift in Sources */,
+				F320FF3C1A714D1100924F8D /* FGMasterMessagePresentController.swift in Sources */,
 				F3406A441A65B0AC000C04F4 /* FGBannerPresentController.swift in Sources */,
 				F3C2503A1A6816AD003B642C /* EventsApi.swift in Sources */,
 				F3C8FE8B1A535B0D009FF404 /* HttpResponse.swift in Sources */,
@@ -796,6 +803,7 @@
 				F35F75431A59D93200283F1C /* BannerInfo.swift in Sources */,
 				F3C33CE31A663D9200EF8E24 /* MastersTableScreen.swift in Sources */,
 				F36316A71A5DFBAD002CAE61 /* Login.swift in Sources */,
+				F320FF3F1A7151A900924F8D /* MasterMessageViewController.swift in Sources */,
 				F3F87A371A5EF6E000EB1EC1 /* BannerPresentationController.swift in Sources */,
 				F3C8FE8A1A535B0D009FF404 /* HttpEntity.swift in Sources */,
 				F3140F5F1A61AC330024A65D /* JourneyLocationPoster.swift in Sources */,

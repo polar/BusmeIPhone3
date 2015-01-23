@@ -15,6 +15,8 @@ public class FGMarkerPresentController : BuspassEventListener {
     weak var masterMapScreen : MasterMapScreen!
     weak var masterController : MasterController!
     
+    var currentMarkerMessageController : MarkerMessageViewController?
+    
     public init(masterMapScreen : MasterMapScreen) {
         self.masterMapScreen = masterMapScreen
         self.masterController = masterMapScreen.masterController
@@ -26,12 +28,14 @@ public class FGMarkerPresentController : BuspassEventListener {
     func registerForEvents() {
         api.uiEvents.registerForEvent("MarkerPresent:display", listener: self)
         api.uiEvents.registerForEvent("MarkerPresent:dismiss", listener: self)
+        api.uiEvents.registerForEvent("MarkerPresent:webDisplay", listener: self)
     }
     
     
     func unregisterForEvents() {
         api.uiEvents.unregisterForEvent("MarkerPresent:display", listener: self)
         api.uiEvents.unregisterForEvent("MarkerPresent:dismiss", listener: self)
+        api.uiEvents.unregisterForEvent("MarkerPresent:webDisplay", listener: self)
     }
     
     
@@ -42,6 +46,8 @@ public class FGMarkerPresentController : BuspassEventListener {
                 presentMarker(eventData!);
             } else if event.eventName == "MarkerPresent:dismiss" {
                 abandonMarker(eventData!);
+            } else if event.eventName == "MarkerPresent:webDisplay" {
+                onWebDisplay(eventData!);
             }
         }
     }
@@ -59,6 +65,35 @@ public class FGMarkerPresentController : BuspassEventListener {
         let annotation = currentMarkers[markerInfo.id]
         if annotation != nil {
             masterMapScreen.removeMarkerAnnotation(annotation!)
+        }
+    }
+    
+    // Called from the MarkerMessageViewController when it should go away, 
+    // after a displayWebPage
+    func removeCurrent(viewController : MarkerMessageViewController) {
+        if currentMarkerMessageController === viewController {
+            self.currentMarkerMessageController = nil
+        }
+    }
+    
+    func dismissMessage(markerInfo: MarkerInfo) {
+        if currentMarkerMessageController != nil {
+            currentMarkerMessageController!.dismiss()
+        }
+        self.currentMarkerMessageController = nil
+    }
+    
+    func displayMessage(markerInfo: MarkerInfo) {
+        if currentMarkerMessageController != nil {
+            currentMarkerMessageController!.dismiss()
+        }
+        currentMarkerMessageController =  MarkerMessageViewController(masterMapScreen: masterMapScreen!, markerInfo: markerInfo)
+        currentMarkerMessageController!.display()
+    }
+    
+    func onWebDisplay(eventData : MarkerEventData) {
+        if currentMarkerMessageController != nil {
+            currentMarkerMessageController?.displayWebPage(eventData.thruUrl)
         }
     }
 }

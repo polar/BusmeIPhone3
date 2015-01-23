@@ -37,6 +37,21 @@ public class MasterMessagePresentationController {
         return masterMessageQ.doesInclude(masterMessage)
     }
     
+    public func onDismiss(remind: Bool, masterMessage : MasterMessage, time: TimeValue64) {
+        if currentMasterMessage != nil {
+            if currentMasterMessage === masterMessage {
+                currentMasterMessage = nil
+                masterMessage.onDismiss(remind, time: time)
+            } else {
+                if BLog.WARN { BLog.logger.warn("Master Message \(masterMessage.title) is not same as current \(currentMasterMessage!.title)") }
+                masterMessage.onDismiss(remind, time: time)
+            }
+        } else {
+            if BLog.WARN { BLog.logger.warn("No Current Master Message dismiss \(masterMessage.title) ") }
+            masterMessage.onDismiss(remind, time: time)
+        }
+    }
+    
     public func roll(removeCurrent : Bool, now : TimeValue64 = UtilsTime.current()) {
         if (currentMasterMessage != nil) {
             if (!removeCurrent && !currentMasterMessage!.isDisplayTimeExpired(now)) {
@@ -63,6 +78,7 @@ public class MasterMessagePresentationController {
     
     func abandonMasterMessage(masterMessage: MasterMessage) {
         let evd = MasterMessageEventData(masterMessage: masterMessage)
+        evd.state = MasterMessageEvent.S_DONE
         api.uiEvents.postEvent("MasterMessagePresent:dismiss", data: evd)
     }
     

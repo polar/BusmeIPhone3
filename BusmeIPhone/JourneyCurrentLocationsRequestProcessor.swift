@@ -21,7 +21,7 @@ public class JourneyCurrentLocationRequestProcessor : ArgumentPreparer, Response
         for journeyDisplay in journeyDisplayController.getJourneyDisplays().filter({(x) in x.route.isJourney() && x.isPathVisible()}) {
             ids.append(journeyDisplay.route.id!)
         }
-        args["journeyLocation_ids[]"] = ids
+        args["journey_ids"] = ids
         return args
     }
     

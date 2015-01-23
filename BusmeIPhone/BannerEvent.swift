@@ -27,6 +27,7 @@ public class BannerEventData {
     public var bannerInfo : BannerInfo
     public var resolve : Int = BannerEvent.R_CANCEL
     public var resolveData : AnyObject?
+    public var time : TimeValue64 = 0
     
     public init(bannerInfo : BannerInfo) {
         self.bannerInfo = bannerInfo
@@ -56,6 +57,7 @@ public class BannerEventData {
 
 public class BannerForeground : BuspassEventListener {
     public var api : BuspassApi
+    weak var bannerPresentationController : BannerPresentationController?
     
     public init(api: BuspassApi) {
         self.api = api
@@ -94,38 +96,32 @@ public class BannerForeground : BuspassEventListener {
     // it sends this event.
     
     func onResolve(eventData : BannerEventData) {
+        let time = UtilsTime.current()
         let evd = eventData.dup()
-        // resolve should have been set. Send off to the background
-        api.bgEvents.postEvent("BannerEvent", data: evd)
+        switch(eventData.state) {
+        case BannerEvent.R_GO:
+            // resolve should have been set. Send off to the background
+            api.bgEvents.postEvent("BannerEvent", data: evd)
+        default:
+            bannerPresentationController?.onDismiss(true, bannerInfo: eventData.bannerInfo, time: time)
+            break;
+        }
     }
     
     // From the BannerBackground Thread
     func onResolved(eventData : BannerEventData) {
-        switch(eventData.resolve) {
-        case BannerEvent.R_CANCEL:
-            break;
-        case BannerEvent.R_GO:
-            break;
-        case BannerEvent.R_REMIND:
-            break;
-        case BannerEvent.R_REMOVE:
-            break;
-        default:
-            break;
-        }
         let evd = eventData.dup()
+        api.uiEvents.postEvent("BannerPresent:webDisplay", data: evd)
         evd.state = BannerEvent.S_DONE
         api.bgEvents.postEvent("BannerEvent", data: evd)
+
     }
     
     func onError(eventData : BannerEventData) {
-        eventData.bannerInfo.onDismiss(true, time:UtilsTime.current())
-        api.uiEvents.postEvent("BannerPresent:dismiss", data: eventData)
     }
     
     func onDone(eventData : BannerEventData) {
-        eventData.bannerInfo.onDismiss(true, time:UtilsTime.current())
-        api.uiEvents.postEvent("BannerPresent:dismiss", data: eventData)
+        if BLog.DEBUG { BLog.logger.debug("BannerEvent DONE \(eventData.bannerInfo.title)") }
     }
 }
 

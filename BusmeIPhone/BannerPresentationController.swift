@@ -77,6 +77,13 @@ public class BannerPresentationController {
         }
     }
     
+    public func onDismiss(remind: Bool, bannerInfo: BannerInfo, time : TimeValue64) {
+        bannerInfo.onDismiss(remind)
+        if !remind {
+            // User doesn't get a choice on remove the banner from display
+        }
+    }
+    
     func abandonBanner(banner: BannerInfo) {
         let evd = BannerEventData(bannerInfo: banner)
         api.uiEvents.postEvent("BannerPresent:dismiss", data: evd)
@@ -86,6 +93,8 @@ public class BannerPresentationController {
         let evd = BannerEventData(bannerInfo: banner)
         api.uiEvents.postEvent("BannerPresent:display", data: evd)
     }
+    
+    // Done on Background
     
     public func onLocationUpdate(location: GeoPoint, now: TimeValue64 = UtilsTime.current()) {
         for banner in bannerBasket.getBanners() {

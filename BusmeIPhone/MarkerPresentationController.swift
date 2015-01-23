@@ -73,6 +73,14 @@ public class MarkerPresentationController {
             }
         }
     }
+    
+    public func onDismiss(remind: Bool, markerInfo: MarkerInfo, time : TimeValue64) {
+        markerInfo.onDismiss(remind)
+        if !remind {
+            // This means remove it
+            removeFromCurrentMarkers(markerInfo)
+        }
+    }
 
     
     public func roll(now : TimeValue64 = UtilsTime.current()) {
@@ -141,6 +149,8 @@ public class MarkerPresentationController {
         let evd = MarkerEventData(markerInfo: marker)
         api.uiEvents.postEvent("MarkerPresent:dismiss", data: evd)
     }
+    
+    // Done on Background
     
     public func onLocationUpdate(location: GeoPoint, time: TimeValue64 = UtilsTime.current()) {
         let markers = markerBasket.getMarkers()

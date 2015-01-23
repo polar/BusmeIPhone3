@@ -39,6 +39,7 @@ public class JourneyDisplayController : OnJourneyAddedListener, OnJourneyRemoved
     public var onJourneyDisplayRemovedListener : OnJourneyDisplayRemovedListener?
     public var journeyDisplays = [JourneyDisplay]()
     public var journeyDisplayMap = [String:JourneyDisplay]()
+    var writeLock = dispatch_semaphore_create(1)
     
     public init(api :BuspassApi, basket : JourneyBasket) {
         self.api = api
@@ -48,10 +49,14 @@ public class JourneyDisplayController : OnJourneyAddedListener, OnJourneyRemoved
     }
     
     public func getJourneyDisplays() -> [JourneyDisplay] {
-        return journeyDisplays
+        dispatch_semaphore_wait(writeLock, DISPATCH_TIME_FOREVER)
+        let result = [JourneyDisplay](journeyDisplays)
+        dispatch_semaphore_signal(writeLock)
+        return result
     }
     
     public func getJourneyPatterns() -> [JourneyPattern] {
+        dispatch_semaphore_wait(writeLock, DISPATCH_TIME_FOREVER)
         var patterns = [String:JourneyPattern]()
         for jd in journeyDisplays {
             if jd.route.isRouteDefinition() {
@@ -60,15 +65,18 @@ public class JourneyDisplayController : OnJourneyAddedListener, OnJourneyRemoved
                 }
             }
         }
+        dispatch_semaphore_signal(writeLock)
         return patterns.values.array
     }
     
     public func onJourneyAdded(journeyBasket : JourneyBasket, journey : Route) {
         let newRoute = JourneyDisplay(journeyDisplayController: self, route: journey)
+        dispatch_semaphore_wait(writeLock, DISPATCH_TIME_FOREVER)
         journeyDisplays.append(newRoute)
         journeyDisplayMap[journey.id!] = newRoute
         onJourneyDisplayAddedListener?.onJourneyDisplayAdded(newRoute)
         presentJourneyDisplay(newRoute)
+        dispatch_semaphore_signal(writeLock)
     }
     
     func removeFromJourneys(journeyDisplay : JourneyDisplay) {
@@ -80,6 +88,8 @@ public class JourneyDisplayController : OnJourneyAddedListener, OnJourneyRemoved
     }
     
     public func onJourneyRemoved(journeyBasket : JourneyBasket, journey : Route) {
+        dispatch_semaphore_wait(writeLock, DISPATCH_TIME_FOREVER)
+
         let jd = journeyDisplayMap[journey.id!]
         if (jd != nil) {
             journeyDisplayMap[journey.id!] = nil
@@ -87,6 +97,8 @@ public class JourneyDisplayController : OnJourneyAddedListener, OnJourneyRemoved
             onJourneyDisplayRemovedListener?.onJourneyDisplayRemoved(jd!)
             abandonJourneyDisplay(jd!)
         }
+        dispatch_semaphore_signal(writeLock)
+
     }
     
     

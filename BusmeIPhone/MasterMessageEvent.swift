@@ -27,6 +27,7 @@ public class MasterMessageEventData {
     public var masterMessage : MasterMessage
     public var resolve : Int = MasterMessageEvent.R_CANCEL
     public var resolveData : AnyObject?
+    public var time : TimeValue64 = 0
     
     public init(masterMessage : MasterMessage) {
         self.masterMessage = masterMessage
@@ -38,6 +39,7 @@ public class MasterMessageEventData {
         evd.resolve = resolve
         evd.thruUrl = thruUrl
         evd.resolveData = resolveData
+        evd.time = time
         return evd
     }
     
@@ -51,6 +53,7 @@ public class MasterMessageEventData {
 
 public class MasterMessageForeground : BuspassEventListener {
     public var api : BuspassApi
+    weak var masterMessagePresentationController : MasterMessagePresentationController?
     
     public init(api: BuspassApi) {
         self.api = api
@@ -90,21 +93,22 @@ public class MasterMessageForeground : BuspassEventListener {
     
     func onResolve(eventData : MasterMessageEventData) {
         let masterMessage = eventData.masterMessage
-        
+        let time = eventData.time != 0 ? eventData.time : UtilsTime.current()
         switch(eventData.resolve) {
         case MasterMessageEvent.R_CANCEL:
+            masterMessagePresentationController?.onDismiss(true, masterMessage: masterMessage, time: time)
             break;
         case MasterMessageEvent.R_GO:
             let evd = eventData.dup()
             api.bgEvents.postEvent("MasterMessageEvent", data: evd)
             break;
         case MasterMessageEvent.R_REMIND:
-            masterMessage.onDismiss(true)
-            api.uiEvents.postEvent("MasterMessagePresent:dismiss", data: eventData)
+            masterMessagePresentationController?.onDismiss(true, masterMessage: masterMessage, time: time)
+
             break;
         case MasterMessageEvent.R_REMOVE:
-            masterMessage.onDismiss(false)
-            api.uiEvents.postEvent("MasterMessagePresent:dismiss", data: eventData)
+            masterMessagePresentationController?.onDismiss(false, masterMessage: masterMessage, time: time)
+
             break;
         default:
             break;
@@ -113,19 +117,8 @@ public class MasterMessageForeground : BuspassEventListener {
     
     // From the MasterMessageBackground Thread
     func onResolved(eventData : MasterMessageEventData) {
-        switch(eventData.resolve) {
-        case MasterMessageEvent.R_CANCEL:
-            break
-        case MasterMessageEvent.R_GO:
-            break
-        case MasterMessageEvent.R_REMIND:
-            break
-        case MasterMessageEvent.R_REMOVE:
-            break
-        default:
-            break
-        }
         let evd = eventData.dup()
+        api.uiEvents.postEvent("MasterMessagePresent:webDisplay", data: evd)
         evd.state = MasterMessageEvent.S_DONE
         api.bgEvents.postEvent("MasterMessageEvent", data: evd)
     }
@@ -134,6 +127,7 @@ public class MasterMessageForeground : BuspassEventListener {
     }
     
     func onDone(eventData : MasterMessageEventData) {
+        if BLog.DEBUG { BLog.logger.debug("MasterMessageEvent DONE \(eventData.masterMessage.title)") }
     }
 }
 
@@ -186,10 +180,13 @@ public class MasterMessageBackground : BuspassEventListener {
     }
     
     func onError(eventData : MasterMessageEventData) {
-        api.uiEvents.postEvent("MasterMessageEvent", data: eventData)
+        let evd = eventData.dup()
+        evd.state = MasterMessageEvent.S_ERROR
+        api.uiEvents.postEvent("MasterMessageEvent", data: evd)
     }
     
     func onDone(eventData : MasterMessageEventData) {
-        api.uiEvents.postEvent("MasterMessageEvent", data: eventData)
+        if BLog.DEBUG { BLog.logger.debug("MasterMessageEvent Background DONE \(eventData.masterMessage.title)") }
+        
     }
 }

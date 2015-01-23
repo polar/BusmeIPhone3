@@ -10,7 +10,7 @@ import Foundation
 
 public class MasterMessageBasket {
     public var masterMessageStore : MasterMessageStore
-    public var masterMessageController : MasterMessagePresentationController?
+    weak var masterMessageController : MasterMessagePresentationController?
     
     public init(masterMessageStore : MasterMessageStore) {
         self.masterMessageStore = masterMessageStore
@@ -23,6 +23,7 @@ public class MasterMessageBasket {
     public func resetMasterMessages(now : TimeValue64 = UtilsTime.current()) {
         for masterMessage in masterMessageStore.getMasterMessages() {
             masterMessage.reset(time: now)
+            masterMessageController?.addMasterMessage(masterMessage)
         }
     }
     

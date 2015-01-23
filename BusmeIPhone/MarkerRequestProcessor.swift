@@ -23,8 +23,8 @@ public class MarkerRequestProcessor : ArgumentPreparer, ResponseProcessor {
             ids.append(marker.getId())
             versions.append("\(marker.version)")
         }
-        args["marker_ids[]"] = ids
-        args["marker_versions[]"] = versions
+        args["marker_ids"] = ids
+        args["marker_versions"] = versions
         return args
     }
     public func onResponse(response: Tag) {

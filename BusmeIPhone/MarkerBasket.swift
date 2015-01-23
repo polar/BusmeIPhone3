@@ -34,6 +34,7 @@ public class MarkerBasket {
     public func resetMarkers(now : TimeValue64 = UtilsTime.current()) {
         for marker in markerStore.getMarkers() {
             marker.reset(time: now)
+            markerController?.addMarker(marker)
         }
     }
     

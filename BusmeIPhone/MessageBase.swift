@@ -19,7 +19,7 @@ public class MessageBase : MessageSpec {
     public var content : String?
     public var iconUrl : String?
     public var priority : Double = 0
-    public var displayDuration : Double = 30 //seconds
+    public var displayDuration : Double = 1 * 24 * 60 * 60 * 1000 // milliseconds
     public var remindable : Bool = false
     public var lastSeen : TimeValue64?
     public var seen : Bool = false

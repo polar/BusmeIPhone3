@@ -234,11 +234,11 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
             masterController!.api.bgEvents.postEvent("Master:reload", data: MasterEventData())
             Toast(title: "Reload All", message: "", duration: 1).show()
         } else if title == "Reset Seen Markers" {
-            masterController!.api.bgEvents.postEvent("Master:resetSeenMarkers", data: MainEventData())
-            Toast(title: "Reset Seen Markers", message: "The markers you have ingored will now reappear when appropriate", duration: 2).show()
+            masterController!.api.bgEvents.postEvent("Master:resetSeenMarkers", data: MasterEventData())
+            Toast(title: "Reset Seen Markers", message: "The markers you have ingored will now reappear if appropriate and not expired.", duration: 2).show()
         } else if title == "Reset Seen Messages"{
-            masterController!.api.bgEvents.postEvent("Master:resetSeenMessages", data: MainEventData())
-            Toast(title: "Reset Seen Markers", message: "The message you have removed will now reappear if an when they are appropriate", duration: 2).show()
+            masterController!.api.bgEvents.postEvent("Master:resetSeenMessages", data: MasterEventData())
+            Toast(title: "Reset Seen Markers", message: "The messages you have marked as seen will now reappear if and when scheduled and not expired.", duration: 2).show()
         }
     }
 }
