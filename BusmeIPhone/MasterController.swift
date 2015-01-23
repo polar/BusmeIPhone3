@@ -146,6 +146,22 @@ public class MasterController : BuspassEventListener {
         api.bgEvents.unregisterForEvent("Update", listener: self)
     }
     
+    func unregisterForEventsAllComponents() {
+        unregisterForEvents()
+        bannerForeground.unregisterForEvents()
+        bannerBackground.unregisterForEvents()
+        markerBackground.unregisterForEvents()
+        markerForeground.unregisterForEvents()
+        masterMessageForeground.unregisterForEvents()
+        masterMessageBackground.unregisterForEvents()
+    
+        journeyLocationPoster.unregisterForEvents()
+        journeyEventController.unregisterForEvents()
+        
+        loginForeground.unregisterForEvents()
+        loginBackground.unregisterForEvents()
+    }
+    
     public func onBuspassEvent(event: BuspassEvent) {
         let eventName = event.eventName
         if eventName == "Master:init" {

@@ -32,10 +32,11 @@ public class BoundingBox : NSObject {
     
     public init(array: [String]) { // E, S, W, N
         super.init()
-        setEast((array[0] as NSString).doubleValue)
-        setSouth((array[1] as NSString).doubleValue)
-        setWest((array[2] as NSString).doubleValue)
-        setNorth((array[3] as NSString).doubleValue)    }
+        setEast((array[2] as NSString).doubleValue)
+        setSouth((array[3] as NSString).doubleValue)
+        setWest((array[0] as NSString).doubleValue)
+        setNorth((array[1] as NSString).doubleValue)
+    }
 
     public init(north: Double, east: Double, west: Double, south : Double) {
         super.init()

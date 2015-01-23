@@ -16,6 +16,10 @@ public class JourneyEventController : BuspassEventListener {
         api.uiEvents.registerForEvent("JourneyEvent", listener: self)
     }
     
+    func unregisterForEvents() {
+        api.uiEvents.unregisterForEvent("JourneyEvent", listener: self)
+    }
+    
     public func onBuspassEvent(event: BuspassEvent) {
         let eventData = event.eventData as? JourneyEventData
         if eventData != nil {

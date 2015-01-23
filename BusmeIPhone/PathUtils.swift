@@ -98,11 +98,15 @@ public struct Rect {
     }
     
     public func containsXY(x : Float, y : Float) -> Bool {
-        return left < Double(x) && Double(x) < right && top < Double(y) && Double(y) < bottom
+        return containsXY(Double(x), y: Double(y))
     }
     
     public func containsXY(x : Double, y : Double) -> Bool {
-        return left < x && x < right && top < y && y < bottom
+        let xint = Int(x*1E6)
+        let yint = Int(y*1E6)
+        let horizontal = Int(left*1E6) <= xint && xint <= Int(right*1E6)
+        let vertical = Int(bottom*1E6) <= yint && yint <= Int(top*1E6)
+        return horizontal && vertical
     }
     
     public func containsPoint(point : Point) -> Bool {

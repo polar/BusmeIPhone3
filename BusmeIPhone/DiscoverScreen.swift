@@ -185,7 +185,7 @@ public class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDe
     func doMasterInit(master : Master) {
         self.navigationController?.popViewControllerAnimated(true)
         let eventData = MainEventData(master : master)
-        api.bgEvents.postEvent("Main:Discover:return", data: eventData)
+        api.uiEvents.postEvent("Main:Discover:return", data: eventData)
     }
     
     // MKOverlayRenderer

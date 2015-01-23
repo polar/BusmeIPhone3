@@ -103,7 +103,7 @@ public class MainController : BuspassEventListener {
         }
         self.masterController = MasterController(api: eventData.masterApi!, master: eventData.master!, mainController: self)
         if oldMasterController != nil {
-            oldMasterController!.unregisterForEvents()
+            oldMasterController!.unregisterForEventsAllComponents()
         }
         if eventData.saveAsDefault {
             // TODO Possible Error

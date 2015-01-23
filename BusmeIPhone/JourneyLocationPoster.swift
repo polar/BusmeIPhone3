@@ -61,7 +61,10 @@ public class JourneyLocationPoster : BuspassEventListener {
     
     public init(api : BuspassApi) {
         self.api = api
-        
+        registerForEvents()
+    }
+    
+    func registerForEvents() {
         api.uiEvents.registerForEvent("LocationChanged", listener: self)
         api.uiEvents.registerForEvent("LocationProviderDisabled", listener: self)
         api.uiEvents.registerForEvent("LocationProviderEnabled", listener: self)
@@ -69,8 +72,18 @@ public class JourneyLocationPoster : BuspassEventListener {
         api.bgEvents.registerForEvent("JourneyStartPosting", listener: self)
         api.bgEvents.registerForEvent("JourneyStopPosting", listener: self)
         api.bgEvents.registerForEvent("JourneyRemoved", listener: self)
-        
     }
+    
+    func unregisterForEvents() {
+        api.uiEvents.unregisterForEvent("LocationChanged", listener: self)
+        api.uiEvents.unregisterForEvent("LocationProviderDisabled", listener: self)
+        api.uiEvents.unregisterForEvent("LocationProviderEnabled", listener: self)
+        
+        api.bgEvents.unregisterForEvent("JourneyStartPosting", listener: self)
+        api.bgEvents.unregisterForEvent("JourneyStopPosting", listener: self)
+        api.bgEvents.unregisterForEvent("JourneyRemoved", listener: self)
+    }
+    
     public func onBuspassEvent(event: BuspassEvent) {
         let eventName = event.eventName
         // Foreground Thread

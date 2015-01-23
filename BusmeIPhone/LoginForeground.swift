@@ -24,6 +24,10 @@ public class LoginForeground : BuspassEventListener {
         api.uiEvents.registerForEvent("LoginEvent", listener: self)
     }
     
+    func unregisterForEvents() {
+        api.uiEvents.unregisterForEvent("LoginEvent", listener: self)
+    }
+    
     public func onBuspassEvent(event: BuspassEvent) {
         let eventData = event.eventData as? LoginEventData
         if eventData != nil {
@@ -108,6 +112,10 @@ public class LoginBackground : BuspassEventListener {
     public init(api : BuspassApi) {
         self.api = api
         api.bgEvents.registerForEvent("LoginEvent", listener: self)
+    }
+    
+    func unregisterForEvents() {
+        api.bgEvents.unregisterForEvent("LoginEvent", listener: self)
     }
     
     public func onBuspassEvent(event: BuspassEvent) {

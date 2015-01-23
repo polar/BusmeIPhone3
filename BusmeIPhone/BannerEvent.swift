@@ -64,6 +64,10 @@ public class BannerForeground : BuspassEventListener {
         self.api.uiEvents.registerForEvent("BannerEvent", listener: self)
     }
     
+    func unregisterForEvents() {
+        self.api.uiEvents.unregisterForEvent("BannerEvent", listener: self)
+    }
+    
     public func onBuspassEvent(event: BuspassEvent) {
         let evd = event.eventData as BannerEventData
         switch(evd.state) {
@@ -135,6 +139,10 @@ public class BannerBackground : BuspassEventListener {
     public init(api : BuspassApi) {
         self.api = api
         self.api.bgEvents.registerForEvent("BannerEvent", listener: self)
+    }
+    
+    func unregisterForEvents() {
+        self.api.bgEvents.unregisterForEvent("BannerEvent", listener: self)
     }
     
     public func onBuspassEvent(event: BuspassEvent) {
