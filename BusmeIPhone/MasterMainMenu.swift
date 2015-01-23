@@ -125,7 +125,9 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
         let submenu : [MenuItem] = [
             MenuItem(title: "Select", action: "busme", target: self),
             MenuItem(title: "Save As Default", action: "busme", target: self),
-            MenuItem(title: "Remove As Default", action: "busme", target: self)
+            MenuItem(title: "Remove As Default", action: "busme", target: self),
+            MenuItem(title: "Store", action: "busme", target: self),
+            MenuItem(title: "Reload", action: "busme", target: self)
         ]
         return MenuItem(title: "Busme Transit Systems", submenu: submenu)
     }
@@ -138,7 +140,19 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
             busmeSaveAsDefault(menuItem)
         } else if title == "Remove As Default" {
             busmeRemoveAsDefault(menuItem)
+        } else if title == "Store" {
+            store(menuItem)
+        } else if title == "Reload" {
+            reloadStore(menuItem)
         }
+    }
+    
+    func reloadStore(menuItem : MenuItem) {
+        mainController!.masterController?.reloadStores();
+    }
+    
+    func store(menuItem : MenuItem) {
+        mainController!.masterController?.storeMaster()
     }
     
     func busmeSelect(menuItem : MenuItem) {

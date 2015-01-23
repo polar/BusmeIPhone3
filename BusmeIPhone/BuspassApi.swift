@@ -381,9 +381,19 @@ public class BuspassApi : ApiBase, EventsApi {
                 let status = response.getStatusLine()
                 if status.statusCode == 200 {
                     let tag = xmlParse(response.getEntity())
-                    if (tag != nil && "pattern" == tag!.name.lowercaseString) {
-                        var pattern = JourneyPattern(tag: tag!)
-                        return pattern
+                    if (tag != nil) {
+                        if ("route" == tag!.name.lowercaseString && tag!.attributes["type"] != nil) {
+                            if tag!.attributes["type"]!.lowercaseString == "pattern" {
+                                var pattern = JourneyPattern(tag: tag!)
+                                return pattern
+                            } else {
+                                if BLog.DEBUG { BLog.logger.debug("not the right type") }
+                            }
+                        } else {
+                            if BLog.DEBUG { BLog.logger.debug("Not a Route structure") }
+                        }
+                    } else {
+                        if BLog.DEBUG { BLog.logger.debug("Invalid XML") }
                     }
                 } else {
                     if (BLog.DEBUG) { BLog.logger.debug(status.toString()) }

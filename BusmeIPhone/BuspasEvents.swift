@@ -61,8 +61,11 @@ public class BuspassEventDistributor {
     public var eventNotifiers : [String:BuspassEventNotifier] = [String:BuspassEventNotifier]();
     public var eventQ : [BuspassEvent] = [BuspassEvent]();
 
+    var writeLock : dispatch_semaphore_t
+    
     public init(name : String) {
         self.name = name
+        self.writeLock = dispatch_semaphore_create(1)
     }
     
     public func registerForEvent(eventName : String, listener : BuspassEventListener) {
@@ -82,10 +85,14 @@ public class BuspassEventDistributor {
     }
     
     public func postBuspassEvent(event : BuspassEvent) {
+        dispatch_semaphore_wait(writeLock, DISPATCH_TIME_FOREVER)
         
         if (BLog.DEBUG) { BLog.logger.debug("\(event.eventName)") }
 
         eventQ.insert(event, atIndex: 0);
+        
+        dispatch_semaphore_signal(writeLock)
+        
         if (postEventListener != nil) {
             postEventListener!.onPostEvent(event);
         }
@@ -97,7 +104,11 @@ public class BuspassEventDistributor {
     }
     
     public func peek() -> BuspassEvent? {
-        return eventQ.last;
+        dispatch_semaphore_wait(writeLock, DISPATCH_TIME_FOREVER)
+        let last = eventQ.last
+        dispatch_semaphore_signal(writeLock)
+
+        return last;
     }
     
     public func top() -> BuspassEvent? {
@@ -106,8 +117,10 @@ public class BuspassEventDistributor {
     
     public func roll() -> BuspassEvent? {
         // fatal error: cannot remove last from empty array.
+        dispatch_semaphore_wait(writeLock, DISPATCH_TIME_FOREVER)
         if self.eventQ.count > 0 {
             let event : BuspassEvent? = self.eventQ.removeLast();
+            dispatch_semaphore_signal(writeLock)
             if (event != nil) {
                 let notifier = eventNotifiers[event!.eventName]
                 if (notifier != nil) {
@@ -115,6 +128,8 @@ public class BuspassEventDistributor {
                 }
                 return event!
             }
+        } else {
+            dispatch_semaphore_signal(writeLock)
         }
         return nil
     }

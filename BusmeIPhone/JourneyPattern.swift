@@ -23,24 +23,20 @@ public class JourneyPattern : Storage {
         self.id = id
     }
     
-    public override init( coder : NSCoder ) {
-        super.init()
-        initWithCoder(coder)
-    }
-    
     public init(tag : Tag) {
         super.init()
         loadParsedXML(tag)
     }
     
-    public override func initWithCoder(decoder: NSCoder) -> Void {
-        self.id = decoder.decodeObjectForKey("id") as String;
-        self.nameid = decoder.decodeObjectForKey("nameid") as? NameId
-        let ps = decoder.decodeObjectForKey("path") as? [GeoPointImpl]
+    public override init(coder: NSCoder) {
+        super.init()
+        self.id = coder.decodeObjectForKey("id") as String;
+        self.nameid = coder.decodeObjectForKey("nameid") as? NameId
+        let ps = coder.decodeObjectForKey("path") as? [GeoPointImpl]
         if (ps != nil) {
             self.path = toCoordinates(ps!)
         }
-        let geoRect  = decoder.decodeObjectForKey("rect") as? GeoRect
+        let geoRect  = coder.decodeObjectForKey("rect") as? GeoRect
         if (geoRect != nil) {
             self.rect = toMapRect(geoRect!);
         }

@@ -101,7 +101,7 @@ public class JourneyBasket {
                 }
             }
             if addJourney {
-                let route = retrieveRouteAndStore(nameid)
+                let route = retrieveRouteJourney(nameid)
                 if (route != nil) {
                     if route!.isJourney() {
                         let measure = route!.getStartingMeasure()

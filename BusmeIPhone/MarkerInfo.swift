@@ -22,6 +22,10 @@ public class MarkerInfo : MessageBase, StorageProtocol {
         }
     }
     
+    public override init(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+    
     public override func isValid() -> Bool {
         return title != nil && msgDescription != nil
     }
@@ -33,8 +37,4 @@ public class MarkerInfo : MessageBase, StorageProtocol {
     public func postSerialize(api : ApiBase, time : TimeValue64) {
         
     }
-
-
-    
-    
 }

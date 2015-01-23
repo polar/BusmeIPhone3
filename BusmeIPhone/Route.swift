@@ -93,7 +93,7 @@ public class Route : Storage {
         self.reported = coder.decodeBoolForKey("reported")
     }
     
-    public func encodeWithCoder(coder : NSCoder) -> Route {
+    public func encodeWithCoder(coder : NSCoder) {
         if (name != nil) { coder.encodeObject(name!, forKey: "name") }
         if (type != nil) { coder.encodeObject(type!, forKey: "type") }
         if (id != nil) { coder.encodeObject(id!, forKey: "id") }
@@ -127,7 +127,6 @@ public class Route : Storage {
         coder.encodeBool(onRoute, forKey: "onRoute")
         if (timeZone != nil) { coder.encodeObject(timeZone!, forKey: "timeZone") }
         coder.encodeBool(reported, forKey: "reported")
-        return self
     }
     
     public override func preSerialize(api : ApiBase, time : TimeValue64) {

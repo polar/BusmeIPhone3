@@ -61,6 +61,10 @@ public class MarkerForeground : BuspassEventListener {
         self.api.uiEvents.registerForEvent("MarkerEvent", listener: self)
     }
     
+    func unregisterForEvents() {
+        self.api.uiEvents.unregisterForEvent("MarkerEvent", listener: self)
+    }
+    
     public func onBuspassEvent(event: BuspassEvent) {
         let evd = event.eventData as MarkerEventData
         switch(evd.state) {
@@ -145,6 +149,10 @@ public class MarkerBackground : BuspassEventListener {
     public init(api : BuspassApi) {
         self.api = api
         self.api.bgEvents.registerForEvent("MarkerEvent", listener: self)
+    }
+    
+    func unregisterForEvents() {
+        self.api.bgEvents.unregisterForEvent("MarkerEvent", listener: self)
     }
     
     public func onBuspassEvent(event: BuspassEvent) {

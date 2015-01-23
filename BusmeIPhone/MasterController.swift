@@ -69,13 +69,14 @@ public class MasterController : BuspassEventListener {
     public var storageSerializedController : StorageSerializeController
     
     
-    
-    public init(api : BuspassApi, master: Master, mainController : MainController?) {
+    public init(api : BuspassApi, master: Master, mainController : MainController) {
         self.api = api
         self.master = master
         self.mainController = mainController
         
-        self.externalStorageController = ExternalStorageController(api: api, directory: "/Library/Caches/com.busme")
+        let directory = mainController.configurator.getCacheDirectory()
+        
+        self.externalStorageController = ExternalStorageController(api: api, directory: directory)
         self.storageSerializedController = StorageSerializeController(api: api, externalStorageController: externalStorageController)
         
         self.bannerStore = BannerStore()
@@ -85,7 +86,7 @@ public class MasterController : BuspassEventListener {
         self.bannerForeground.bannerPresentationController = bannerPresentationController
         self.bannerBackground = BannerBackground(api: api)
         
-        let ms = storageSerializedController.retrieveStorage("\(master.slug)-Markers.dat", api: api) as? MarkerStore
+        let ms = storageSerializedController.retrieveStorage("\(master.slug!)-Markers.dat", api: api) as? MarkerStore
         self.markerStore = ms != nil ? ms! : MarkerStore()
         self.markerBasket = MarkerBasket(markerStore: markerStore)
         self.markerPresentationController = MarkerPresentationController(api: api, markerBasket: markerBasket)
@@ -93,7 +94,7 @@ public class MasterController : BuspassEventListener {
         self.markerForeground.markerPresentationController = markerPresentationController
         self.markerBackground = MarkerBackground(api: api)
         
-        let msgS = storageSerializedController.retrieveStorage("\(master.slug)-Messages.dat", api: api) as? MasterMessageStore
+        let msgS = storageSerializedController.retrieveStorage("\(master.slug!)-Messages.dat", api: api) as? MasterMessageStore
         self.masterMessageStore = msgS != nil ? msgS! : MasterMessageStore()
         self.masterMessageBasket = MasterMessageBasket(masterMessageStore: masterMessageStore)
         self.masterMessagePresentationController = MasterMessagePresentationController(api: api, basket: masterMessageBasket)
@@ -102,22 +103,24 @@ public class MasterController : BuspassEventListener {
         self.masterMessageForeground.masterMessagePresentationController = masterMessagePresentationController
         self.masterMessageBackground = MasterMessageBackground(api: api)
         
-        let js = storageSerializedController.retrieveStorage("\(master.slug)-Journeys.dat", api: api) as? JourneyStore
+        let js = storageSerializedController.retrieveStorage("\(master.slug!)-Journeys.dat", api: api) as? JourneyStore
         self.journeyStore = js != nil ? js! : JourneyStore()
         self.journeyBasket = JourneyBasket(api: api, journeyStore: journeyStore)
         self.journeyDisplayController = JourneyDisplayController(api: api, basket: journeyBasket)
         self.journeyVisibilityController = JourneyVisibilityController(api: api, controller: journeyDisplayController)
         self.journeyDisplaySelectionController = JourneyDisplaySelectionController(api : api, journeyDisplayController: journeyDisplayController)
+        
+        
+        self.updateRemoteInvocation = UpdateRemoteInvocation(api: api, bannerBasket: bannerBasket, markerBasket: markerBasket, masterMessageBasket: masterMessageBasket, journeyDisplayController: journeyDisplayController)
+        
+        self.journeySyncRemoteInvocation = JourneySyncRemoteInvocation(api: api, journeyDisplayController: journeyDisplayController, journeySyncProgressListener: JourneySyncProgressListener(api: api))
+        
         self.journeyLocationPoster = JourneyLocationPoster(api: api)
         self.journeyEventController = JourneyEventController(api: api)
         self.journeyPostingController = JourneyPostingController(api: api)
         
         self.loginForeground = LoginForeground(api: api)
         self.loginBackground = LoginBackground(api: api)
-        
-        self.updateRemoteInvocation = UpdateRemoteInvocation(api: api, bannerBasket: bannerBasket, markerBasket: markerBasket, masterMessageBasket: masterMessageBasket, journeyDisplayController: journeyDisplayController)
-        
-        self.journeySyncRemoteInvocation = JourneySyncRemoteInvocation(api: api, journeyDisplayController: journeyDisplayController, journeySyncProgressListener: JourneySyncProgressListener(api: api))
         registerForEvents()
     }
 
@@ -202,8 +205,55 @@ public class MasterController : BuspassEventListener {
     }
     
     public func storeMaster() {
-        storageSerializedController.cacheStorage(journeyStore, filename: "\(master.slug)-Journeys.dat", api: api)
-        storageSerializedController.cacheStorage(masterMessageStore, filename: "\(master.slug)-Messages.dat", api: api)
-        storageSerializedController.cacheStorage(markerStore, filename: "\(master.slug)-Markers.dat", api: api)
+        storageSerializedController.cacheStorage(journeyStore, filename: "\(master.slug!)-Journeys.dat", api: api)
+        storageSerializedController.cacheStorage(masterMessageStore, filename: "\(master.slug!)-Messages.dat", api: api)
+        storageSerializedController.cacheStorage(markerStore, filename: "\(master.slug!)-Markers.dat", api: api)
+    }
+    
+    public func reloadStores() {
+        replaceMarkerStore()
+        replaceMasterMessageStore()
+        replaceJourneyStore()
+        
+        self.updateRemoteInvocation = UpdateRemoteInvocation(api: api, bannerBasket: bannerBasket, markerBasket: markerBasket, masterMessageBasket: masterMessageBasket, journeyDisplayController: journeyDisplayController)
+        
+        self.journeySyncRemoteInvocation = JourneySyncRemoteInvocation(api: api, journeyDisplayController: journeyDisplayController, journeySyncProgressListener: JourneySyncProgressListener(api: api))
+    }
+    
+    func replaceMarkerStore() {
+        self.markerBackground.unregisterForEvents()
+        self.markerForeground.unregisterForEvents()
+        
+        let ms = storageSerializedController.retrieveStorage("\(master.slug!)-Markers.dat", api: api) as? MarkerStore
+        self.markerStore = ms != nil ? ms! : MarkerStore()
+        self.markerBasket = MarkerBasket(markerStore: markerStore)
+        self.markerPresentationController = MarkerPresentationController(api: api, markerBasket: markerBasket)
+        self.markerForeground = MarkerForeground(api: api)
+        self.markerForeground.markerPresentationController = markerPresentationController
+        self.markerBackground = MarkerBackground(api: api)
+    }
+    
+    func replaceMasterMessageStore() {
+        self.masterMessageForeground.unregisterForEvents()
+        self.masterMessageBackground.unregisterForEvents()
+        
+        let msgS = storageSerializedController.retrieveStorage("\(master.slug!)-Messages.dat", api: api) as? MasterMessageStore
+        self.masterMessageStore = msgS != nil ? msgS! : MasterMessageStore()
+        self.masterMessageBasket = MasterMessageBasket(masterMessageStore: masterMessageStore)
+        self.masterMessagePresentationController = MasterMessagePresentationController(api: api, basket: masterMessageBasket)
+        self.masterMessageBasket.masterMessageController = masterMessagePresentationController
+        self.masterMessageForeground = MasterMessageForeground(api: api)
+        self.masterMessageForeground.masterMessagePresentationController = masterMessagePresentationController
+        self.masterMessageBackground = MasterMessageBackground(api: api)
+    }
+    
+    func replaceJourneyStore() {
+        
+        let js = storageSerializedController.retrieveStorage("\(master.slug!)-Journeys.dat", api: api) as? JourneyStore
+        self.journeyStore = js != nil ? js! : JourneyStore()
+        self.journeyBasket = JourneyBasket(api: api, journeyStore: journeyStore)
+        self.journeyDisplayController = JourneyDisplayController(api: api, basket: journeyBasket)
+        self.journeyVisibilityController = JourneyVisibilityController(api: api, controller: journeyDisplayController)
+        self.journeyDisplaySelectionController = JourneyDisplaySelectionController(api : api, journeyDisplayController: journeyDisplayController)
     }
 }

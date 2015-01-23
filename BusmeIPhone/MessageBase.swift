@@ -62,8 +62,8 @@ public class MessageBase : MessageSpec {
         super.init(id: id, version: version, expiryTime: then)
     }
     
-    override func initWithCoder(coder: NSCoder) -> Void {
-        super.initWithCoder(coder)
+    public override init(coder: NSCoder) {
+        super.init(coder: coder)
         let hasPoint = coder.decodeBoolForKey("hasPoint")
         if (hasPoint) {
             let lat = coder.decodeDoubleForKey("lat")

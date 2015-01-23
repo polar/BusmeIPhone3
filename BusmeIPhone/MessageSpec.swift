@@ -15,7 +15,6 @@ public class MessageSpec : NSObject {
     
     public override init() {
         super.init()
-        
     }
     
     public init(id : String, version: TimeValue64, expiryTime : TimeValue64) {
@@ -24,13 +23,13 @@ public class MessageSpec : NSObject {
         self.expiryTime = expiryTime
     }
     
-    func initWithCoder(decoder: NSCoder) -> Void {
-        self.id = decoder.decodeObjectForKey("id") as String;
-        self.version = decoder.decodeInt64ForKey("version")
-        self.expiryTime = decoder.decodeInt64ForKey("expiryTime")
+    public init(coder: NSCoder) {
+        self.id = coder.decodeObjectForKey("id") as String;
+        self.version = coder.decodeInt64ForKey("version")
+        self.expiryTime = coder.decodeInt64ForKey("expiryTime")
     }
     
-    public func encodeWithCoder(encoder: NSCoder) -> Void {
+    public func encodeWithCoder(encoder: NSCoder) {
         encoder.encodeObject(id, forKey: "id")
         encoder.encodeInt64(version, forKey: "version")
         encoder.encodeInt64(expiryTime, forKey: "expiryTime")

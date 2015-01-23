@@ -16,7 +16,8 @@ public class JourneyStore : Storage {
     override init() {
         super.init()
     }
-    public override func initWithCoder( coder : NSCoder) {
+    public override init( coder : NSCoder) {
+        super.init()
         let journeys = coder.decodeObjectForKey("journeys") as? [String:Route]
         if journeys != nil {
             self.journeys = journeys!

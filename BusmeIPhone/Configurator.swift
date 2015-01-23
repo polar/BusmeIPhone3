@@ -11,6 +11,13 @@ import CoreLocation
 
 public class Configurator {
     
+    public func getCacheDirectory() -> String {
+        let directories = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.CachesDirectory, NSSearchPathDomainMask.UserDomainMask,true)
+        let cache_directory = directories[0] as NSString
+        let directory = cache_directory + "/com.busme"
+        return directory
+    }
+    
     public func getDefaultMaster() -> Master? {
         if BLog.DEBUG { BLog.logger.debug("Getting Default Master") }
         let result: AnyObject? = NSUserDefaults.standardUserDefaults().objectForKey("DefaultMaster")
@@ -39,7 +46,7 @@ public class Configurator {
     public func saveAsDefaultMaster(master : Master)  {
         if BLog.DEBUG { BLog.logger.debug("Saving Default Mater \(master.name)") }
         let result = NSKeyedArchiver.archivedDataWithRootObject(master)
-        NSUserDefaults.standardUserDefaults().setObject(master, forKey: "DefaultMaster")
+        NSUserDefaults.standardUserDefaults().setObject(result, forKey: "DefaultMaster")
     }
     
     public func removeAsDefault(master : Master) {

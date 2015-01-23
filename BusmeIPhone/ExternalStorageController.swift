@@ -17,12 +17,15 @@ public class ExternalStorageController {
     public init(api : BuspassApi, directory : String) {
         self.api = api
         self.directory = directory
+        NSFileManager.defaultManager().createDirectoryAtPath(directory, withIntermediateDirectories: true, attributes: nil, error: nil)
+        
     }
     
     public func legalize(filename : String) -> String {
         var it = filename as NSString
         it = it.stringByReplacingOccurrencesOfString(" ", withString: "_")
-        it = it.stringByReplacingOccurrencesOfString("/", withString: "-")
+        it = it.stringByReplacingOccurrencesOfString("(", withString: "-")
+        it = it.stringByReplacingOccurrencesOfString(")", withString: "-")
         it = it.stringByReplacingOccurrencesOfString("*", withString: ".")
         return it
     }
@@ -37,10 +40,14 @@ public class ExternalStorageController {
         return directory
     }
     public func serializeObjectToFile(store: Storage, file : String) -> Bool {
-
-        return NSKeyedArchiver.archiveRootObject(store, toFile: legalize(file))
+        let legalFilename = legalize(directory + "/" + file)
+        let result = NSKeyedArchiver.archiveRootObject(store, toFile: legalFilename)
+        return result
     }
     public func deserializeObjectFromFile(file :String) -> Storage? {
-        return NSKeyedUnarchiver.unarchiveObjectWithFile(legalize(file)) as? Storage
+        let legalFilename = legalize(directory + "/" + file)
+        let result : AnyObject? = NSKeyedUnarchiver.unarchiveObjectWithFile(legalFilename)
+        let typedResult = result as? Storage
+        return typedResult
     }
 }

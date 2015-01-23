@@ -60,6 +60,10 @@ public class MasterMessageForeground : BuspassEventListener {
         self.api.uiEvents.registerForEvent("MasterMessageEvent", listener: self)
     }
     
+    func unregisterForEvents() {
+        self.api.uiEvents.unregisterForEvent("MasterMessageEvent", listener: self)
+    }
+    
     public func onBuspassEvent(event: BuspassEvent) {
         let evd = event.eventData as MasterMessageEventData
         switch(evd.state) {
@@ -137,6 +141,10 @@ public class MasterMessageBackground : BuspassEventListener {
     public init(api : BuspassApi) {
         self.api = api
         self.api.bgEvents.registerForEvent("MasterMessageEvent", listener: self)
+    }
+    
+    func unregisterForEvents() {
+        self.api.bgEvents.unregisterForEvent("MasterMessageEvent", listener: self)
     }
     
     public func onBuspassEvent(event: BuspassEvent) {

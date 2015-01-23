@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class NameId {
+public class NameId : Storage {
     public var name : String
     public var id : String
     public var route_id : String?
@@ -20,11 +20,13 @@ public class NameId {
     public init(id: String, name: String) {
         self.name = name
         self.id = id
+        super.init()
     }
     
-    func initWithCoder(decoder : NSCoder) {
+    init(decoder : NSCoder) {
         self.id = decoder.decodeObjectForKey("id")! as String
         self.name = decoder.decodeObjectForKey("name")! as String
+        super.init()
         self.route_id = decoder.decodeObjectForKey("route_id") as? String
         self.type = decoder.decodeObjectForKey("type") as? String
         self.version = decoder.decodeInt64ForKey("version")
@@ -52,6 +54,7 @@ public class NameId {
     public init(args: [String]) {
         self.name = args[0].stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
         self.id = args[1].stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+        super.init()
         if (args.count > 2) {
             self.type = args[2].stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
 
