@@ -121,7 +121,7 @@ public class MarkerForeground : BuspassEventListener {
         let evd = eventData.dup()
         api.uiEvents.postEvent("MarkerPresent:webDisplay", data: evd)
         evd.state = MasterMessageEvent.S_DONE
-        api.bgEvents.postEvent("MarkerEvent", data: evd)
+        api.bgEvents.postEvent("MarkerEvent", data: evd.dup())
     }
     
     func onError(eventData : MarkerEventData) {

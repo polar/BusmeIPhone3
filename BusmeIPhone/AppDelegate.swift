@@ -10,8 +10,8 @@ import UIKit
 import CoreData
 import CoreLocation
 
-//let INITIAL_URL = "http://busme-apis.herokuapp.com/apis/d1/get"
-let INITIAL_URL = "http://polars-macbook-air.local:3002/apis/d1/get"
+let INITIAL_URL = "http://busme-apis.herokuapp.com/apis/d1/get"
+//let INITIAL_URL = "http://polars-macbook-air.local:3002/apis/d1/get"
 let APP_PLATFORM = "iOS"
 
 class Toast : UIResponder, UIAlertViewDelegate {

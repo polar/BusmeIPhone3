@@ -85,11 +85,12 @@ public class FGBannerPresentController : BuspassEventListener {
         if currentBanner != nil {
             let banner = currentBanner!
             self.currentBanner = nil
-            if eventData.bannerInfo === currentBanner!.bannerInfo {
+            if eventData.bannerInfo === banner.bannerInfo {
                 banner.slide_out({(y) in
                     banner.removeFromParentViewController()
                 })
             }
+
         }
     }
     
@@ -98,7 +99,7 @@ public class FGBannerPresentController : BuspassEventListener {
             let banner = currentBanner!
             if banner.bannerInfo === eventData.bannerInfo {
                 banner.displayWebPage(eventData.thruUrl)
-                //abandonBanner(eventData)
+                abandonBanner(eventData)
             }
         }
     }

@@ -96,7 +96,7 @@ public class BannerForeground : BuspassEventListener {
     // it sends this event.
     
     func onResolve(eventData : BannerEventData) {
-        let time = UtilsTime.current()
+        let time = eventData.time != 0 ? UtilsTime.current() : eventData.time
         let evd = eventData.dup()
         switch(eventData.state) {
         case BannerEvent.R_GO:
@@ -110,10 +110,14 @@ public class BannerForeground : BuspassEventListener {
     
     // From the BannerBackground Thread
     func onResolved(eventData : BannerEventData) {
+        let time = eventData.time != 0 ? UtilsTime.current() : eventData.time
         let evd = eventData.dup()
-        api.uiEvents.postEvent("BannerPresent:webDisplay", data: evd)
+        bannerPresentationController?.onDismiss(true, bannerInfo: eventData.bannerInfo, time: time)
+        
         evd.state = BannerEvent.S_DONE
-        api.bgEvents.postEvent("BannerEvent", data: evd)
+        api.uiEvents.postEvent("BannerPresent:webDisplay", data: evd)
+        api.uiEvents.postEvent("BannerPresent:dismiss", data: evd.dup())
+        api.bgEvents.postEvent("BannerEvent", data: evd.dup()) // To complete protocol
 
     }
     
