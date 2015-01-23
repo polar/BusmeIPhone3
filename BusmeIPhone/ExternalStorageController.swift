@@ -40,7 +40,7 @@ public class ExternalStorageController {
 
         return NSKeyedArchiver.archiveRootObject(store, toFile: legalize(file))
     }
-    public func deserializeObjectFromFile(store: Storage, file :String) -> Storage? {
+    public func deserializeObjectFromFile(file :String) -> Storage? {
         return NSKeyedUnarchiver.unarchiveObjectWithFile(legalize(file)) as? Storage
     }
 }

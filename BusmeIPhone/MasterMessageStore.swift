@@ -8,11 +8,16 @@
 
 import Foundation
 
-public class MasterMessageStore : StorageProtocol {
+public class MasterMessageStore : Storage {
     
     public var masterMessages : [String:MasterMessage] = [String:MasterMessage]()
     
-    func initWithCoder( coder : NSCoder) {
+    override init() {
+        super.init()
+    }
+    
+    override init( coder : NSCoder) {
+        super.init()
         let masterMessages = coder.decodeObjectForKey("masterMessages") as? [String:MasterMessage]
         if masterMessages != nil {
             self.masterMessages = masterMessages!
@@ -23,13 +28,13 @@ public class MasterMessageStore : StorageProtocol {
         coder.encodeObject(masterMessages, forKey: "masterMessages")
     }
     
-    public func preSerialize(api: ApiBase, time: TimeValue64) {
+    public override func preSerialize(api: ApiBase, time: TimeValue64) {
         for masterMessage in masterMessages.values.array {
             masterMessage.preSerialize(api, time: time)
         }
     }
     
-    public func postSerialize(api: ApiBase, time: TimeValue64) {
+    public override func postSerialize(api: ApiBase, time: TimeValue64) {
         for masterMessage in masterMessages.values.array {
             masterMessage.postSerialize(api, time: time)
         }

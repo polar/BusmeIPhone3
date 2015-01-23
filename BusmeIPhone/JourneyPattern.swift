@@ -23,6 +23,11 @@ public class JourneyPattern : Storage {
         self.id = id
     }
     
+    public override init( coder : NSCoder ) {
+        super.init()
+        initWithCoder(coder)
+    }
+    
     public init(tag : Tag) {
         super.init()
         loadParsedXML(tag)

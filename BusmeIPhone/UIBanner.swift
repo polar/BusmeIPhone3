@@ -65,8 +65,8 @@ public class UIBanner : UIViewController {
     
     func initSubviews() {
         
-        if (bannerInfo.description != nil && !bannerInfo.description!.isEmpty ) {
-            textView.text = bannerInfo.description!
+        if (bannerInfo.msgDescription != nil && !bannerInfo.msgDescription!.isEmpty ) {
+            textView.text = bannerInfo.msgDescription!
         } else if bannerInfo.title != nil {
             textView.text = bannerInfo.title
         }

@@ -13,7 +13,7 @@ public class MessageBase : MessageSpec {
     public var point : CLLocationCoordinate2D?
     public var radius : Double = 0 // feet
     public var title : String?
-    public var description : String?
+    public var msgDescription : String?
     public var goUrl : String?
     public var goLabel : String?
     public var content : String?
@@ -73,7 +73,7 @@ public class MessageBase : MessageSpec {
         self.radius = coder.decodeDoubleForKey("radius")
         self.priority = coder.decodeDoubleForKey("priority")
         self.title = coder.decodeObjectForKey("title") as? String;
-        self.description = coder.decodeObjectForKey("description") as? String
+        self.msgDescription = coder.decodeObjectForKey("description") as? String
         self.content = coder.decodeObjectForKey("content") as? String
         self.goLabel = coder.decodeObjectForKey("goLabel") as? String
         self.goUrl = coder.decodeObjectForKey("goUrl") as? String
@@ -99,7 +99,7 @@ public class MessageBase : MessageSpec {
         encoder.encodeDouble(radius, forKey: "radius")
         encoder.encodeDouble(priority, forKey: "priority")
         encoder.encodeObject(title, forKey: "title")
-        encoder.encodeObject(description, forKey: "description")
+        encoder.encodeObject(msgDescription, forKey: "description")
         encoder.encodeObject(content, forKey: "content")
         encoder.encodeObject(goLabel, forKey: "goLabel")
         encoder.encodeObject(goUrl, forKey: "goUrl")
@@ -211,7 +211,7 @@ public class MessageBase : MessageSpec {
                 self.content = m.text!
                 break;
             case "description":
-                self.description = m.text!
+                self.msgDescription = m.text!
                 break;
             case "golabel":
                 self.goLabel = m.text!

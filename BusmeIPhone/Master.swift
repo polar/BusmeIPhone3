@@ -8,22 +8,24 @@
 
 import Foundation
 
-public class Master {
+public class Master : NSObject {
     public var lon : Double?
     public var lat : Double?
     public var slug : String?
     public var name : String?
     public var apiUrl : String?
     public var title : String?
-    public var description : String?
+    public var masterDescription : String?
     public var bbox : BoundingBox?
     public var timeFormat : String = "%l:%M %P"
     
     public init( coder : NSCoder ) {
+        super.init()
         initWithCoder(coder)
     }
     
     public init(tag : Tag) {
+        super.init()
         loadParsedXML(tag)
     }
 
@@ -32,7 +34,7 @@ public class Master {
         self.lat = coder.decodeDoubleForKey("lat")
         self.slug = coder.decodeObjectForKey("slug") as? String
         self.name = coder.decodeObjectForKey("name") as? String
-        self.description = coder.decodeObjectForKey("description") as? String
+        self.masterDescription = coder.decodeObjectForKey("description") as? String
         self.apiUrl = coder.decodeObjectForKey("apiUrl") as? String
         
         self.bbox = coder.decodeObjectForKey("bbox") as? BoundingBox
@@ -48,7 +50,7 @@ public class Master {
         coder.encodeObject(apiUrl!, forKey: "apiUrl")
         coder.encodeObject(bbox!, forKey: "bbox")
         coder.encodeObject(title!, forKey: "title")
-        coder.encodeObject(description!, forKey: "description")
+        coder.encodeObject(masterDescription!, forKey: "description")
         coder.encodeObject(timeFormat, forKey: "timeFormat")
     }
     
@@ -76,13 +78,13 @@ public class Master {
                 self.title = child.text
             }
             if ("description" == child.name.lowercaseString) {
-                self.description = child.text
+                self.masterDescription = child.text
             }
         }
     }
     
     public func isValid() -> Bool {
-        return lon != nil && lat != nil && name != nil && slug != nil && title != nil && apiUrl != nil && description != nil && bbox != nil
+        return lon != nil && lat != nil && name != nil && slug != nil && title != nil && apiUrl != nil && masterDescription != nil && bbox != nil
     }
     
     public func toString() -> String {

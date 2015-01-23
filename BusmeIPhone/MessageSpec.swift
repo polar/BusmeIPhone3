@@ -8,12 +8,13 @@
 
 import Foundation
 
-public class MessageSpec {
+public class MessageSpec : NSObject {
     public var id : String = ""
     public var version : TimeValue64 = 0
     public var expiryTime : TimeValue64 = 0
     
-    public init() {
+    public override init() {
+        super.init()
         
     }
     

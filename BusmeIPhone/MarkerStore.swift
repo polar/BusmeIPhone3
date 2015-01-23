@@ -8,11 +8,15 @@
 
 import Foundation
 
-public class MarkerStore : StorageProtocol {
+public class MarkerStore : Storage {
     
     public var markers : [String:MarkerInfo] = [String:MarkerInfo]()
     
-    func initWithCoder( coder : NSCoder) {
+    override init() {
+        super.init()
+    }
+    override init( coder : NSCoder) {
+        super.init()
         let markers = coder.decodeObjectForKey("markers") as? [String:MarkerInfo]
         if markers != nil {
             self.markers = markers!
@@ -23,13 +27,13 @@ public class MarkerStore : StorageProtocol {
         coder.encodeObject(markers, forKey: "markers")
     }
     
-    public func preSerialize(api: ApiBase, time: TimeValue64) {
+    public override func preSerialize(api: ApiBase, time: TimeValue64) {
         for marker in markers.values.array {
             marker.preSerialize(api, time: time)
         }
     }
     
-    public func postSerialize(api: ApiBase, time: TimeValue64) {
+    public override func postSerialize(api: ApiBase, time: TimeValue64) {
         for marker in markers.values.array {
             marker.postSerialize(api, time: time)
         }

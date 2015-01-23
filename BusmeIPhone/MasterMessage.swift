@@ -9,7 +9,7 @@
 import Foundation
 import CoreLocation
 
-public class MasterMessage : MessageBase, StorageProtocol {
+public class MasterMessage : MessageBase {
     
     public override func isValid() -> Bool {
         return title != nil && content != nil

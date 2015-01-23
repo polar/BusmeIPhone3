@@ -47,6 +47,8 @@ public class Route : Storage {
     public var reported : Bool = false
     public var reporting : Bool = false
     
+
+
     public init(tag : Tag) {
         super.init()
         loadParsedXML(tag)
@@ -54,7 +56,8 @@ public class Route : Storage {
     
     public var journeyStore : JourneyStore?
     
-    public override func initWithCoder(coder : NSCoder) {
+    override init(coder : NSCoder) {
+        super.init()
         self.name = coder.decodeObjectForKey("name") as? String
         self.type = coder.decodeObjectForKey("type") as? String
         self.id = coder.decodeObjectForKey("id") as? String

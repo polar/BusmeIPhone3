@@ -23,7 +23,7 @@ public class MarkerInfo : MessageBase, StorageProtocol {
     }
     
     public override func isValid() -> Bool {
-        return title != nil && description != nil
+        return title != nil && msgDescription != nil
     }
     
     public func preSerialize(api : ApiBase, time : TimeValue64) {

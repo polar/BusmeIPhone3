@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class StoageSerializeController {
+public class StorageSerializeController {
     public var api : BuspassApi
     public var externalStorageController : ExternalStorageController
     
@@ -17,9 +17,9 @@ public class StoageSerializeController {
         self.externalStorageController = externalStorageController
     }
     
-    public func retrieveStorage(storage : Storage, filename : String, api : BuspassApi) -> Storage? {
+    public func retrieveStorage(filename : String, api : BuspassApi) -> Storage? {
         if externalStorageController.isAvailable() {
-            let store = externalStorageController.deserializeObjectFromFile(storage, file: filename)
+            let store = externalStorageController.deserializeObjectFromFile(filename)
             if store != nil {
                 store!.postSerialize(api, time: UtilsTime.current())
                 return store!

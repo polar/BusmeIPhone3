@@ -64,6 +64,9 @@ public class MasterController : BuspassEventListener {
     
     public var updateRemoteInvocation : UpdateRemoteInvocation
     public var journeySyncRemoteInvocation : JourneySyncRemoteInvocation
+
+    public var externalStorageController : ExternalStorageController
+    public var storageSerializedController : StorageSerializeController
     
     
     
@@ -72,6 +75,9 @@ public class MasterController : BuspassEventListener {
         self.master = master
         self.mainController = mainController
         
+        self.externalStorageController = ExternalStorageController(api: api, directory: "/Library/Caches/com.busme")
+        self.storageSerializedController = StorageSerializeController(api: api, externalStorageController: externalStorageController)
+        
         self.bannerStore = BannerStore()
         self.bannerBasket = BannerBasket(bannerStore: bannerStore)
         self.bannerPresentationController = BannerPresentationController(api: api, basket: bannerBasket)
@@ -79,14 +85,16 @@ public class MasterController : BuspassEventListener {
         self.bannerForeground.bannerPresentationController = bannerPresentationController
         self.bannerBackground = BannerBackground(api: api)
         
-        self.markerStore = MarkerStore()
+        let ms = storageSerializedController.retrieveStorage("\(master.slug)-Markers.dat", api: api) as? MarkerStore
+        self.markerStore = ms != nil ? ms! : MarkerStore()
         self.markerBasket = MarkerBasket(markerStore: markerStore)
         self.markerPresentationController = MarkerPresentationController(api: api, markerBasket: markerBasket)
         self.markerForeground = MarkerForeground(api: api)
         self.markerForeground.markerPresentationController = markerPresentationController
         self.markerBackground = MarkerBackground(api: api)
         
-        self.masterMessageStore = MasterMessageStore()
+        let msgS = storageSerializedController.retrieveStorage("\(master.slug)-Messages.dat", api: api) as? MasterMessageStore
+        self.masterMessageStore = msgS != nil ? msgS! : MasterMessageStore()
         self.masterMessageBasket = MasterMessageBasket(masterMessageStore: masterMessageStore)
         self.masterMessagePresentationController = MasterMessagePresentationController(api: api, basket: masterMessageBasket)
         self.masterMessageBasket.masterMessageController = masterMessagePresentationController
@@ -94,7 +102,8 @@ public class MasterController : BuspassEventListener {
         self.masterMessageForeground.masterMessagePresentationController = masterMessagePresentationController
         self.masterMessageBackground = MasterMessageBackground(api: api)
         
-        self.journeyStore = JourneyStore()
+        let js = storageSerializedController.retrieveStorage("\(master.slug)-Journeys.dat", api: api) as? JourneyStore
+        self.journeyStore = js != nil ? js! : JourneyStore()
         self.journeyBasket = JourneyBasket(api: api, journeyStore: journeyStore)
         self.journeyDisplayController = JourneyDisplayController(api: api, basket: journeyBasket)
         self.journeyVisibilityController = JourneyVisibilityController(api: api, controller: journeyDisplayController)
@@ -109,7 +118,6 @@ public class MasterController : BuspassEventListener {
         self.updateRemoteInvocation = UpdateRemoteInvocation(api: api, bannerBasket: bannerBasket, markerBasket: markerBasket, masterMessageBasket: masterMessageBasket, journeyDisplayController: journeyDisplayController)
         
         self.journeySyncRemoteInvocation = JourneySyncRemoteInvocation(api: api, journeyDisplayController: journeyDisplayController, journeySyncProgressListener: JourneySyncProgressListener(api: api))
-        
         registerForEvents()
     }
 
@@ -156,6 +164,9 @@ public class MasterController : BuspassEventListener {
         } else if eventName == "Master:resetSeenMessages" {
             let eventData = event.eventData as MasterEventData
             onMasterResetSeenMessages(eventData)
+        } else if eventName == "Master:store" {
+            let eventData = event.eventData as MasterEventData
+            storeMaster()
         }
     }
     
@@ -191,6 +202,8 @@ public class MasterController : BuspassEventListener {
     }
     
     public func storeMaster() {
-        
+        storageSerializedController.cacheStorage(journeyStore, filename: "\(master.slug)-Journeys.dat", api: api)
+        storageSerializedController.cacheStorage(masterMessageStore, filename: "\(master.slug)-Messages.dat", api: api)
+        storageSerializedController.cacheStorage(markerStore, filename: "\(master.slug)-Markers.dat", api: api)
     }
 }

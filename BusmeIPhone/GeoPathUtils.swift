@@ -23,7 +23,7 @@ public protocol GeoPointMutable : GeoPoint {
     func set(lat : Double, lon : Double) -> GeoPointMutable
 }
 
-public class BoundingBox {
+public class BoundingBox : NSObject {
     public var eastE6 : Int = 0
     public var westE6 : Int = 0
     public var northE6 : Int = 0
@@ -31,13 +31,15 @@ public class BoundingBox {
     
     
     public init(array: [String]) { // E, S, W, N
+        super.init()
         setEast((array[0] as NSString).doubleValue)
         setSouth((array[1] as NSString).doubleValue)
         setWest((array[2] as NSString).doubleValue)
-        setNorth((array[3] as NSString).doubleValue)
-    }
+        setNorth((array[3] as NSString).doubleValue)    }
 
     public init(north: Double, east: Double, west: Double, south : Double) {
+        super.init()
+
         setNorth(north)
         setEast(east)
         setWest(west)
@@ -45,6 +47,8 @@ public class BoundingBox {
     }
     
     public init(northE6: Int, eastE6: Int, westE6: Int, southE6: Int) {
+        super.init()
+
         setNorthE6(northE6)
         setEastE6(eastE6)
         setWestE6(westE6)
@@ -56,10 +60,8 @@ public class BoundingBox {
     }
     
     public init( coder : NSCoder) {
-        initWithCoder(coder)
-    }
-    
-    func initWithCoder( coder : NSCoder) {
+        super.init()
+
         self.eastE6 = Int(coder.decodeIntForKey("eastE6"))
         self.westE6 = Int(coder.decodeIntForKey("westE6"))
         self.northE6 = Int(coder.decodeIntForKey("northE6"))
@@ -121,7 +123,7 @@ public class BoundingBox {
         self.southE6 = x    }
 }
 
-public class GeoPointImpl : GeoPointMutable {
+public class GeoPointImpl : NSObject, GeoPointMutable {
     public var latitude  : Double = 0.0
     public var longitude : Double = 0.0
     
@@ -144,10 +146,12 @@ public class GeoPointImpl : GeoPointMutable {
         return self.latitude
     }
 
-    public init() {
+    public override init() {
+        super.init()
     }
     
     public init( coder : NSCoder ) {
+        super.init()
         initWithCoder(coder)
     }
     
@@ -158,6 +162,7 @@ public class GeoPointImpl : GeoPointMutable {
     }
     
     public init(lat : Double, lon : Double) {
+        super.init()
         setLatitude(lat)
         setLongitude(lon)
     }
@@ -184,7 +189,7 @@ public class DGeoPoint {
     }
 }
 
-public class GeoRect {
+public class GeoRect : NSObject {
     public var left : Double
     public var top : Double
     public var right : Double
@@ -202,6 +207,7 @@ public class GeoRect {
         self.top = top
         self.right = right
         self.bottom = bottom
+        super.init()
     }
     
     public init(boundingBox : BoundingBox) {
@@ -209,6 +215,7 @@ public class GeoRect {
         self.left = boundingBox.west()
         self.right = boundingBox.east()
         self.bottom = boundingBox.south()
+        super.init()
     }
     
     public func encodeWithCoder(encoder : NSCoder) {
