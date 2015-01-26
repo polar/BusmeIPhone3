@@ -72,6 +72,10 @@
 		F36316A71A5DFBAD002CAE61 /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36316A61A5DFBAD002CAE61 /* Login.swift */; };
 		F36316A91A5DFDA8002CAE61 /* LoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36316A81A5DFDA8002CAE61 /* LoginManager.swift */; };
 		F3705E6E1A6962F80070884F /* MenuScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3705E6D1A6962F80070884F /* MenuScreen.swift */; };
+		F376020F1A734EC4002976B7 /* MasterOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F376020E1A734EC4002976B7 /* MasterOverlay.swift */; };
+		F37602121A76A9A4002976B7 /* RoutesAndLocationMapLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37602111A76A9A4002976B7 /* RoutesAndLocationMapLayer.swift */; };
+		F37602141A76C89E002976B7 /* MasterOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37602131A76C89E002976B7 /* MasterOverlayView.swift */; };
+		F37602161A76D2ED002976B7 /* Locator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37602151A76D2ED002976B7 /* Locator.swift */; };
 		F37633AB1A5AC549005AFB8F /* MasterMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37633AA1A5AC549005AFB8F /* MasterMessage.swift */; };
 		F37633B01A5ACA3A005AFB8F /* MessageBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37633AF1A5ACA3A005AFB8F /* MessageBase.swift */; };
 		F37633B31A5ACEFF005AFB8F /* Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37633B21A5ACEFF005AFB8F /* Time.swift */; };
@@ -232,6 +236,10 @@
 		F36316A61A5DFBAD002CAE61 /* Login.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
 		F36316A81A5DFDA8002CAE61 /* LoginManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginManager.swift; sourceTree = "<group>"; };
 		F3705E6D1A6962F80070884F /* MenuScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuScreen.swift; sourceTree = "<group>"; };
+		F376020E1A734EC4002976B7 /* MasterOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterOverlay.swift; sourceTree = "<group>"; };
+		F37602111A76A9A4002976B7 /* RoutesAndLocationMapLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutesAndLocationMapLayer.swift; sourceTree = "<group>"; };
+		F37602131A76C89E002976B7 /* MasterOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterOverlayView.swift; sourceTree = "<group>"; };
+		F37602151A76D2ED002976B7 /* Locator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Locator.swift; sourceTree = "<group>"; };
 		F37633AA1A5AC549005AFB8F /* MasterMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterMessage.swift; sourceTree = "<group>"; };
 		F37633AF1A5ACA3A005AFB8F /* MessageBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageBase.swift; sourceTree = "<group>"; };
 		F37633B21A5ACEFF005AFB8F /* Time.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Time.swift; sourceTree = "<group>"; };
@@ -347,6 +355,9 @@
 				F3529EDA1A7020E200036288 /* WebScreen.swift */,
 				F320FF3B1A714D1100924F8D /* FGMasterMessagePresentController.swift */,
 				F320FF3E1A7151A900924F8D /* MasterMessageViewController.swift */,
+				F376020E1A734EC4002976B7 /* MasterOverlay.swift */,
+				F37602131A76C89E002976B7 /* MasterOverlayView.swift */,
+				F37602151A76D2ED002976B7 /* Locator.swift */,
 			);
 			name = MasterMapScreen;
 			sourceTree = "<group>";
@@ -571,6 +582,7 @@
 				F35E28F71A64DE75004DF0D7 /* JourneySyncRemoteInvocation.swift */,
 				F3C33CDD1A6627E600EF8E24 /* DiscoverEventData.swift */,
 				F3C33CE01A663CAD00EF8E24 /* DiscoverController.swift */,
+				F37602111A76A9A4002976B7 /* RoutesAndLocationMapLayer.swift */,
 			);
 			name = Platform;
 			sourceTree = "<group>";
@@ -794,6 +806,7 @@
 				F3140F5C1A61AAC00024A65D /* Location.swift in Sources */,
 				F35E28F81A64DE75004DF0D7 /* JourneySyncRemoteInvocation.swift in Sources */,
 				F398020C1A5A424200D6C2B0 /* MarkerInfo.swift in Sources */,
+				F37602141A76C89E002976B7 /* MasterOverlayView.swift in Sources */,
 				F3C33CDE1A6627E600EF8E24 /* DiscoverEventData.swift in Sources */,
 				F39802081A5A08A400D6C2B0 /* BuspasEvents.swift in Sources */,
 				F3140F3F1A5F57090024A65D /* JourneyBasket.swift in Sources */,
@@ -812,6 +825,7 @@
 				F35E28EB1A647D2A004DF0D7 /* MasterMessageRequestProcessor.swift in Sources */,
 				F37633B51A5ADB7B005AFB8F /* NameId.swift in Sources */,
 				F3140F521A6186E30024A65D /* PathUtils.swift in Sources */,
+				F37602121A76A9A4002976B7 /* RoutesAndLocationMapLayer.swift in Sources */,
 				F3140F3D1A5F3B2A0024A65D /* MasterMessageEvent.swift in Sources */,
 				F35E28FC1A65731F004DF0D7 /* RequestController.swift in Sources */,
 				F3C8FE891A535B0D009FF404 /* HttpClient.swift in Sources */,
@@ -821,6 +835,8 @@
 				F3E8A9631A6C62340034F17E /* TabButton.swift in Sources */,
 				F3F87A351A5EEB7800EB1EC1 /* BannerStore.swift in Sources */,
 				F3C8FE841A535B0D009FF404 /* ApiBase.swift in Sources */,
+				F37602161A76D2ED002976B7 /* Locator.swift in Sources */,
+				F376020F1A734EC4002976B7 /* MasterOverlay.swift in Sources */,
 				F3E8A9561A696EFC0034F17E /* MasterMainMenu.swift in Sources */,
 				F3406A561A661DC5000C04F4 /* DiscoverScreen.swift in Sources */,
 				F363169F1A5D823C002CAE61 /* Master.swift in Sources */,

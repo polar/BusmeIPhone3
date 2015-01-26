@@ -175,6 +175,7 @@ public class JourneyLocationPoster : BuspassEventListener {
     }
     
     public func onProviderDisabled() {
+        currentLocation = nil
         if postingRoute != nil {
             endPosting(reason: JourneyEvent.R_SERVICE)
         }
@@ -193,7 +194,14 @@ public class JourneyLocationPoster : BuspassEventListener {
         }
     }
     
+    var currentLocation : Location?
+    public func getCurrentLocation() -> Location? {
+        return currentLocation;
+    }
+    
+    
     public func onLocationChanged(eventData : LocationEventData) {
+        currentLocation = eventData.location
         processLocation(eventData.location)
     }
     

@@ -124,7 +124,7 @@ public struct ScreenPathUtils {
         return thePath
     }
     
-    public func toClippedScreenPath(projectedPath : [Point], projection : Projection, path: Path? = nil) -> Path {
+    public static func toClippedScreenPath(projectedPath : [Point], projection : Projection, path: Path? = nil) -> Path {
         var out = path == nil ? Path() : path!
         let rect = projection.screenRect
         var last : Point? = nil

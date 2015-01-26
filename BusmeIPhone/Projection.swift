@@ -54,10 +54,16 @@ public class Projection {
 
 public class MKMapProjection : Projection {
     public var renderer : MKOverlayRenderer
+    public var zoomScale : MKZoomScale
+    public var lineWidth : CGFloat
+    public var mapRect : MKMapRect
     
     public init(renderer: MKOverlayRenderer, zoomScale: MKZoomScale, mapRect: MKMapRect) {
         self.renderer = renderer
+        self.zoomScale = zoomScale
         let zoom = 22 + Int(log(zoomScale))  // MAX_ZOOM_LEVEL - -log(zoomScale)
+        self.lineWidth = MKRoadWidthAtZoomScale(zoomScale)
+        self.mapRect = mapRect
         super.init(zoom: zoom, rect: Rect(mapRect: mapRect))
     }
     
