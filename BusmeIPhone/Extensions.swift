@@ -103,19 +103,54 @@ extension MKMapPoint : PointMutable {
 
 extension Rect {
     public func toCGRect() -> CGRect {
-        return CGRectMake(CGFloat(left), CGFloat(bottom), CGFloat(right-left), CGFloat(top-bottom))
+        return CGRect(x: CGFloat(left), y: CGFloat(bottom), width: CGFloat(right-left), height: CGFloat(top-bottom))
     }
 
 }
 
 extension GeoRect {
     public func toMapRect() -> MKMapRect {
-        let nw = MKMapPointForCoordinate(CLLocationCoordinate2D(latitude: self.left, longitude: self.top))
-        let se = MKMapPointForCoordinate(CLLocationCoordinate2D(latitude: self.right, longitude: self.bottom))
+        let nw = MKMapPointForCoordinate(CLLocationCoordinate2D(latitude: self.top, longitude: self.left))
+        let se = MKMapPointForCoordinate(CLLocationCoordinate2D(latitude: self.bottom, longitude: self.right))
         let nwMapRect = MKMapRect(origin: nw, size: MKMapSize(width: 0, height: 0))
         let seMapRect = MKMapRect(origin: se, size: MKMapSize(width: 0, height: 0))
-        return MKMapRectUnion(nwMapRect, seMapRect)
+        let result = MKMapRectUnion(nwMapRect, seMapRect)
+        return result
     }
 
+}
+
+extension MKMapRect {
+    public func toString() -> String {
+        return "Map\(Rect(mapRect: self).toString())"
+    }
+    
+    public func upperLeftQuadrant() -> MKMapRect {
+        return MKMapRect(origin: origin, size: MKMapSize(width: size.width/2.0, height: size.height/2.0))
+    }
+    
+    public func lowerLeftQuadrant() -> MKMapRect {
+        return MKMapRect(origin: MKMapPoint(x: origin.x, y: origin.y + size.height/2.0), size: MKMapSize(width: size.width/2.0, height: size.height/2.0))
+    }
+    
+    public func upperRightQuadrant() -> MKMapRect {
+        return MKMapRect(origin: MKMapPoint(x: origin.x + size.width, y: origin.y), size: MKMapSize(width: size.width/2.0, height: size.height/2.0))
+    }
+    
+    public func lowerRightQuadrant() -> MKMapRect {
+        return MKMapRect(origin: MKMapPoint(x: origin.x, y: origin.x + size.height/2.0), size: MKMapSize(width: size.width/2.0, height: size.height/2.0))
+    }
+}
+
+extension ScreenPathUtils {
+    public static func cgRectToGeoRect(renderer : MKOverlayRenderer, cgRect : CGRect) -> GeoRect {
+        let mapRect = renderer.mapRectForRect(cgRect)
+        return mapRectToGeoRect(mapRect)
+    }
+    public static func mapRectToGeoRect(mapRect : MKMapRect) -> GeoRect {
+        let nw = MKCoordinateForMapPoint(mapRect.origin)
+        let se = MKCoordinateForMapPoint(MKMapPoint(x: mapRect.origin.x + mapRect.size.width, y: mapRect.origin.y - mapRect.size.height))
+        return GeoRect(left: nw.longitude, top: nw.latitude, right: se.longitude, bottom: se.latitude)
+    }
 }
 

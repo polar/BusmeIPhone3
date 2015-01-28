@@ -107,6 +107,8 @@ public class MasterMapScreen : UIViewController, MKMapViewDelegate {
     }
     
     public func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {
-        return MasterOverlayView(overlay: overlay as MasterOverlay, mapView: mapView, masterController: masterController)
+        let overlayView =  MasterOverlayView(overlay: overlay as MasterOverlay, mapView: mapView, masterController: masterController)
+        overlayView.setCenterAndZoom()
+        return overlayView
     }
 }

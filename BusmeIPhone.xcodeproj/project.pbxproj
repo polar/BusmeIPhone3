@@ -40,6 +40,7 @@
 		F33B69B41A5B022C004C7742 /* GeoPathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33B69B31A5B022C004C7742 /* GeoPathUtils.swift */; };
 		F33B69BA1A5B43D2004C7742 /* IPUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33B69B91A5B43D2004C7742 /* IPUtils.swift */; };
 		F33B69BC1A5C3CD3004C7742 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33B69BB1A5C3CD3004C7742 /* Route.swift */; };
+		F33EBFED1A795D4700B2A694 /* ProjectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33EBFEC1A795D4700B2A694 /* ProjectionController.swift */; };
 		F3406A441A65B0AC000C04F4 /* FGBannerPresentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3406A431A65B0AC000C04F4 /* FGBannerPresentController.swift */; };
 		F3406A461A65B3D9000C04F4 /* UIBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3406A451A65B3D9000C04F4 /* UIBanner.swift */; };
 		F3406A4A1A65C8D8000C04F4 /* MasterMapScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3406A491A65C8D8000C04F4 /* MasterMapScreen.swift */; };
@@ -205,6 +206,7 @@
 		F33B69B31A5B022C004C7742 /* GeoPathUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeoPathUtils.swift; sourceTree = "<group>"; };
 		F33B69B91A5B43D2004C7742 /* IPUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPUtils.swift; sourceTree = "<group>"; };
 		F33B69BB1A5C3CD3004C7742 /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
+		F33EBFEC1A795D4700B2A694 /* ProjectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectionController.swift; sourceTree = "<group>"; };
 		F3406A431A65B0AC000C04F4 /* FGBannerPresentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FGBannerPresentController.swift; sourceTree = "<group>"; };
 		F3406A451A65B3D9000C04F4 /* UIBanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIBanner.swift; sourceTree = "<group>"; };
 		F3406A491A65C8D8000C04F4 /* MasterMapScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterMapScreen.swift; sourceTree = "<group>"; };
@@ -358,6 +360,7 @@
 				F376020E1A734EC4002976B7 /* MasterOverlay.swift */,
 				F37602131A76C89E002976B7 /* MasterOverlayView.swift */,
 				F37602151A76D2ED002976B7 /* Locator.swift */,
+				F33EBFEC1A795D4700B2A694 /* ProjectionController.swift */,
 			);
 			name = MasterMapScreen;
 			sourceTree = "<group>";
@@ -819,6 +822,7 @@
 				F320FF3F1A7151A900924F8D /* MasterMessageViewController.swift in Sources */,
 				F3F87A371A5EF6E000EB1EC1 /* BannerPresentationController.swift in Sources */,
 				F3C8FE8A1A535B0D009FF404 /* HttpEntity.swift in Sources */,
+				F33EBFED1A795D4700B2A694 /* ProjectionController.swift in Sources */,
 				F3140F5F1A61AC330024A65D /* JourneyLocationPoster.swift in Sources */,
 				F3C8FE521A5359B0009FF404 /* AppDelegate.swift in Sources */,
 				F33B69BA1A5B43D2004C7742 /* IPUtils.swift in Sources */,

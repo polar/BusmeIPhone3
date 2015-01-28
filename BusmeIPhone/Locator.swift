@@ -25,7 +25,8 @@ class Icon {
     }
     
     func scaleTo(size : CGSize) -> Icon {
-        let matrix = CGAffineTransformMakeScale(size.width, size.height)
+        // We scale by ratio the hotspot.
+        let matrix = CGAffineTransformMakeScale(size.width/image.size.width, size.height/image.size.height)
         let hp = CGPointApplyAffineTransform(hotspot, matrix)
         return Icon(image: scaleImageTo(image, target_width: size.width, target_height: size.height), hotspot: hp)
     }
@@ -77,6 +78,8 @@ struct Locators {
         if Locators.icons[idxname] == nil {
             let image = reported ? UIImage(named: "\(name)_yellow_button.png") : UIImage(named: "\(name)_button.png")
             let arrow = UIImage(named: "\(name)_arrow.png")
+            let imageSize = image!.size
+            let arrowSize = arrow!.size
             let hotspot = CGPoint(x: 22, y: 30)
             let icon = Locator(baseImage: image!, arrowImage: arrow!, hotspot: hotspot)
             Locators.icons[idxname] = icon
@@ -185,8 +188,8 @@ class Locator {
     }
     
     func rotateImageBy(image: UIImage, radians : Double) -> UIImage {
-        let w = abs(Double(image.size.width) * cos(radians)) + (Double(image.size.height) * sin(radians))
-        let h = abs(Double(image.size.height) * cos(radians)) + (Double(image.size.width) * sin(radians))
+        let w = abs(Double(image.size.width) * cos(radians)) + abs(Double(image.size.height) * sin(radians))
+        let h = abs(Double(image.size.height) * cos(radians)) + abs(Double(image.size.width) * sin(radians))
         let newSize = CGSize(width: w,height: h)
         
         UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0)

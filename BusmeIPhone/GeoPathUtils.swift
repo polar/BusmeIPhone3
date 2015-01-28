@@ -239,7 +239,8 @@ public class GeoRect : NSObject {
 public class Path  {
     public var cgpath : CGMutablePath = CGPathCreateMutable()
     public var transform = CGAffineTransform(a: 1,b: 1,c: 1,d: 1,tx: 0,ty: 0)
-
+    public var segments = 0
+    public var points = 0
     public init() {
     }
     private var empty : Bool = true
@@ -252,14 +253,17 @@ public class Path  {
     }
     public func moveTo(x: Float, y: Float) {
         self.empty = false
-        CGPathMoveToPoint(self.cgpath, &self.transform, CGFloat(x), CGFloat(y))
+        self.segments += 1
+        self.points += 1
+        CGPathMoveToPoint(self.cgpath, nil, CGFloat(x), CGFloat(y))
     }
     public func lineTo(x: Double, y: Double) {
         lineTo(Float(x), y: Float(y))
     }
     public func lineTo(x: Float, y: Float) {
         self.empty = false
-        CGPathMoveToPoint(self.cgpath, &self.transform, CGFloat(x), CGFloat(y))
+        self.points += 1
+        CGPathAddLineToPoint(self.cgpath, nil, CGFloat(x), CGFloat(y))
     }
 }
 

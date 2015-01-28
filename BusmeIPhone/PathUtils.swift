@@ -13,10 +13,13 @@ import MapKit
 // PointImpl is an extension of a native type.
 
 public struct Rect {
+    let ORIENT_UL = 0
+    let ORIENT_LL = 1
     public var left : Double
     public var top : Double
     public var right : Double
     public var bottom : Double
+    public var orient : Int = 0 // ORIENT_UL
     
     public init(left: Float, top : Float, right: Float, bottom : Float) {
         self.left = Double(left)
@@ -40,10 +43,28 @@ public struct Rect {
     }
     
     public init(mapRect : MKMapRect) {
+        // MapRect is Upper Left Oriented and increasing right down
         self.left = mapRect.origin.x
         self.top = mapRect.origin.y
         self.right = left + mapRect.size.width
-        self.bottom = top - mapRect.size.height
+        self.bottom = top + mapRect.size.height
+    }
+    
+    
+    public init(cgRect : CGRect) {
+        // CGREct is Lower Left Oriented and increasing right up
+        self.left = Double(cgRect.origin.x)
+        self.bottom = Double(cgRect.origin.y)
+        self.top = Double(cgRect.origin.y + cgRect.size.height)
+        self.right = left + Double(cgRect.size.width)
+        self.orient = ORIENT_LL
+    }
+    
+    public init(geoRect : GeoRect) {
+        self.left = geoRect.left
+        self.right = geoRect.right
+        self.top = geoRect.top
+        self.bottom = geoRect.bottom
     }
     
     public func dup() -> Rect {
@@ -59,7 +80,7 @@ public struct Rect {
     }
     
     public func height() -> Double {
-        return bottom - top
+        return orient == ORIENT_UL ? top - bottom : bottom - top
     }
     
     public func area() -> Double {
@@ -142,6 +163,10 @@ public struct Rect {
         let x2 = (top - c1.getY())/m + c1.getX()
         if ( x2 > left && x2 < right) { return true }
         return false
+    }
+    
+    public func toString() -> String {
+        return "Rect(left:\(left),top:\(top),right:\(right),bottom:\(bottom))"
     }
 }
 

@@ -59,6 +59,7 @@ public class JourneyBasket {
     
     public func setJourneys(journeys : [Route]) {
         self.journeys = journeys
+        self.updateJourneyMap()
     }
     
     public func empty() {

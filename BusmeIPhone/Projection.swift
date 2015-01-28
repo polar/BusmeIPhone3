@@ -70,6 +70,10 @@ public class MKMapProjection : Projection {
     public var zoomScale : MKZoomScale
     public var lineWidth : CGFloat
     public var mapRect : MKMapRect
+    public var cgRect : CGRect
+    var writeLock : dispatch_semaphore_t
+    
+    var patternCGPaths : [String:CGPath] = [String:CGPath]()
     
     public init(renderer: MKOverlayRenderer, zoomScale: MKZoomScale, mapRect: MKMapRect) {
         self.renderer = renderer
@@ -77,12 +81,108 @@ public class MKMapProjection : Projection {
         let zoom = 22 + Int(log(zoomScale))  // MAX_ZOOM_LEVEL - -log(zoomScale)
         self.lineWidth = MKRoadWidthAtZoomScale(zoomScale)
         self.mapRect = mapRect
-        super.init(zoom: zoom, rect: Rect(mapRect: mapRect))
+        self.cgRect = renderer.rectForMapRect(mapRect)
+        self.cgRect.inset(dx: -lineWidth, dy: -lineWidth)
+        self.writeLock = dispatch_semaphore_create(1)
+        super.init(zoom: zoom, rect: Rect(cgRect: cgRect))
+    }
+    
+    public override func translatePoint(projectedPoint: Point) -> PointMutable {
+        let cgPoint = renderer.pointForMapPoint(projectedPoint as MKMapPoint)
+        return cgPoint
     }
     
     public override func translatePoint(projectedPoint: Point, inout reuse: PointMutable) -> PointMutable {
-        let mapPoint = renderer.pointForMapPoint(projectedPoint as MKMapPoint)
-        reuse.set(Double(mapPoint.x), y: Double(mapPoint.y))
-        return mapPoint
+        let cgPoint = renderer.pointForMapPoint(projectedPoint as MKMapPoint)
+        reuse.set(Double(cgPoint.x), y: Double(cgPoint.y))
+        return cgPoint
+    }
+    
+    public func storeCGPath(journeyPattern : JourneyPattern, cgPath : CGPath) {
+        dispatch_semaphore_wait(writeLock, DISPATCH_TIME_FOREVER)
+        patternCGPaths[journeyPattern.id] = cgPath
+        dispatch_semaphore_signal(writeLock)
+    }
+    
+    func hasCGPath(journeyPattern : JourneyPattern) -> Bool {
+        return patternCGPaths[journeyPattern.id] != nil
+    }
+    
+    func createCGPath(journeyPattern : JourneyPattern) -> CGPath {
+        let projectedPath = journeyPattern.getProjectedPath()
+        let path = ScreenPathUtils.toClippedScreenPath(projectedPath, projection: self, path: nil)
+        storeCGPath(journeyPattern, cgPath: path.cgpath)
+        return path.cgpath
+    }
+    
+    public func getCGPath(journeyPattern : JourneyPattern) -> CGPath {
+        var cgPath = patternCGPaths[journeyPattern.id]
+        let hasPath = cgPath != nil
+        if !hasPath {
+            cgPath = createCGPath(journeyPattern)
+        }
+        return cgPath!
+    }
+}
+
+class MKMapControlledProjection : MKMapProjection {
+    let name : String!
+    var projectionController : ProjectionController
+    var upperLeft : MKMapControlledProjection?
+    var upperRight : MKMapControlledProjection?
+    var lowerLeft : MKMapControlledProjection?
+    var lowerRight : MKMapControlledProjection?
+    init(controller : ProjectionController, zoomScale: MKZoomScale, mapRect: MKMapRect) {
+        self.projectionController = controller
+        super.init(renderer: controller.renderer, zoomScale: zoomScale, mapRect: mapRect)
+        self.name = "\(Rect(mapRect: mapRect).toString()) - \(zoomLevel)"
+        
+        controller.register(self)
+    }
+
+    func createSubProjections() {
+        if zoomLevel > 2 && upperLeft == nil {
+            upperLeft = MKMapControlledProjection(controller: projectionController, zoomScale: zoomScale*2, mapRect: mapRect.upperLeftQuadrant())
+            
+            upperRight = MKMapControlledProjection(controller: projectionController, zoomScale: zoomScale*2, mapRect: mapRect.upperRightQuadrant())
+            
+            lowerLeft = MKMapControlledProjection(controller: projectionController, zoomScale: zoomScale*2, mapRect: mapRect.lowerLeftQuadrant())
+            
+            lowerRight = MKMapControlledProjection(controller: projectionController, zoomScale: zoomScale*2, mapRect: mapRect.lowerRightQuadrant())
+            
+            projectionController.register(upperRight!)
+            projectionController.register(upperLeft!)
+            projectionController.register(lowerRight!)
+            projectionController.register(lowerLeft!)
+        }
+    }
+    
+    func createPathsForSubProjections(journeyPattern : JourneyPattern) {
+        if upperLeft != nil {
+            projectionController.createPath(upperLeft!, journeyPattern: journeyPattern)
+        }
+        
+        if lowerLeft != nil {
+            projectionController.createPath(lowerLeft!, journeyPattern: journeyPattern)
+        }
+        
+        if upperRight != nil {
+            projectionController.createPath(upperRight!, journeyPattern: journeyPattern)
+        }
+        
+        if lowerRight != nil {
+            projectionController.createPath(lowerRight!, journeyPattern: journeyPattern)
+        }
+    }
+    
+    func internalCreateCGPath(journeyPattern : JourneyPattern) {
+        let cgPath = super.createCGPath(journeyPattern)
+    }
+    
+    override func createCGPath(journeyPattern: JourneyPattern) -> CGPath {
+        let cgPath = super.createCGPath(journeyPattern)
+        createSubProjections()
+        createPathsForSubProjections(journeyPattern)
+        return cgPath
     }
 }

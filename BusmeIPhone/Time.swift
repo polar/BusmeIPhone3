@@ -26,7 +26,7 @@ func cmp(i1 : TimeValue64, i2 : TimeValue64) -> Int {
 
 public struct UtilsTime {
     public static func current() -> TimeValue64 {
-        let now = Int64(NSDate().timeIntervalSince1970) * 1000
+        let now = Int64(NSDate().timeIntervalSince1970 * 1000)
         return now
     }
     
