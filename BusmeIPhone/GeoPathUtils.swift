@@ -639,4 +639,12 @@ public struct GeoPathUtils {
         return GeoRect(left: left, top: top, right: right, bottom: bottom)
     }
     
+    public static func unionGeoRect(rect1 : GeoRect, rect2: GeoRect) -> GeoRect {
+        let left = min(rect1.left, rect2.left)
+        let right = max(rect1.right, rect2.right)
+        let top = max(rect1.top, rect2.top)
+        let bottom = min(rect1.bottom, rect2.bottom)
+        return GeoRect(left: left, top: top, right: right, bottom: bottom)
+    }
+    
 }

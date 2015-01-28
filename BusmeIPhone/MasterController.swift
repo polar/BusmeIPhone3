@@ -167,8 +167,7 @@ public class MasterController : BuspassEventListener {
         if eventName == "Master:init" {
             let eventData = event.eventData as MasterEventData
             onMasterInit(eventData)
-        }
-        if eventName == "JourneySync" {
+        } else if eventName == "JourneySync" {
             let eventData = event.eventData as JourneySyncEventData
             journeySyncRemoteInvocation.perform(eventData.isForced)
         } else if eventName == "Update" {

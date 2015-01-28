@@ -108,3 +108,14 @@ extension Rect {
 
 }
 
+extension GeoRect {
+    public func toMapRect() -> MKMapRect {
+        let nw = MKMapPointForCoordinate(CLLocationCoordinate2D(latitude: self.left, longitude: self.top))
+        let se = MKMapPointForCoordinate(CLLocationCoordinate2D(latitude: self.right, longitude: self.bottom))
+        let nwMapRect = MKMapRect(origin: nw, size: MKMapSize(width: 0, height: 0))
+        let seMapRect = MKMapRect(origin: se, size: MKMapSize(width: 0, height: 0))
+        return MKMapRectUnion(nwMapRect, seMapRect)
+    }
+
+}
+

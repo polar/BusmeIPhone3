@@ -15,7 +15,7 @@ public class JourneyPattern : Storage {
     public var path : [GeoPoint]?
     public var projectedPath : [Point]?
     public var distance : Double?
-    public var rect : MKMapRect?
+    public var geoRect : GeoRect?
     public var nameid : NameId?
     
     public init(id : String) {
@@ -36,11 +36,7 @@ public class JourneyPattern : Storage {
         if (ps != nil) {
             self.path = toCoordinates(ps!)
         }
-        let geoRect  = coder.decodeObjectForKey("rect") as? GeoRect
-        if (geoRect != nil) {
-            self.rect = toMapRect(geoRect!);
-        }
-        
+        self.geoRect  = coder.decodeObjectForKey("rect") as? GeoRect
     }
     
     private func toCoordinates(path : [GeoPointImpl]) -> [GeoPoint] {
@@ -59,18 +55,6 @@ public class JourneyPattern : Storage {
         return ps
     }
     
-    private func toGeoRect(mapRect : MKMapRect) -> GeoRect {
-        let left = mapRect.origin.x
-        let top = mapRect.origin.y
-        let right = mapRect.origin.x + mapRect.size.width
-        let bottom = mapRect.origin.y + mapRect.size.height
-        return GeoRect(left: left, top: top, right: right, bottom: bottom)
-    }
-    
-    private func toMapRect(rect : GeoRect) -> MKMapRect {
-        return MKMapRectMake(rect.left, rect.top, rect.right-rect.left, rect.top-rect.bottom);
-    }
-    
     public func encodeWithCoder( encoder : NSCoder) {
         encoder.encodeObject(id, forKey: "id");
         if (nameid != nil) {
@@ -83,8 +67,8 @@ public class JourneyPattern : Storage {
         if (distance != nil) {
             encoder.encodeDouble(distance!, forKey: "distance")
         }
-        if (rect != nil) {
-            encoder.encodeObject(toGeoRect(rect!), forKey: "rect")
+        if (geoRect != nil) {
+            encoder.encodeObject(geoRect!, forKey: "rect")
         }
     }
     
@@ -118,12 +102,11 @@ public class JourneyPattern : Storage {
         }
     }
     
-    public func getRect() -> MKMapRect {
-        if (rect == nil) {
-//            let geoRect = GeoPathUtils.rectForPath(path!);
-//            rect = MKMapRectMake(geoRect.left, geoRect.top, geoRect.right-geoRect.left, geoRect.top-geoRect.bottom);
+    public func getGeoRect() -> GeoRect {
+        if (geoRect == nil) {
+            self.geoRect = GeoPathUtils.rectForPath(path!);
         }
-        return rect!;
+        return geoRect!
     }
     
     public func loadParsedXML(tag : Tag) {
@@ -133,7 +116,7 @@ public class JourneyPattern : Storage {
             self.distance = (distlit! as NSString).doubleValue
         }
         for jps in tag.childNodes {
-            if ("jps" == jps.name || "JPS" == jps.name) {
+            if ("jps" == jps.name.lowercaseString) {
                 self.path = parsePath(jps)
                 break
             }

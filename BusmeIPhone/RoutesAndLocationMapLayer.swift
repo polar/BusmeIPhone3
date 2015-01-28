@@ -137,7 +137,7 @@ class RouteAndLocationsMapLayer {
         return nil
     }
     
-    func getJourneyLocators(journeyDisplays : [JourneyDisplay], context : AnyObject) -> [LocatorArgs] {
+    func getJourneyLocators(journeyDisplays : [JourneyDisplay]) -> [LocatorArgs] {
         var locators : [LocatorArgs] = [LocatorArgs]()
         var highlighted : [LocatorArgs] = [LocatorArgs]()
         var postingRoute : JourneyDisplay? = nil
@@ -182,11 +182,15 @@ class RouteAndLocationsMapLayer {
             if jd.isPathVisible() {
                 if jd.isPathHighlighted() {
                     for p in jd.route.getJourneyPatterns() {
-                        highlighted[p.id] = p
+                        if p.isReady() {
+                            highlighted[p.id] = p
+                        }
                     }
                 } else {
                     for p in jd.route.getJourneyPatterns() {
-                        patterns[p.id] = p
+                        if p.isReady() {
+                            patterns[p.id] = p
+                        }
                     }
                 }
             }

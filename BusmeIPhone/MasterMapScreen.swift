@@ -30,6 +30,7 @@ public class MasterMapScreen : UIViewController, MKMapViewDelegate {
     public var fgBannerPresentationController : FGBannerPresentController!
     public var fgMarkerPresentationController : FGMarkerPresentController!
     public var fgMasterMessagePresentationController : FGMasterMessagePresentController!
+    var masterOverlay : MasterOverlay!
     
     public func setMasterController(masterController : MasterController) {
         self.masterController = masterController
@@ -39,6 +40,7 @@ public class MasterMapScreen : UIViewController, MKMapViewDelegate {
         self.fgBannerPresentationController = FGBannerPresentController(masterMapScreen: self)
         self.fgMarkerPresentationController = FGMarkerPresentController(masterMapScreen: self)
         self.fgMasterMessagePresentationController = FGMasterMessagePresentController(masterMapScreen: self)
+        self.masterOverlay = MasterOverlay(master: masterController.master, masterController: masterController)
     }
     
     override public func viewDidLoad() {
@@ -63,6 +65,7 @@ public class MasterMapScreen : UIViewController, MKMapViewDelegate {
         view.addSubview(tabButton!)
         view.autoresizesSubviews = false
         routesView!.viewWillAppear(false)
+        mapView.addOverlay(masterOverlay)
     }
 
     override public func didReceiveMemoryWarning() {
@@ -101,5 +104,9 @@ public class MasterMapScreen : UIViewController, MKMapViewDelegate {
             return maview
         }
         return nil
+    }
+    
+    public func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {
+        return MasterOverlayView(overlay: overlay as MasterOverlay, mapView: mapView, masterController: masterController)
     }
 }

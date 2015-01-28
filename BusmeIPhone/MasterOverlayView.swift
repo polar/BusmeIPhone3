@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreGraphics
+import CoreLocation
 import MapKit
 
 class PatternView {
@@ -34,7 +35,7 @@ class PatternView {
     }
 
     func getBoundingMapRect() -> MKMapRect {
-        return journeyPattern.getRect()
+        return journeyPattern.getGeoRect().toMapRect()
     }
 }
 
@@ -97,23 +98,111 @@ class LocatorView {
 }
 
 class MasterOverlayView : MKOverlayRenderer, BuspassEventListener {
-    
-    
     var masterController : MasterController
     var mapView : MKMapView
+    var mapLayer : RouteAndLocationsMapLayer
     
     var writeLock : dispatch_semaphore_t = dispatch_semaphore_create(1)
+    var locatorWriteLock : dispatch_semaphore_t = dispatch_semaphore_create(1)
     
     init(overlay: MasterOverlay, mapView: MKMapView, masterController: MasterController) {
         self.mapView = mapView
         self.masterController = masterController
+        self.mapLayer = RouteAndLocationsMapLayer(api: masterController.api, journeyDisplayController: masterController.journeyDisplayController, journeyLocationPoster: masterController.journeyLocationPoster)
         super.init(overlay: overlay)
+        registerForEvents()
     }
     
     var mustDrawPaths = true
     
     func onBuspassEvent(event: BuspassEvent) {
+        let eventName = event.eventName
+        if eventName == "JourneySyncProgress" {
+            let eventData = event.eventData as? JourneySyncProgressEventData
+            if eventData != nil && eventData!.action == JourneySyncProgressEvent.P_DONE {
+                resetAll()
+            }
+        } else if eventName == "UpdateProgress" {
+            let eventData2 = event.eventData as? UpdateProgressEventData
+            if eventData2 != nil && eventData2!.action == InvocationProgressEvent.U_FINISH {
+                resetLocators()
+            }
+        } else if eventName == "JourneyLocationUpdate" {
+                resetLocators()
+        } else if eventName == "VisibilityChanged" {
+            resetAll()
+        }
         
+    }
+    
+    func resetAll() {
+        let journeyDisplays = [JourneyDisplay](masterController.journeyDisplayController.getJourneyDisplays())
+        let patterns = mapLayer.getRoutePatterns(journeyDisplays)
+        let locators = mapLayer.getJourneyLocators(journeyDisplays)
+        dispatch_semaphore_wait(writeLock, DISPATCH_TIME_FOREVER)
+        self.patternViews = patterns.map({(p) in PatternView(args: p)})
+        self.locatorViews = locators.map({(loc) in LocatorView(args: loc)})
+        let locatorMapRects = [MKMapRect](previousLocators.values.array)
+        dispatch_semaphore_signal(writeLock)
+        setNeedsDisplayInMapRect(overlay.boundingMapRect)
+        for loc in locatorMapRects {
+            setNeedsDisplayInMapRect(loc)
+        }
+        
+    }
+    
+    func resetLocators() {
+        let journeyDisplays = [JourneyDisplay](masterController.journeyDisplayController.getJourneyDisplays())
+        let locators = mapLayer.getJourneyLocators(journeyDisplays)
+        dispatch_semaphore_wait(writeLock, DISPATCH_TIME_FOREVER)
+        self.locatorViews = locators.map({(loc) in LocatorView(args: loc)})
+        let locatorMapRects = [MKMapRect](previousLocators.values.array)
+        dispatch_semaphore_signal(writeLock)
+        setNeedsDisplayInMapRect(overlay.boundingMapRect)
+        for locView in locatorViews {
+            let point : GeoPoint = locView.params.currentLocation
+            updateMapRect(locView.params.journeyDisplay, loc: point)
+        }
+        
+        for loc in locatorMapRects {
+            setNeedsDisplayInMapRect(loc)
+        }
+    }
+    
+    func updateMapRect(journeyDisplay : JourneyDisplay, loc : GeoPoint) {
+        // If data is the lastLocation we have to update that mapRect.
+        // However, if it is the newLocation, we just assume the icon
+        // is the same size. We assume that if the zoomLevel changes
+        // that we will get a pertinent update anyway.
+        let mapRect = previousLocators[journeyDisplay.route.id!]
+        var size : MKMapSize?
+        if mapRect != nil {
+            size = mapRect!.size
+        }
+        if size == nil {
+            let geoRect = journeyDisplay.getGeoRect()
+            let nw = CLLocationCoordinate2D(latitude: geoRect.top, longitude: geoRect.left)
+            let se = CLLocationCoordinate2D(latitude: geoRect.bottom, longitude: geoRect.right)
+            let nwMapPoint = MKMapPointForCoordinate(nw)
+            let seMapPoint = MKMapPointForCoordinate(se)
+            let nwMapRect = MKMapRect(origin: nwMapPoint, size: MKMapSize(width: 0, height: 0))
+            let seMapRect = MKMapRect(origin: seMapPoint, size: MKMapSize(width: 0, height: 0))
+            let mapRect = MKMapRectUnion(nwMapRect, seMapRect)
+            size = mapRect.size
+        }
+        let rect = mapRectForLocation(loc, mapSize: size!)
+        setNeedsDisplayInMapRect(rect)
+    }
+    
+    func mapRectForLocation(loc : GeoPoint, mapSize : MKMapSize) -> MKMapRect {
+        let coord = CLLocationCoordinate2D(latitude: loc.getLatitude(), longitude: loc.getLongitude())
+        let mapPoint = MKMapPointForCoordinate(coord)
+        let mapWidth = mapSize.width
+        let mapHeight = mapSize.height
+        // Center the Rect
+        let corner = MKMapPoint(x: mapPoint.x - mapWidth/2, y: mapPoint.y - mapHeight/2)
+        let mapRect = MKMapRect(origin: corner, size: mapSize)
+        return mapRect
     }
     
     func registerForEvents() {
@@ -135,8 +224,8 @@ class MasterOverlayView : MKOverlayRenderer, BuspassEventListener {
     }
     
     var drawCount = 0
-    var patternViews : [PatternView]
-    var locatorViews : [LocatorView]
+    var patternViews : [PatternView] = [PatternView]()
+    var locatorViews : [LocatorView] = [LocatorView]()
     
     override func drawMapRect(mapRect: MKMapRect, zoomScale: MKZoomScale, inContext context: CGContext!) {
         let timeStart = UtilsTime.current()
@@ -152,7 +241,7 @@ class MasterOverlayView : MKOverlayRenderer, BuspassEventListener {
         
         let projection = MKMapProjection(renderer: self, zoomScale: zoomScale, mapRect: mapRect)
         
-        // Critical Section 
+        // Critical Section
         dispatch_semaphore_wait(writeLock, DISPATCH_TIME_FOREVER)
         drawCount += 1
         let count = drawCount
@@ -171,9 +260,9 @@ class MasterOverlayView : MKOverlayRenderer, BuspassEventListener {
     func drawPatterns(patterns : [PatternView], projection: MKMapProjection, context : CGContextRef) {
         var drawn = [String:Bool]()
         for pattern in patterns {
-            if drawn[pattern.journeyPattern.id] != nil {
+            if drawn[pattern.journeyPattern.id] == nil {
                 let mapRect = MKMapRectInset(pattern.getBoundingMapRect(), Double(-projection.lineWidth), Double(-projection.lineWidth))
-                if MKMapRectIntersectsRect(mapRect, projection.mapRect) {
+                if true || MKMapRectIntersectsRect(mapRect, projection.mapRect) {
                     drawPattern(pattern, projection: projection, context: context)
                     drawn[pattern.journeyPattern.id] = true
                 }
@@ -184,7 +273,7 @@ class MasterOverlayView : MKOverlayRenderer, BuspassEventListener {
     func drawPattern(patternView : PatternView, projection : MKMapProjection, context : CGContextRef) {
         CGContextSaveGState(context)
         
-        if false {
+        if true {
             let cgrect = rectForMapRect(patternView.getBoundingMapRect())
             CGContextSetLineWidth(context, 2.0/projection.zoomScale)
             CGContextSetStrokeColorWithColor(context, UIColor.greenColor().CGColor)

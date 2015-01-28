@@ -64,6 +64,20 @@ public class JourneyDisplay {
         return !pathVisible
     }
     
+    private var geoRect : GeoRect?
+    public func getGeoRect() -> GeoRect {
+        if geoRect != nil {
+            return geoRect!
+        }
+        var result = GeoRect(left: 0.0, top: 0.0, right: 0.0, bottom: 0.0)
+        for path in route.getPaths() {
+           let pathRect = GeoPathUtils.rectForPath(path)
+            result = GeoPathUtils.unionGeoRect(result, rect2: pathRect)
+        }
+        geoRect = result
+        return geoRect!
+    }
+    
     public func setPathVisible(visible : Bool) {
         self.pathVisible = visible
         notifyVisibilityListener("path", value: self.pathVisible)

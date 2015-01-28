@@ -131,12 +131,11 @@ public struct ScreenPathUtils {
         var reuse = PointImpl()
         var onscreen = false
         if projectedPath.count > 0 {
-            last = projection.translatePoint(projectedPath[0], reuse: reuse)
+            last = projection.translatePoint(projectedPath[0])
             onscreen = rect.containsXY(last!.getX(),  y: last!.getY())
         }
-        let coords = PointImpl()
         for point in projectedPath {
-            projection.translatePoint(point, reuse: coords)
+            var coords = projection.translatePoint(point)
             if last!.getX() != coords.getX() || last!.getY() != coords.getY() {
                 if rect.containsXY(coords.getX(), y: coords.getY()) {
                     if !onscreen || out.isEmpty() {

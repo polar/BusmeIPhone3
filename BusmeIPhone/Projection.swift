@@ -26,8 +26,21 @@ public class Projection {
         self.screenRect = rect
     }
     
-    public func translatePoint(projectedPoint : Point, reuse : PointMutable? = nil) -> PointMutable {
-        var out = reuse == nil ? PointImpl() as PointMutable : reuse!
+    public func translatePoint(projectedPoint : Point) -> PointMutable {
+        var out = PointImpl()
+        
+        let zoomDifference = MAX_ZOOM_LEVEL - zoomLevel
+        
+        let div = pow(2.0, Double(zoomDifference))
+        let x = Float(projectedPoint.getX()/div + offsetX)
+        let y = Float(projectedPoint.getY()/div + offsetX)
+        
+        return out.set(x, y: y)
+    }
+
+    
+    public func translatePoint(projectedPoint : Point, inout reuse : PointMutable) -> PointMutable {
+        var out = reuse
         
         let zoomDifference = MAX_ZOOM_LEVEL - zoomLevel
         
@@ -67,7 +80,9 @@ public class MKMapProjection : Projection {
         super.init(zoom: zoom, rect: Rect(mapRect: mapRect))
     }
     
-    public override func translatePoint(projectedPoint: Point, reuse: PointMutable?) -> PointMutable {
-        return renderer.pointForMapPoint(projectedPoint as MKMapPoint)
+    public override func translatePoint(projectedPoint: Point, inout reuse: PointMutable) -> PointMutable {
+        let mapPoint = renderer.pointForMapPoint(projectedPoint as MKMapPoint)
+        reuse.set(Double(mapPoint.x), y: Double(mapPoint.y))
+        return mapPoint
     }
 }

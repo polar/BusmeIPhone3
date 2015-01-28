@@ -102,10 +102,10 @@ public struct Rect {
     }
     
     public func containsXY(x : Double, y : Double) -> Bool {
-        let xint = Int(x*1E6)
-        let yint = Int(y*1E6)
-        let horizontal = Int(left*1E6) <= xint && xint <= Int(right*1E6)
-        let vertical = Int(bottom*1E6) <= yint && yint <= Int(top*1E6)
+        let xint = floor(x*1E6)
+        let yint = floor(y*1E6)
+        let horizontal = floor(left*1E6) <= xint && xint <= floor(right*1E6)
+        let vertical = floor(bottom*1E6) <= yint && yint <= floor(top*1E6)
         return horizontal && vertical
     }
     
