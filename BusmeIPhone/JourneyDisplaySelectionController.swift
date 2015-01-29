@@ -9,11 +9,11 @@
 import Foundation
 
 
-public class JourneyDisplaySelectionController {
-    public var api : BuspassApi
-    public var journeyDisplayController : JourneyDisplayController
+class JourneyDisplaySelectionController {
+    var api : BuspassApi
+    var journeyDisplayController : JourneyDisplayController
     
-    public init(api : BuspassApi, journeyDisplayController : JourneyDisplayController) {
+    init(api : BuspassApi, journeyDisplayController : JourneyDisplayController) {
         self.api = api
         self.journeyDisplayController = journeyDisplayController
     }

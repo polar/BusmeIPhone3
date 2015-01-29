@@ -9,16 +9,16 @@
 import Foundation
 import CoreLocation
 
-public class Configurator {
+class Configurator {
     
-    public func getCacheDirectory() -> String {
+    func getCacheDirectory() -> String {
         let directories = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.CachesDirectory, NSSearchPathDomainMask.UserDomainMask,true)
         let cache_directory = directories[0] as NSString
         let directory = cache_directory + "/com.busme"
         return directory
     }
     
-    public func getDefaultMaster() -> Master? {
+    func getDefaultMaster() -> Master? {
         if BLog.DEBUG { BLog.logger.debug("Getting Default Master") }
         let result: AnyObject? = NSUserDefaults.standardUserDefaults().objectForKey("DefaultMaster")
         if result != nil {
@@ -33,23 +33,23 @@ public class Configurator {
         return nil
     }
     
-    public func setLastLocation(location : GeoPoint) {
+    func setLastLocation(location : GeoPoint) {
         let loc = GeoPointImpl(lat: location.getLatitude(), lon: location.getLongitude())
         if BLog.DEBUG { BLog.logger.debug("Saving Last Location \(loc)") }
         NSUserDefaults.standardUserDefaults().setObject(loc, forKey: "LastLocation")
     }
     
-    public func getLastLocation() -> GeoPoint? {
+    func getLastLocation() -> GeoPoint? {
         return NSUserDefaults.standardUserDefaults().objectForKey("LastLocation") as? GeoPointImpl
     }
     
-    public func saveAsDefaultMaster(master : Master)  {
+    func saveAsDefaultMaster(master : Master)  {
         if BLog.DEBUG { BLog.logger.debug("Saving Default Mater \(master.name)") }
         let result = NSKeyedArchiver.archivedDataWithRootObject(master)
         NSUserDefaults.standardUserDefaults().setObject(result, forKey: "DefaultMaster")
     }
     
-    public func removeAsDefault(master : Master) {
+    func removeAsDefault(master : Master) {
         NSUserDefaults.standardUserDefaults().removeObjectForKey("DefaultMaster")
     }
 }

@@ -46,61 +46,61 @@ class UpdateProgressEventData {
     }
 }
 
-public class UpdateRemoteInvocationProgressListener : InvocationProgressListener {
+class UpdateRemoteInvocationProgressListener : InvocationProgressListener {
     var api : BuspassApi
     
     init(api : BuspassApi) {
         self.api = api
     }
     
-    public override func onUpdateStart(time : TimeValue64, isForced : Bool) {
+    override func onUpdateStart(time : TimeValue64, isForced : Bool) {
         api.uiEvents.postEvent("UpdateProgress",
             data: UpdateProgressEventData(action: InvocationProgressEvent.U_START, time: time, isForced: isForced))
     }
     
-    public override func onArgumentsStart() {
+    override func onArgumentsStart() {
         api.uiEvents.postEvent("UpdateProgress",
             data: UpdateProgressEventData(action: InvocationProgressEvent.U_ARG_START ))
     }
-    public override func onArgumentsFinish(makeRequest : Bool) {
+    override func onArgumentsFinish(makeRequest : Bool) {
         api.uiEvents.postEvent("UpdateProgress",
             data: UpdateProgressEventData(action: InvocationProgressEvent.U_ARG_START, makeRequest: makeRequest))
     }
-    public override func onRequestStart(time : TimeValue64) {
+    override func onRequestStart(time : TimeValue64) {
         api.uiEvents.postEvent("UpdateProgress",
             data: UpdateProgressEventData(action: InvocationProgressEvent.U_REQ_START , time: time))
     }
-    public override func onRequestIOError(status : HttpStatusLine) {
+    override func onRequestIOError(status : HttpStatusLine) {
         api.uiEvents.postEvent("UpdateProgress",
             data: UpdateProgressEventData(action: InvocationProgressEvent.U_REQ_IOERROR, error: status))
     }
-    public override func onRequestFinish(time : TimeValue64) {
+    override func onRequestFinish(time : TimeValue64) {
         api.uiEvents.postEvent("UpdateProgress",
             data: UpdateProgressEventData(action: InvocationProgressEvent.U_REQ_FIN, time: time))
     }
-    public override func onResponseStart() {
+    override func onResponseStart() {
         api.uiEvents.postEvent("UpdateProgress",
             data: UpdateProgressEventData(action: InvocationProgressEvent.U_RESP_START))
     }
-    public override func onResponseFinish() {
+    override func onResponseFinish() {
         api.uiEvents.postEvent("UpdateProgress",
             data: UpdateProgressEventData(action: InvocationProgressEvent.U_RESP_FIN))
     }
-    public override func onUpdateFinish(makeRequest : Bool, time : TimeValue64) {
+    override func onUpdateFinish(makeRequest : Bool, time : TimeValue64) {
         api.uiEvents.postEvent("UpdateProgress",
             data: UpdateProgressEventData(action: InvocationProgressEvent.U_FINISH, time: time))
     }
 }
 
-public class UpdateRemoteInvocation : RemoteInvocation {
+class UpdateRemoteInvocation : RemoteInvocation {
     let busApi : BuspassApi
-    public var banners : BannerRequestProcessor
-    public var markers : MarkerRequestProcessor
-    public var messages : MasterMessageRequestProcessor
-    public var journeys : JourneyCurrentLocationRequestProcessor
-    public var updateProgressListener : UpdateRemoteInvocationProgressListener
+    var banners : BannerRequestProcessor
+    var markers : MarkerRequestProcessor
+    var messages : MasterMessageRequestProcessor
+    var journeys : JourneyCurrentLocationRequestProcessor
+    var updateProgressListener : UpdateRemoteInvocationProgressListener
     
-    public init(
+    init(
         api : BuspassApi,
         bannerBasket : BannerBasket,
         markerBasket : MarkerBasket,
@@ -123,11 +123,11 @@ public class UpdateRemoteInvocation : RemoteInvocation {
         self.addResponseProcessor(journeys)
     }
     
-    public func perform(isForced : Bool) {
+    func perform(isForced : Bool) {
         self.invoke(updateProgressListener, isForced: isForced)
     }
     
-    public override func getRequestUrl() -> String? {
+    override func getRequestUrl() -> String? {
         if busApi.isReady() {
             let query = busApi.getDefaultQuery().toString()
             let url = busApi.buspass!.updateUrl
@@ -138,7 +138,7 @@ public class UpdateRemoteInvocation : RemoteInvocation {
         return nil
     }
     
-    public override func handleResponse(tag: Tag?) -> Bool {
+    override func handleResponse(tag: Tag?) -> Bool {
         if tag != nil {
             if "response" == tag!.name.lowercaseString {
                 let updateRate = tag!.attributes["updateRate"]

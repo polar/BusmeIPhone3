@@ -8,33 +8,33 @@
 
 import Foundation
 
-public struct MarkerEvent {
-    public static let S_PRESENT  = 0
-    public static let S_RESOLVE  = 1
-    public static let S_RESOLVED = 2
-    public static let S_ERROR    = 3
-    public static let S_DONE     = 4
+struct MarkerEvent {
+    static let S_PRESENT  = 0
+    static let S_RESOLVE  = 1
+    static let S_RESOLVED = 2
+    static let S_ERROR    = 3
+    static let S_DONE     = 4
     
-    public static let R_GO     = 1
-    public static let R_REMIND = 2
-    public static let R_REMOVE = 3
-    public static let R_CANCEL = 4
+    static let R_GO     = 1
+    static let R_REMIND = 2
+    static let R_REMOVE = 3
+    static let R_CANCEL = 4
 }
 
-public class MarkerEventData {
-    public var state : Int = MarkerEvent.S_PRESENT
-    public var thruUrl : String?
-    public var markerInfo : MarkerInfo
-    public var resolve : Int = MarkerEvent.R_CANCEL
-    public var resolveData : AnyObject?
-    public var time : TimeValue64 = 0
+class MarkerEventData {
+    var state : Int = MarkerEvent.S_PRESENT
+    var thruUrl : String?
+    var markerInfo : MarkerInfo
+    var resolve : Int = MarkerEvent.R_CANCEL
+    var resolveData : AnyObject?
+    var time : TimeValue64 = 0
 
     
-    public init(markerInfo : MarkerInfo) {
+    init(markerInfo : MarkerInfo) {
         self.markerInfo = markerInfo
     }
     
-    public func dup() -> MarkerEventData {
+    func dup() -> MarkerEventData {
         let evd = MarkerEventData(markerInfo: markerInfo)
         evd.state = state
         evd.resolve = resolve
@@ -44,7 +44,7 @@ public class MarkerEventData {
         return evd
     }
     
-    public func empty() {
+    func empty() {
         //self.markerInfo = nil
         self.thruUrl = nil
         self.resolveData = nil
@@ -52,11 +52,11 @@ public class MarkerEventData {
     
 }
 
-public class MarkerForeground : BuspassEventListener {
-    public var api : BuspassApi
+class MarkerForeground : BuspassEventListener {
+    var api : BuspassApi
     weak var markerPresentationController : MarkerPresentationController?
     
-    public init(api: BuspassApi) {
+    init(api: BuspassApi) {
         self.api = api
         self.api.uiEvents.registerForEvent("MarkerEvent", listener: self)
     }
@@ -65,7 +65,7 @@ public class MarkerForeground : BuspassEventListener {
         self.api.uiEvents.unregisterForEvent("MarkerEvent", listener: self)
     }
     
-    public func onBuspassEvent(event: BuspassEvent) {
+    func onBuspassEvent(event: BuspassEvent) {
         let evd = event.eventData as MarkerEventData
         switch(evd.state) {
         case MarkerEvent.S_PRESENT:
@@ -143,10 +143,10 @@ public class MarkerForeground : BuspassEventListener {
     }
 }
 
-public class MarkerBackground : BuspassEventListener {
-    public var api : BuspassApi
+class MarkerBackground : BuspassEventListener {
+    var api : BuspassApi
     
-    public init(api : BuspassApi) {
+    init(api : BuspassApi) {
         self.api = api
         self.api.bgEvents.registerForEvent("MarkerEvent", listener: self)
     }
@@ -155,7 +155,7 @@ public class MarkerBackground : BuspassEventListener {
         self.api.bgEvents.unregisterForEvent("MarkerEvent", listener: self)
     }
     
-    public func onBuspassEvent(event: BuspassEvent) {
+    func onBuspassEvent(event: BuspassEvent) {
         let evd = event.eventData! as MarkerEventData
         switch(evd.state) {
         case MarkerEvent.S_RESOLVE:

@@ -8,34 +8,15 @@
 
 import Foundation
 
-public class DiscoverApiVersion1 : DiscoverApi {
-    public var initialUrl : String
-    public var discoverUrl : String?
-    public var masterUrl : String?
+class DiscoverApiVersion1 : DiscoverApi {
+    var discoverUrl : String?
+    var masterUrl : String?
     
-    public init(httpClient : HttpClient, initialUrl : String) {
-        self.initialUrl = initialUrl
+    override init(httpClient : HttpClient) {
         super.init(httpClient: httpClient)
     }
     
-    public override func get() -> (HttpStatusLine, DiscoverApiVersion1?) {
-        let response = getURLResponse(initialUrl)
-        let status = response.getStatusLine()
-        if status.statusCode == 200 {
-            let tag = xmlParse(response.getEntity())
-            if (tag != nil) {
-                self.discoverUrl = tag!.attributes["discover"]
-                self.masterUrl = tag!.attributes["master"]
-            }
-            if (self.discoverUrl != nil && masterUrl != nil) {
-                return (status, self)
-            }
-            return (HttpStatusLine(statusCode: 1000, reasonPhrase: "Invalid Structure"), nil)
-        }
-        return (status, nil)
-    }
-    
-    public override func discover(lon : Double, lat : Double, buffer : Double) -> (HttpStatusLine, [Master]){
+    override func discover(lon : Double, lat : Double, buffer : Double) -> (HttpStatusLine, [Master]){
         var masters = [Master]();
         let url = "\(discoverUrl!)?lon=\(lon)&lat=\(lat)&buf=\(buffer)"
         let response = getURLResponse(url)
@@ -58,7 +39,7 @@ public class DiscoverApiVersion1 : DiscoverApi {
         return (status, masters)
     }
     
-    public override func findMaster(slug : String) -> (HttpStatusLine, Master?) {
+    override func findMaster(slug : String) -> (HttpStatusLine, Master?) {
         let url = "\(masterUrl!)?slug=\(slug)"
         let response = getURLResponse(url)
         let status = response.getStatusLine()

@@ -9,36 +9,36 @@
 import Foundation
 
 
-public struct JourneyEvent {
-    public static let A_ON_ROUTE_POSTING = 1
-    public static let A_AT_ROUTE_START   = 2
-    public static let A_OFF_ROUTE        = 3
-    public static let A_ON_ROUTE         = 4
-    public static let A_UPDATE_ROUTE     = 5
-    public static let A_AT_ROUTE_END     = 6
-    public static let A_ON_ROUTE_DONE    = 7
+struct JourneyEvent {
+    static let A_ON_ROUTE_POSTING = 1
+    static let A_AT_ROUTE_START   = 2
+    static let A_OFF_ROUTE        = 3
+    static let A_ON_ROUTE         = 4
+    static let A_UPDATE_ROUTE     = 5
+    static let A_AT_ROUTE_END     = 6
+    static let A_ON_ROUTE_DONE    = 7
 
-    public static let R_NORMAL        = 1
-    public static let R_FORCED        = 2
-    public static let R_DISABLED      = 3
-    public static let R_SERVICE       = 4
-    public static let R_OFF_ROUTE     = 5
-    public static let R_NOT_AVAILABLE = 6
+    static let R_NORMAL        = 1
+    static let R_FORCED        = 2
+    static let R_DISABLED      = 3
+    static let R_SERVICE       = 4
+    static let R_OFF_ROUTE     = 5
+    static let R_NOT_AVAILABLE = 6
 }
 
-public class JourneyEventData {
-    public var route : Route
-    public var role : String
-    public var action : Int = 0
-    public var reason : Int = 0
-    public var location : PostLocation?
+class JourneyEventData {
+    var route : Route
+    var role : String
+    var action : Int = 0
+    var reason : Int = 0
+    var location : PostLocation?
     
-    public init(route : Route, role : String, location : PostLocation? = nil) {
+    init(route : Route, role : String, location : PostLocation? = nil) {
         self.route = route
         self.role = role
         self.location = location
     }
-    public init(route : Route, role : String, reason : Int) {
+    init(route : Route, role : String, reason : Int) {
         self.route = route
         self.role = role
         self.reason = reason
@@ -46,20 +46,20 @@ public class JourneyEventData {
 
 }
 
-public class JourneyLocationPoster : BuspassEventListener {
-    public var api : BuspassApi
+class JourneyLocationPoster : BuspassEventListener {
+    var api : BuspassApi
     
-    public var postingRoute : Route?
-    public var postingPathPoints : [GeoPoint] = [GeoPoint]()
-    public var startPoint : GeoPoint?
-    public var endPoint : GeoPoint?
-    public var postingRole : String = "passenger"
-    public var offRouteCount : Int = 0
-    public var alreadyPosting : Bool = false
-    public var alreadyStarted : Bool = false
-    public var alreadyFinished : Bool = false
+    var postingRoute : Route?
+    var postingPathPoints : [GeoPoint] = [GeoPoint]()
+    var startPoint : GeoPoint?
+    var endPoint : GeoPoint?
+    var postingRole : String = "passenger"
+    var offRouteCount : Int = 0
+    var alreadyPosting : Bool = false
+    var alreadyStarted : Bool = false
+    var alreadyFinished : Bool = false
     
-    public init(api : BuspassApi) {
+    init(api : BuspassApi) {
         self.api = api
         registerForEvents()
     }
@@ -84,7 +84,7 @@ public class JourneyLocationPoster : BuspassEventListener {
         api.bgEvents.unregisterForEvent("JourneyRemoved", listener: self)
     }
     
-    public func onBuspassEvent(event: BuspassEvent) {
+    func onBuspassEvent(event: BuspassEvent) {
         let eventName = event.eventName
         // Foreground Thread
         if (eventName ==  "LocationProviderEnabled") {
@@ -116,14 +116,14 @@ public class JourneyLocationPoster : BuspassEventListener {
         }
     }
     
-    public func reset() {
+    func reset() {
         self.postingRoute = nil
         self.alreadyPosting = false
         self.alreadyFinished = false
         self.alreadyStarted = false
     }
     
-    public func startPosting(route : Route, role : String) {
+    func startPosting(route : Route, role : String) {
         self.postingRoute = route
         self.postingRole = role
         self.postingPathPoints = route.getPaths().first!
@@ -131,14 +131,14 @@ public class JourneyLocationPoster : BuspassEventListener {
         self.endPoint = self.postingPathPoints.last
     }
     
-    public func endPosting(reason : Int = JourneyEvent.R_FORCED) {
+    func endPosting(reason : Int = JourneyEvent.R_FORCED) {
         if postingRoute != nil {
             postingRoute!.reporting = false
             notifyOnRouteDone(reason)
         }
     }
     
-    public func processLocation( location : Location ) {
+    func processLocation( location : Location ) {
         if postingRoute != nil {
             if !alreadyPosting {
                 notifyOnRoutePosting(location)
@@ -163,49 +163,49 @@ public class JourneyLocationPoster : BuspassEventListener {
         }
     }
     
-    public func postLocation( location : Location) {
+    func postLocation( location : Location) {
         let postLocation = PostLocation(journey: postingRoute!, location: location)
 
         api.bgEvents.postEvent("JourneyLocationPost",
             data: JourneyEventData(route: postingRoute!, role: postingRole, location: postLocation))
     }
     
-    public func onProviderEnabled() {
+    func onProviderEnabled() {
     
     }
     
-    public func onProviderDisabled() {
+    func onProviderDisabled() {
         currentLocation = nil
         if postingRoute != nil {
             endPosting(reason: JourneyEvent.R_SERVICE)
         }
     }
     
-    public func onJourneyStartPosting(eventData : JourneyEventData) {
+    func onJourneyStartPosting(eventData : JourneyEventData) {
         if postingRoute != nil {
             endPosting(reason: JourneyEvent.R_FORCED)
         }
         startPosting(eventData.route, role: eventData.role)
     }
     
-    public func onJourneyStopPosting(eventData : JourneyEventData) {
+    func onJourneyStopPosting(eventData : JourneyEventData) {
         if postingRoute != nil {
             endPosting(reason: eventData.reason)
         }
     }
     
     var currentLocation : Location?
-    public func getCurrentLocation() -> Location? {
+    func getCurrentLocation() -> Location? {
         return currentLocation;
     }
     
     
-    public func onLocationChanged(eventData : LocationEventData) {
+    func onLocationChanged(eventData : LocationEventData) {
         currentLocation = eventData.location
         processLocation(eventData.location)
     }
     
-    public func onJourneyRemoved(eventData : JourneyDisplayEventData) {
+    func onJourneyRemoved(eventData : JourneyDisplayEventData) {
         if postingRoute != nil {
             if postingRoute!.id == eventData.id {
                 endPosting(reason: JourneyEvent.R_NORMAL)
@@ -213,7 +213,7 @@ public class JourneyLocationPoster : BuspassEventListener {
         }
     }
     
-    public func  notifyOnRoutePosting(location : Location) {
+    func  notifyOnRoutePosting(location : Location) {
         if postingRoute != nil {
             let postLocation = PostLocation(journey: postingRoute!, location: location)
             var eventData = JourneyEventData(route : postingRoute!, role : postingRole, location : postLocation)
@@ -222,7 +222,7 @@ public class JourneyLocationPoster : BuspassEventListener {
         }
     }
     
-    public func  notifyAtRouteStart(location : Location) {
+    func  notifyAtRouteStart(location : Location) {
         if postingRoute != nil {
             let postLocation = PostLocation(journey: postingRoute!, location: location)
             var eventData = JourneyEventData(route : postingRoute!, role : postingRole, location : postLocation)
@@ -231,7 +231,7 @@ public class JourneyLocationPoster : BuspassEventListener {
         }
     }
     
-    public func  notifyOnRoute(location : Location) {
+    func  notifyOnRoute(location : Location) {
         if postingRoute != nil {
             let postLocation = PostLocation(journey: postingRoute!, location: location)
             var eventData = JourneyEventData(route : postingRoute!, role : postingRole, location : postLocation)
@@ -240,7 +240,7 @@ public class JourneyLocationPoster : BuspassEventListener {
         }
     }
     
-    public func  notifyUpdateRoute(location : Location) {
+    func  notifyUpdateRoute(location : Location) {
         if postingRoute != nil {
             let postLocation = PostLocation(journey: postingRoute!, location: location)
             var eventData = JourneyEventData(route : postingRoute!, role : postingRole, location : postLocation)
@@ -249,7 +249,7 @@ public class JourneyLocationPoster : BuspassEventListener {
         }
     }
     
-    public func  notifyOffRoute(location : Location) {
+    func  notifyOffRoute(location : Location) {
         if postingRoute != nil {
             let postLocation = PostLocation(journey: postingRoute!, location: location)
             var eventData = JourneyEventData(route : postingRoute!, role : postingRole, location : postLocation)
@@ -258,7 +258,7 @@ public class JourneyLocationPoster : BuspassEventListener {
         }
     }
     
-    public func  notifyAtRouteEnd(location : Location) {
+    func  notifyAtRouteEnd(location : Location) {
         if postingRoute != nil {
             let postLocation = PostLocation(journey: postingRoute!, location: location)
             var eventData = JourneyEventData(route : postingRoute!, role : postingRole, location : postLocation)
@@ -267,7 +267,7 @@ public class JourneyLocationPoster : BuspassEventListener {
         }
     }
     
-    public func  notifyOnRouteDone(reason : Int) {
+    func  notifyOnRouteDone(reason : Int) {
         if postingRoute != nil {
             var eventData = JourneyEventData(route : postingRoute!, role : postingRole, reason : reason)
             eventData.action = JourneyEvent.A_ON_ROUTE_DONE

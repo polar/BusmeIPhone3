@@ -8,14 +8,14 @@
 
 import Foundation
 
-public class MasterMessageRequestProcessor : ArgumentPreparer, ResponseProcessor {
-    public var masterMessageBasket : MasterMessageBasket
+class MasterMessageRequestProcessor : ArgumentPreparer, ResponseProcessor {
+    var masterMessageBasket : MasterMessageBasket
     
-    public init(masterMessageBasket : MasterMessageBasket) {
+    init(masterMessageBasket : MasterMessageBasket) {
         self.masterMessageBasket = masterMessageBasket
     }
     
-    public func getArguments() -> [String : [String]]? {
+    func getArguments() -> [String : [String]]? {
         var args = [String:[String]]()
         var ids = [String]()
         var versions = [String]()
@@ -27,7 +27,7 @@ public class MasterMessageRequestProcessor : ArgumentPreparer, ResponseProcessor
         args["message_versions"] = versions
         return args
     }
-    public func onResponse(response: Tag) {
+    func onResponse(response: Tag) {
         var masterMessages = [String : MasterMessage]()
         for child in response.childNodes {
             if child.name.lowercaseString == "messages" {

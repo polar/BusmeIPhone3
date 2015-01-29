@@ -8,20 +8,20 @@
 
 import Foundation
 
-public class ExternalStorageController {
-    public var api : BuspassApi
-    public var available : Bool = true
-    public var writeable : Bool = true
-    public var directory : String
+class ExternalStorageController {
+    var api : BuspassApi
+    var available : Bool = true
+    var writeable : Bool = true
+    var directory : String
     
-    public init(api : BuspassApi, directory : String) {
+    init(api : BuspassApi, directory : String) {
         self.api = api
         self.directory = directory
         NSFileManager.defaultManager().createDirectoryAtPath(directory, withIntermediateDirectories: true, attributes: nil, error: nil)
         
     }
     
-    public func legalize(filename : String) -> String {
+    func legalize(filename : String) -> String {
         var it = filename as NSString
         it = it.stringByReplacingOccurrencesOfString(" ", withString: "_")
         it = it.stringByReplacingOccurrencesOfString("(", withString: "-")
@@ -30,21 +30,21 @@ public class ExternalStorageController {
         return it
     }
     
-    public func isAvailable() -> Bool {
+    func isAvailable() -> Bool {
         return available
     }
-    public func isWriteable() -> Bool {
+    func isWriteable() -> Bool {
         return writeable
     }
-    public func getDirectory() -> String {
+    func getDirectory() -> String {
         return directory
     }
-    public func serializeObjectToFile(store: Storage, file : String) -> Bool {
+    func serializeObjectToFile(store: Storage, file : String) -> Bool {
         let legalFilename = legalize(directory + "/" + file)
         let result = NSKeyedArchiver.archiveRootObject(store, toFile: legalFilename)
         return result
     }
-    public func deserializeObjectFromFile(file :String) -> Storage? {
+    func deserializeObjectFromFile(file :String) -> Storage? {
         let legalFilename = legalize(directory + "/" + file)
         let result : AnyObject? = NSKeyedUnarchiver.unarchiveObjectWithFile(legalFilename)
         let typedResult = result as? Storage

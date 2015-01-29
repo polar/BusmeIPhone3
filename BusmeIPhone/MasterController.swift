@@ -22,54 +22,54 @@ class MasterEventData {
     }
 }
 
-public class MasterController : BuspassEventListener {
-    public var api : BuspassApi
-    public var master : Master
-    public var mainController : MainController?
+class MasterController : BuspassEventListener {
+    var api : BuspassApi
+    var master : Master
+    var mainController : MainController?
     
-    public var directory : String?
-    public var bannerBasket : BannerBasket
-    public var bannerPresentationController : BannerPresentationController
-    public var bannerStore : BannerStore
+    var directory : String?
+    var bannerBasket : BannerBasket
+    var bannerPresentationController : BannerPresentationController
+    var bannerStore : BannerStore
     
-    public var bannerForeground : BannerForeground
-    public var bannerBackground : BannerBackground
+    var bannerForeground : BannerForeground
+    var bannerBackground : BannerBackground
     
-    public var journeyBasket : JourneyBasket
-    public var journeyDisplayController : JourneyDisplayController
-    public var journeyStore : JourneyStore
-    public var journeyVisibilityController : JourneyVisibilityController
-    public var journeyDisplaySelectionController : JourneyDisplaySelectionController
+    var journeyBasket : JourneyBasket
+    var journeyDisplayController : JourneyDisplayController
+    var journeyStore : JourneyStore
+    var journeyVisibilityController : JourneyVisibilityController
+    var journeyDisplaySelectionController : JourneyDisplaySelectionController
     
-    public var markerBasket : MarkerBasket
-    public var markerPresentationController : MarkerPresentationController
-    public var markerStore : MarkerStore
+    var markerBasket : MarkerBasket
+    var markerPresentationController : MarkerPresentationController
+    var markerStore : MarkerStore
     
-    public var markerForeground : MarkerForeground
-    public var markerBackground : MarkerBackground
+    var markerForeground : MarkerForeground
+    var markerBackground : MarkerBackground
     
-    public var masterMessageBasket : MasterMessageBasket
-    public var masterMessagePresentationController : MasterMessagePresentationController
-    public var masterMessageStore : MasterMessageStore
+    var masterMessageBasket : MasterMessageBasket
+    var masterMessagePresentationController : MasterMessagePresentationController
+    var masterMessageStore : MasterMessageStore
     
-    public var masterMessageForeground : MasterMessageForeground
-    public var masterMessageBackground : MasterMessageBackground
+    var masterMessageForeground : MasterMessageForeground
+    var masterMessageBackground : MasterMessageBackground
     
-    public var loginForeground : LoginForeground
-    public var loginBackground : LoginBackground
+    var loginForeground : LoginForeground
+    var loginBackground : LoginBackground
     
-    public var journeyLocationPoster : JourneyLocationPoster
-    public var journeyEventController : JourneyEventController
-    public var journeyPostingController : JourneyPostingController
+    var journeyLocationPoster : JourneyLocationPoster
+    var journeyEventController : JourneyEventController
+    var journeyPostingController : JourneyPostingController
     
-    public var updateRemoteInvocation : UpdateRemoteInvocation
-    public var journeySyncRemoteInvocation : JourneySyncRemoteInvocation
+    var updateRemoteInvocation : UpdateRemoteInvocation
+    var journeySyncRemoteInvocation : JourneySyncRemoteInvocation
 
-    public var externalStorageController : ExternalStorageController
-    public var storageSerializedController : StorageSerializeController
+    var externalStorageController : ExternalStorageController
+    var storageSerializedController : StorageSerializeController
     
     
-    public init(api : BuspassApi, master: Master, mainController : MainController) {
+    init(api : BuspassApi, master: Master, mainController : MainController) {
         self.api = api
         self.master = master
         self.mainController = mainController
@@ -135,7 +135,7 @@ public class MasterController : BuspassEventListener {
         api.bgEvents.registerForEvent("Update", listener: self)
     }
     
-    public func unregisterForEvents() {
+    func unregisterForEvents() {
         api.bgEvents.unregisterForEvent("Master:init", listener: self)
         api.bgEvents.unregisterForEvent("Master:reload", listener: self)
         api.bgEvents.unregisterForEvent("Master:store", listener: self)
@@ -162,7 +162,7 @@ public class MasterController : BuspassEventListener {
         loginBackground.unregisterForEvents()
     }
     
-    public func onBuspassEvent(event: BuspassEvent) {
+    func onBuspassEvent(event: BuspassEvent) {
         let eventName = event.eventName
         if eventName == "Master:init" {
             let eventData = event.eventData as MasterEventData
@@ -219,13 +219,13 @@ public class MasterController : BuspassEventListener {
         masterMessageBasket.resetMasterMessages(now: UtilsTime.current())
     }
     
-    public func storeMaster() {
+    func storeMaster() {
         storageSerializedController.cacheStorage(journeyStore, filename: "\(master.slug!)-Journeys.dat", api: api)
         storageSerializedController.cacheStorage(masterMessageStore, filename: "\(master.slug!)-Messages.dat", api: api)
         storageSerializedController.cacheStorage(markerStore, filename: "\(master.slug!)-Markers.dat", api: api)
     }
     
-    public func reloadStores() {
+    func reloadStores() {
         replaceMarkerStore()
         replaceMasterMessageStore()
         replaceJourneyStore()

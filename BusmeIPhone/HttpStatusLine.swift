@@ -8,14 +8,14 @@
 
 import Foundation
 
-public class HttpStatusLine {
-    public var statusCode: Int = 0;
-    public var reasonPhrase: String = "";
+class HttpStatusLine {
+    var statusCode: Int = 0;
+    var reasonPhrase: String = "";
     init(statusCode: Int, reasonPhrase: String) {
         self.statusCode = statusCode;
         self.reasonPhrase = reasonPhrase;
     }
-    public func toString() -> String {
+    func toString() -> String {
         return "\(statusCode): \(reasonPhrase)"
     }
 }

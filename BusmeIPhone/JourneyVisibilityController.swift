@@ -8,37 +8,37 @@
 
 import Foundation
 
-public class VisualState {
-    public let S_ALL = 1
-    public let S_ROUTE = 2
-    public let S_VEHICLE = 3
+class VisualState {
+    let S_ALL = 1
+    let S_ROUTE = 2
+    let S_VEHICLE = 3
     
-    public var state : Int = 1
-    public var nearBy : Double?
-    public var onlyActive : Bool = false
-    public var selectedRoute : JourneyDisplay?
-    public var selectedRouteCode : String?
-    public var selectedRouteCodes : NSMutableSet = NSMutableSet()
-    public var selectedRoutes : NSMutableSet = NSMutableSet()
-    public var onlySelected : Bool = false
-    public var selectedLocations :  [GeoPoint] = [GeoPoint]()
+    var state : Int = 1
+    var nearBy : Double?
+    var onlyActive : Bool = false
+    var selectedRoute : JourneyDisplay?
+    var selectedRouteCode : String?
+    var selectedRouteCodes : NSMutableSet = NSMutableSet()
+    var selectedRoutes : NSMutableSet = NSMutableSet()
+    var onlySelected : Bool = false
+    var selectedLocations :  [GeoPoint] = [GeoPoint]()
     
-    public init() {
+    init() {
         
     }
     
 }
 
-public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJourneyDisplayAddedListener {
-    public var api : BuspassApi
-    public var journeyDisplayController : JourneyDisplayController
+class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJourneyDisplayAddedListener {
+    var api : BuspassApi
+    var journeyDisplayController : JourneyDisplayController
     
-    public var nearByDistance : Int = 500
-    public var currentLocation : GeoPoint?
+    var nearByDistance : Int = 500
+    var currentLocation : GeoPoint?
     
-    public var stateStack : [VisualState] = [VisualState]()
+    var stateStack : [VisualState] = [VisualState]()
     
-    public init(api : BuspassApi, controller : JourneyDisplayController) {
+    init(api : BuspassApi, controller : JourneyDisplayController) {
         self.api = api
         self.journeyDisplayController = controller
         controller.onJourneyDisplayAddedListener = self
@@ -46,20 +46,20 @@ public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJo
         stateStack.append(VisualState())
     }
     
-    public func getJourneyDisplays() -> [JourneyDisplay]{
+    func getJourneyDisplays() -> [JourneyDisplay]{
         return journeyDisplayController.getJourneyDisplays()
     }
     
-    public func getSortedJourneyDisplays() -> [JourneyDisplay] {
+    func getSortedJourneyDisplays() -> [JourneyDisplay] {
         var array = [JourneyDisplay](getJourneyDisplays())
         return array.sorted{(x: JourneyDisplay,y: JourneyDisplay) in x.compareTo(y) < 0}
     }
     
-    public func getCurrentState() -> VisualState {
+    func getCurrentState() -> VisualState {
         return stateStack.first!
     }
     
-    public func setNearbyState(nearby  : Double?) {
+    func setNearbyState(nearby  : Double?) {
         let newState = VisualState()
         newState.nearBy = nearby
         newState.onlyActive = stateStack.first!.onlyActive
@@ -68,7 +68,7 @@ public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJo
         setVisibility(newState)
     }
     
-    public func setOnlyActiveState(active :Bool) {
+    func setOnlyActiveState(active :Bool) {
         let newState = VisualState()
         newState.onlyActive = active
         newState.nearBy = stateStack.first!.nearBy
@@ -77,7 +77,7 @@ public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJo
         setVisibility(newState)
     }
     
-    public func onJourneyDisplayAdded(display: JourneyDisplay) {
+    func onJourneyDisplayAdded(display: JourneyDisplay) {
         let state = stateStack.first!
         if addJourneyToState(state, display: display) {
             setVisibilityJourneyDisplay(state, display: display)
@@ -87,7 +87,7 @@ public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJo
         }
         
     }
-    public func onJourneyDisplayRemoved(journey: JourneyDisplay) {
+    func onJourneyDisplayRemoved(journey: JourneyDisplay) {
         journey.setPathVisible(false)
         journey.setNameVisible(false)
         while stateStack.count > 0 && removeJourneyDisplayFromState(stateStack.first!, display: journey) {
@@ -100,7 +100,7 @@ public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJo
     }
     
     // Should be called when location changes on device. Handles nearby visibilities.
-    public func onLocationChanged(point : GeoPoint) -> Bool {
+    func onLocationChanged(point : GeoPoint) -> Bool {
         var changed : Bool = false
         self.currentLocation = point
         let state = stateStack.first!
@@ -131,7 +131,7 @@ public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJo
         return changed
     }
     
-    public func goBack() {
+    func goBack() {
         if (stateStack.count > 1) {
             stateStack.removeAtIndex(0)
             setVisibility(stateStack.first!)
@@ -139,7 +139,7 @@ public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJo
     }
     
     private var journeysHighlighted = [JourneyDisplay]()
-    public func highlight(display : JourneyDisplay) {
+    func highlight(display : JourneyDisplay) {
         if display.route.isRouteDefinition() {
             for jd in display.getActiveJourneys() {
                 jd.setNameHighlighted(true)
@@ -153,7 +153,7 @@ public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJo
         if (BLog.DEBUG) { BLog.logger.debug("Highlight journeysHighlighted \(journeysHighlighted.count)")}
     }
     
-    public func unhighlightAll() {
+    func unhighlightAll() {
         if (BLog.DEBUG) { BLog.logger.debug("Unhightlight all journeysHighlighted \(journeysHighlighted.count)")}
         for display in journeysHighlighted {
             display.setNameHighlighted(false)
@@ -162,7 +162,7 @@ public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJo
         self.journeysHighlighted = [JourneyDisplay]()
     }
     
-    public func selectJourneysFromPoint(geoPoint : GeoPoint, buffer : Double) -> [JourneyDisplay] {
+    func selectJourneysFromPoint(geoPoint : GeoPoint, buffer : Double) -> [JourneyDisplay] {
         var selected = [JourneyDisplay]()
         for display in getJourneyDisplays() {
             if display.isPathVisible() && display.route.isJourney() {
@@ -181,7 +181,7 @@ public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJo
         return selected
     }
     
-    public func onLocationSelected(geoPoint : GeoPoint, buffer : Double) -> Bool {
+    func onLocationSelected(geoPoint : GeoPoint, buffer : Double) -> Bool {
         var atLeastOneSelected = false
         var selected = [JourneyDisplay]()
         var unselected = [JourneyDisplay]()
@@ -209,7 +209,7 @@ public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJo
         return false
     }
     
-    public func onSelectionChanged(selected : [JourneyDisplay], unselected : [JourneyDisplay], geoPoint : GeoPoint) {
+    func onSelectionChanged(selected : [JourneyDisplay], unselected : [JourneyDisplay], geoPoint : GeoPoint) {
         var newState = VisualState()
         newState.state = stateStack.first!.state
         newState.nearBy = stateStack.first!.nearBy
@@ -226,7 +226,7 @@ public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJo
         setVisibility(stateStack.first!)
     }
     
-    public func onVehicleSelected(display : JourneyDisplay) -> Bool {
+    func onVehicleSelected(display : JourneyDisplay) -> Bool {
         var state = stateStack.first!
         if state.state == state.S_VEHICLE {
             if state.selectedRoute === display {
@@ -248,7 +248,7 @@ public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJo
         
     }
     
-    public func onRouteCodeSelected(code : String) -> Bool {
+    func onRouteCodeSelected(code : String) -> Bool {
         var state = stateStack.first!
         if state.state == state.S_ROUTE {
             if state.selectedRouteCode == code {
@@ -270,7 +270,7 @@ public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJo
         
     }
     
-    public func addJourneyToState(state : VisualState, display : JourneyDisplay) -> Bool {
+    func addJourneyToState(state : VisualState, display : JourneyDisplay) -> Bool {
         switch (state.state) {
         case state.S_VEHICLE:
             if state.selectedRoute!.route.id! == display.route.id! {
@@ -324,7 +324,7 @@ public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJo
         }
     }
     
-    public func removeJourneyDisplayFromState(state :VisualState, display : JourneyDisplay) -> Bool {
+    func removeJourneyDisplayFromState(state :VisualState, display : JourneyDisplay) -> Bool {
         switch (state.state) {
         case state.S_VEHICLE:
             state.selectedRoutes.removeObject(display)
@@ -357,7 +357,7 @@ public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJo
             
         }
     }
-    public func setVisibility(state : VisualState) {
+    func setVisibility(state : VisualState) {
         switch (state.state) {
         case state.S_ALL, state.S_ROUTE:
             for display in getJourneyDisplays() {
@@ -388,7 +388,7 @@ public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJo
         
     }
     
-    public func setVisibilityJourneyDisplay(state : VisualState, display : JourneyDisplay) -> Bool {
+    func setVisibilityJourneyDisplay(state : VisualState, display : JourneyDisplay) -> Bool {
         switch (state.state) {
         case state.S_ALL:
             return forS_ALL(state, display: display)
@@ -402,7 +402,7 @@ public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJo
         }
     }
     
-    public func forS_ALL(state :VisualState, display : JourneyDisplay) -> Bool {
+    func forS_ALL(state :VisualState, display : JourneyDisplay) -> Bool {
         let nameVisible = display.isNameVisible()
         let pathVisible = display.isPathVisible()
         if !state.onlySelected || nil != state.selectedRoutes.member(display) || nil != state.selectedRouteCodes.member(display.route.code!) {
@@ -435,7 +435,7 @@ public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJo
         return changed
     }
     
-    public func forS_ROUTE(state : VisualState, display : JourneyDisplay) -> Bool {
+    func forS_ROUTE(state : VisualState, display : JourneyDisplay) -> Bool {
         let nameVisible = display.isNameVisible()
         let pathVisible = display.isPathVisible()
         if state.selectedRouteCode! == display.route.code! {
@@ -468,7 +468,7 @@ public class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJo
         return changed
     }
     
-    public func forS_VEHICLE(state : VisualState, display : JourneyDisplay) -> Bool {
+    func forS_VEHICLE(state : VisualState, display : JourneyDisplay) -> Bool {
         let nameVisible = display.isNameVisible()
         let pathVisible = display.isPathVisible()
         if state.selectedRoute === display {

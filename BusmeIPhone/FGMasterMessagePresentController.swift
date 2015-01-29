@@ -9,13 +9,13 @@
 import Foundation
 import CoreGraphics
 
-public class FGMasterMessagePresentController : BuspassEventListener {
+class FGMasterMessagePresentController : BuspassEventListener {
     
     weak var api : BuspassApi!
     weak var masterMapScreen : MasterMapScreen!
     weak var masterController : MasterController!
     
-    public init(masterMapScreen : MasterMapScreen) {
+    init(masterMapScreen : MasterMapScreen) {
         self.masterMapScreen = masterMapScreen
         self.masterController = masterMapScreen.masterController
         self.api = masterMapScreen.api
@@ -37,7 +37,7 @@ public class FGMasterMessagePresentController : BuspassEventListener {
     }
     
     
-    public func onBuspassEvent(event: BuspassEvent) {
+    func onBuspassEvent(event: BuspassEvent) {
         let eventData = event.eventData as? MasterMessageEventData
         if eventData != nil {
             if event.eventName == "MasterMessagePresent:display" {
@@ -51,14 +51,14 @@ public class FGMasterMessagePresentController : BuspassEventListener {
     }
     private var currentMasterMessage : MasterMessageViewController?
     
-    public func presentMasterMessage(eventData : MasterMessageEventData) {
+    func presentMasterMessage(eventData : MasterMessageEventData) {
         let masterMessage = eventData.masterMessage
         let mvc = MasterMessageViewController(masterMapScreen: masterMapScreen, masterMessage: masterMessage)
         currentMasterMessage = mvc
         mvc.display()
     }
     
-    public func onWebDisplay(eventData : MasterMessageEventData) {
+    func onWebDisplay(eventData : MasterMessageEventData) {
         if currentMasterMessage != nil {
             if (currentMasterMessage!.masterMessage === eventData.masterMessage) {
                 currentMasterMessage!.displayWebPage(eventData.thruUrl)
@@ -68,7 +68,7 @@ public class FGMasterMessagePresentController : BuspassEventListener {
         }
     }
     
-    public func abandonMasterMessage(eventData : MasterMessageEventData) {
+    func abandonMasterMessage(eventData : MasterMessageEventData) {
         let masterMessage = eventData.masterMessage
         if currentMasterMessage != nil {
             currentMasterMessage!.dismiss()

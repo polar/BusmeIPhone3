@@ -9,27 +9,27 @@
 import Foundation
 import CoreLocation
 
-public class BuspassApi : ApiBase, EventsApi {
-    public var apiURL : String
-    public var master_slug : String
-    public var appVersion : String
-    public var platformName : String
-    public var buspass : Buspass?
-    public var ready : Bool = false;
-    public var syncRate : Int = 60 * 1000;
-    public var updateRate : Int = 60 * 1000;
-    public var activeStartDisplayThreshold : Double = 60 * 1000;
-    public var busmeAppVersionString : String = "iPhone 1.0.0"
-    public var loginManager : LoginManager?
-    public var uiEvents : BuspassEventDistributor
-    public var bgEvents : BuspassEventDistributor
-    public var loginCredentials : Login?
-    public var startReporting : Boolean?
-    public var offRouteDistanceThreshold : Int = 1000;
-    public var offRouteCountThreshold : Int = 20
-    public var offRouteTimeThreshold : Int = 60 * 1000
+class BuspassApi : ApiBase, EventsApi {
+    var apiURL : String
+    var master_slug : String
+    var appVersion : String
+    var platformName : String
+    var buspass : Buspass?
+    var ready : Bool = false;
+    var syncRate : Int = 60 * 1000;
+    var updateRate : Int = 60 * 1000;
+    var activeStartDisplayThreshold : Double = 60 * 1000;
+    var busmeAppVersionString : String = "iPhone 1.0.0"
+    var loginManager : LoginManager?
+    var uiEvents : BuspassEventDistributor
+    var bgEvents : BuspassEventDistributor
+    var loginCredentials : Login?
+    var startReporting : Boolean?
+    var offRouteDistanceThreshold : Int = 1000;
+    var offRouteCountThreshold : Int = 20
+    var offRouteTimeThreshold : Int = 60 * 1000
     
-    public init(httpClient: HttpClient, url : String, masterSlug : String, appVersion: String, platformName : String) {
+    init(httpClient: HttpClient, url : String, masterSlug : String, appVersion: String, platformName : String) {
         self.apiURL = url
         self.master_slug = masterSlug
         self.appVersion = appVersion
@@ -40,19 +40,19 @@ public class BuspassApi : ApiBase, EventsApi {
         self.loginManager = LoginManager(api: self)
     }
     
-    public func isReady() -> Bool {
+    func isReady() -> Bool {
         return ready
     }
     
-    public func isLoggedIn() -> Bool {
+    func isLoggedIn() -> Bool {
         return loginCredentials != nil && loginCredentials!.loginState == LoginState.LS_LOGGED_IN
     }
     
-    public func clearLogin() {
+    func clearLogin() {
         self.loginCredentials = nil
     }
     
-    public func get() -> (HttpStatusLine?, Bool) {
+    func get() -> (HttpStatusLine?, Bool) {
         if isReady() {
             return (nil, true)
         } else {
@@ -61,13 +61,13 @@ public class BuspassApi : ApiBase, EventsApi {
         }
     }
     
-    public func getPlatformArgs() -> String {
+    func getPlatformArgs() -> String {
         return "app_version=\(appVersion)&platform=\(platformName)"
     }
     
-    public var lastKnownLocation : CLLocationCoordinate2D?
+    var lastKnownLocation : CLLocationCoordinate2D?
     
-    public func getTrackingArgs() -> String {
+    func getTrackingArgs() -> String {
         if lastKnownLocation != nil {
             return "lon=\(lastKnownLocation!.longitude)&lat=\(lastKnownLocation!.latitude)"
         } else {
@@ -75,7 +75,7 @@ public class BuspassApi : ApiBase, EventsApi {
         }
     }
     
-    public func forceGet() -> (HttpStatusLine, BuspassApi?) {
+    func forceGet() -> (HttpStatusLine, BuspassApi?) {
         let response = getURLResponse(apiURL)
         let status = response.getStatusLine()
         if status.statusCode == 200 {
@@ -184,7 +184,7 @@ public class BuspassApi : ApiBase, EventsApi {
         return q
     }
     
-    public func authTokenLogin(login : Login) -> (HttpStatusLine, Tag?) {
+    func authTokenLogin(login : Login) -> (HttpStatusLine, Tag?) {
         if isReady() {
             login.url = buspass!.authUrl!
             var params = [String:[String]]()
@@ -219,7 +219,7 @@ public class BuspassApi : ApiBase, EventsApi {
         }
     }
     
-    public func passwordRegistration(login : Login) -> (HttpStatusLine, Tag?) {
+    func passwordRegistration(login : Login) -> (HttpStatusLine, Tag?) {
         if isReady() {
             login.url = buspass!.registerUrl!
             var params = [String:[String]]()
@@ -259,7 +259,7 @@ public class BuspassApi : ApiBase, EventsApi {
     
     
     
-    public func passwordLogin(login : Login) -> (HttpStatusLine, Tag?) {
+    func passwordLogin(login : Login) -> (HttpStatusLine, Tag?) {
         if isReady() {
             login.url = buspass!.loginUrl!
             var params = [String:[String]]()
@@ -297,7 +297,7 @@ public class BuspassApi : ApiBase, EventsApi {
         }
     }
     
-    public func postJourneyLocation(ploc : PostLocation, role : String) -> (HttpStatusLine, String?) {
+    func postJourneyLocation(ploc : PostLocation, role : String) -> (HttpStatusLine, String?) {
         if isReady() {
             let postJourneyLocationUrl = buspass!.postJourneyLocationUrl
             if postJourneyLocationUrl != nil {
@@ -341,7 +341,7 @@ public class BuspassApi : ApiBase, EventsApi {
         }
     }
     
-    public func getRouteDefinition(nameid : NameId) -> Route? {
+    func getRouteDefinition(nameid : NameId) -> Route? {
         if isReady() {
             var routeDefUrl = buspass!.getRouteDefinitionUrl
             if routeDefUrl != nil{
@@ -369,7 +369,7 @@ public class BuspassApi : ApiBase, EventsApi {
         return nil
     }
     
-    public func getJourneyPattern(id: String) -> JourneyPattern? {
+    func getJourneyPattern(id: String) -> JourneyPattern? {
         if isReady() {
             var journeyPatterUrl = buspass!.getRouteDefinitionUrl
             if journeyPatterUrl != nil{
@@ -407,7 +407,7 @@ public class BuspassApi : ApiBase, EventsApi {
         return nil
     }
     
-    public func getMarkerClickThru(id : String) -> String? {
+    func getMarkerClickThru(id : String) -> String? {
         if isReady() {
             var clickThru = buspass!.markerClickThru
             if clickThru != nil {
@@ -434,7 +434,7 @@ public class BuspassApi : ApiBase, EventsApi {
         return nil
     }
     
-    public func getMasterMessageClickThru(id : String) -> String? {
+    func getMasterMessageClickThru(id : String) -> String? {
         if isReady() {
             var clickThru = buspass!.messageClickThru
             if clickThru != nil {
@@ -461,7 +461,7 @@ public class BuspassApi : ApiBase, EventsApi {
         return nil
     }
     
-    public func getBannerClickThru(id : String) -> String? {
+    func getBannerClickThru(id : String) -> String? {
         if isReady() {
             var clickThru = buspass!.bannerClickThru
             if clickThru != nil {

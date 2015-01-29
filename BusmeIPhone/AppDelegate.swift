@@ -94,7 +94,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
 
     var window: UIWindow?
     var configurator = Configurator()
-    var api : DiscoverApiVersion1!
+    var api : MainApi!
     var navigationController : UINavigationController!
     var mainController : MainController?
     var httpClient : HttpClient?
@@ -115,8 +115,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
         var httpQ : dispatch_queue_t = dispatch_queue_create("http", DISPATCH_QUEUE_SERIAL);
     
         self.httpClient = HttpClient(queue: httpQ)
-        self.api = DiscoverApiVersion1(httpClient: httpClient!, initialUrl: INITIAL_URL)
-        self.mainController = MainController(configurator: configurator, discoverApi: api)
+        self.api = MainApi(httpClient: httpClient!, initialUrl: INITIAL_URL)
+        self.mainController = MainController(configurator: configurator, api: api)
         
         registerForEvents()
         
@@ -205,12 +205,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
                     self.contactBusServer()
             })
         } else if eventData.returnStatus == "Discover" {
-            eventData.returnStatus = nil
-            api.bgEvents.postEvent("Main:Discover:init", data: eventData)
+            doDiscoverInit(eventData.discoverApi!)
         } else if eventData.returnStatus == "Master" {
             doMasterInit(eventData.master!)
         }
         
+    }
+    
+    func doDiscoverInit(discoverApi : DiscoverApiVersion1) {
+        let evd = MainEventData(discoverApi: discoverApi)
+        eventsController.register(discoverApi)
+        api.bgEvents.postEvent("Main:Discover:init", data: evd)
     }
     
     func doMasterInit(master : Master) {
@@ -226,11 +231,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
             eventData.dialog!.dismissWithClickedButtonIndex(0, animated: true)
             eventData.dialog = nil
         }
+        if eventData.oldDiscoverController != nil {
+            eventsController.unregister(eventData.oldDiscoverController!.api)
+        }
         self.discoverScreen = DiscoverScreen(mainController: mainController!)
         navigationController?.popViewControllerAnimated(false)
         self.navigationController = UINavigationController(rootViewController: discoverScreen!)
         window!.rootViewController = navigationController
-
     }
     
     // The Discover Screen has selected a master, maybe.
@@ -252,24 +259,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
             eventData.dialog!.dismissWithClickedButtonIndex(0, animated: true)
             eventData.dialog = nil
         }
-        let master = eventData.master!
-        if eventData.oldController != nil {
-            eventsController.unregister(eventData.oldController!.api)
+        if eventData.oldMasterController != nil {
+            stopTimers()
+            eventsController.unregister(eventData.oldMasterController!.api)
         }
         
-        registerForMasterEvents(mainController!.masterController!.api)
+        let masterController = eventData.masterController!
+        
+        registerForMasterEvents(masterController.api)
         
         self.masterMapScreen = MasterMapScreen()
-        masterMapScreen!.setMasterController(mainController!.masterController!)
+        masterMapScreen!.setMasterController(eventData.masterController!)
         
         navigationController?.popViewControllerAnimated(false)
         self.navigationController = UINavigationController(rootViewController: masterMapScreen!)
         window!.rootViewController = navigationController
         
-        let dialog = UIAlertView(title: "Welcome to \(master.name!)", message: "", delegate: nil, cancelButtonTitle: nil)
+        let dialog = UIAlertView(title: "Welcome to \(masterController.master.name!)", message: "", delegate: nil, cancelButtonTitle: nil)
         dialog.show()
         let evd = MasterEventData(dialog: dialog)
-        mainController!.masterController!.api.bgEvents.postEvent("Master:init", data: evd)
+        masterController.api.bgEvents.postEvent("Master:init", data: evd)
     }
     
     func onMasterInitReturn(eventData : MasterEventData) {

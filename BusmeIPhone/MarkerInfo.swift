@@ -9,9 +9,9 @@
 import Foundation
 import CoreLocation
 
-public class MarkerInfo : MessageBase, StorageProtocol {
+class MarkerInfo : MessageBase, StorageProtocol {
     
-    public override init(tag : Tag) {
+    override init(tag : Tag) {
         super.init(tag : tag)
         if expiryTime == 0 {
             // reading from the web server
@@ -22,19 +22,19 @@ public class MarkerInfo : MessageBase, StorageProtocol {
         }
     }
     
-    public override init(coder: NSCoder) {
+    override init(coder: NSCoder) {
         super.init(coder: coder)
     }
     
-    public override func isValid() -> Bool {
+    override func isValid() -> Bool {
         return title != nil && msgDescription != nil
     }
     
-    public func preSerialize(api : ApiBase, time : TimeValue64) {
+    func preSerialize(api : ApiBase, time : TimeValue64) {
         
     }
     
-    public func postSerialize(api : ApiBase, time : TimeValue64) {
+    func postSerialize(api : ApiBase, time : TimeValue64) {
         
     }
 }

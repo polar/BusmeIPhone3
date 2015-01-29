@@ -8,55 +8,55 @@
 
 import Foundation
 
-public class Buspass {
-    public var version : String?
-    public var mode : String?
-    public var name : String?
-    public var slug : String?
-    public var authUrl : String?
-    public var loginUrl : String?
-    public var registerUrl : String?
-    public var logoutUrl : String?
-    public var oauthLoginUrl : String?
-    public var oauthLogoutUrl : String?
-    public var postloc_time_rate : String?
-    public var postloc_dist_rate : String?
-    public var curloc_time_rate : String?
-    public var lon : String?
-    public var lat : String?
-    public var timezone : String?
-    public var time : String?
-    public var timeoffset : String?
-    public var datefmt : String?
-    public var getRouteJourneyIdsUrl : String?
-    public var getRouteDefinitionUrl : String?
-    public var getJourneyLocationUrl : String?
-    public var getMultipleJourneyLocationsUrl : String?
-    public var postJourneyLocationUrl : String?
-    public var getMessageUrl : String?
-    public var getMessagesUrl : String?
-    public var getMarkersUrl : String?
-    public var postFeedbackUrl : String?
-    public var updateUrl : String?
-    public var updateRate : String?
-    public var activeStartDisplayThreshold : String?
-    public var activeEndWaitThreshold : String?
-    public var offRouteDistanceThreshold : String?
-    public var offRouteCountThreshold : String?
-    public var offRouteTimeThreshold : String?
-    public var getRouteJourneyIds1Url : String?
-    public var syncRate : String?
-    public var box : String?
-    public var markerClickThru : String?
-    public var messageClickThru : String?
-    public var bannerRefreshRate : String?
-    public var bannerClickThru : String?
-    public var bannerMaxImageSize : String?
-    public var bannerImageUrl : String?
-    public var helpUrl : String?
-    public var initialMessages : [MasterMessage]
+class Buspass {
+    var version : String?
+    var mode : String?
+    var name : String?
+    var slug : String?
+    var authUrl : String?
+    var loginUrl : String?
+    var registerUrl : String?
+    var logoutUrl : String?
+    var oauthLoginUrl : String?
+    var oauthLogoutUrl : String?
+    var postloc_time_rate : String?
+    var postloc_dist_rate : String?
+    var curloc_time_rate : String?
+    var lon : String?
+    var lat : String?
+    var timezone : String?
+    var time : String?
+    var timeoffset : String?
+    var datefmt : String?
+    var getRouteJourneyIdsUrl : String?
+    var getRouteDefinitionUrl : String?
+    var getJourneyLocationUrl : String?
+    var getMultipleJourneyLocationsUrl : String?
+    var postJourneyLocationUrl : String?
+    var getMessageUrl : String?
+    var getMessagesUrl : String?
+    var getMarkersUrl : String?
+    var postFeedbackUrl : String?
+    var updateUrl : String?
+    var updateRate : String?
+    var activeStartDisplayThreshold : String?
+    var activeEndWaitThreshold : String?
+    var offRouteDistanceThreshold : String?
+    var offRouteCountThreshold : String?
+    var offRouteTimeThreshold : String?
+    var getRouteJourneyIds1Url : String?
+    var syncRate : String?
+    var box : String?
+    var markerClickThru : String?
+    var messageClickThru : String?
+    var bannerRefreshRate : String?
+    var bannerClickThru : String?
+    var bannerMaxImageSize : String?
+    var bannerImageUrl : String?
+    var helpUrl : String?
+    var initialMessages : [MasterMessage]
     
-    public init() {
+    init() {
         self.initialMessages = [MasterMessage]();
     }
 }

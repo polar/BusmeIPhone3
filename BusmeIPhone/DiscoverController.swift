@@ -8,19 +8,17 @@
 
 import Foundation
 
-public class DiscoverController : BuspassEventListener {
-    public var api : DiscoverApiVersion1
-    weak var mainController : MainController?
+class DiscoverController : BuspassEventListener {
+    var api : DiscoverApiVersion1
     
-    public var masters = [Master]()
+    var masters = [Master]()
     
-    public func getMasters() -> [Master] {
+    func getMasters() -> [Master] {
         return masters
     }
     
-    public init(mainController : MainController) {
-        self.mainController = mainController
-        self.api = mainController.api
+    init(api : DiscoverApiVersion1) {
+        self.api = api
         registerForEvents()
     }
     
@@ -38,7 +36,7 @@ public class DiscoverController : BuspassEventListener {
         api.bgEvents.unregisterForEvent("Search:select", listener: self)
     }
     
-    public func onBuspassEvent(event: BuspassEvent) {
+    func onBuspassEvent(event: BuspassEvent) {
         let eventData = event.eventData as? DiscoverEventData
         if eventData != nil {
             if event.eventName == "Search.init" {
@@ -53,12 +51,6 @@ public class DiscoverController : BuspassEventListener {
     
     func onSearchInitEvent(eventData : DiscoverEventData) {
         self.masters = [Master]()
-        let (status, x) = api.get()
-        if (x == nil) {
-            eventData.error = status
-            eventData.master = nil
-            eventData.masters = nil
-        }
         api.uiEvents.postEvent("Search:Init:return", data: eventData)
     }
     

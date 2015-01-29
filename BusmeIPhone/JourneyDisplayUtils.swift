@@ -8,9 +8,9 @@
 
 import Foundation
 
-public struct JourneyDisplayUtils {
+struct JourneyDisplayUtils {
     
-    public static func pathSearch( journeyDisplays : [JourneyDisplay], touchGP : GeoPoint, zoomLevel : Int) -> ([JourneyDisplay], [JourneyDisplay], GeoPoint)? {
+    static func pathSearch( journeyDisplays : [JourneyDisplay], touchGP : GeoPoint, zoomLevel : Int) -> ([JourneyDisplay], [JourneyDisplay], GeoPoint)? {
         var selectionChanged = false
         
         // 50 Foot Buffer at XL 19 (near mx) and 2000 foot buffer at ZL 1
@@ -49,7 +49,7 @@ public struct JourneyDisplayUtils {
         return nil
     }
     
-    public static func	hitPaths(journeyDisplays : [JourneyDisplay], touchRect : Rect, projection : Projection) -> ([JourneyDisplay],[JourneyDisplay]){
+    static func	hitPaths(journeyDisplays : [JourneyDisplay], touchRect : Rect, projection : Projection) -> ([JourneyDisplay],[JourneyDisplay]){
         let center = touchRect.center()
         let buffer = max(touchRect.width(), touchRect.height())
         var unselected = [JourneyDisplay]()
@@ -75,7 +75,7 @@ public struct JourneyDisplayUtils {
         return (selected, unselected)
     }
     
-    public func hitsRouteLocator(journeyDisplays : [JourneyDisplay], touchPoint : Point, locatorRect : Rect, projection : Projection) -> JourneyDisplay? {
+    func hitsRouteLocator(journeyDisplays : [JourneyDisplay], touchPoint : Point, locatorRect : Rect, projection : Projection) -> JourneyDisplay? {
         for journeyDisplay in journeyDisplays {
             if journeyDisplay.isPathVisible() {
                 if journeyDisplay.route.isJourney() {

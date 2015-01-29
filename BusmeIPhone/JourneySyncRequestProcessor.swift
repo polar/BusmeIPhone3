@@ -8,21 +8,21 @@
 
 import Foundation
 
-public class JourneySyncRequestProcessor : ArgumentPreparer, ResponseProcessor {
-    public var journeyBasket : JourneyBasket
-    public var progressListener : JourneySyncProgressListener?
+class JourneySyncRequestProcessor : ArgumentPreparer, ResponseProcessor {
+    var journeyBasket : JourneyBasket
+    var progressListener : JourneySyncProgressListener?
     
-    public init(journeyBasket : JourneyBasket) {
+    init(journeyBasket : JourneyBasket) {
         self.journeyBasket = journeyBasket
     }
     
-    public init(journeyBasket : JourneyBasket, progressListener: JourneySyncProgressListener) {
+    init(journeyBasket : JourneyBasket, progressListener: JourneySyncProgressListener) {
         self.journeyBasket = journeyBasket
         self.progressListener = progressListener
     }
     
     
-    public func getArguments() -> [String : [String]]? {
+    func getArguments() -> [String : [String]]? {
         var args = [String:[String]]()
         var routes = [String]()
         var versions = [String]()
@@ -35,7 +35,7 @@ public class JourneySyncRequestProcessor : ArgumentPreparer, ResponseProcessor {
         return args
     }
     
-    public func onResponse(response: Tag) {
+    func onResponse(response: Tag) {
         var nameids = [NameId]()
         for tag in response.childNodes {
             if "r" == tag.name.lowercaseString {

@@ -14,49 +14,49 @@ import MapKit
 
 extension CLLocationCoordinate2D : GeoPoint {
     
-    public func getLatitude() -> Double {
+    func getLatitude() -> Double {
         return latitude
     }
-    public func getLongitude() -> Double {
+    func getLongitude() -> Double {
         return longitude
     }
-    public func getX() -> Double  {
+    func getX() -> Double  {
         return longitude
     }
-    public func getY() -> Double{
+    func getY() -> Double{
         return latitude
     }
 }
 
 extension CGPoint : PointMutable {
     
-    public func getX() -> Double {
+    func getX() -> Double {
         return Double(x)
     }
-    public func getY() -> Double {
+    func getY() -> Double {
         return Double(y)
     }
-    public mutating func setX(x : Double) {
+    mutating func setX(x : Double) {
         self.x = CGFloat(x)
     }
     
-    public mutating func setX(x : Float) {
+    mutating func setX(x : Float) {
         self.x = CGFloat(x)
     }
-    public mutating func setY(y : Double) {
+    mutating func setY(y : Double) {
         self.y = CGFloat(y)
     }
     
-    public mutating func setY(y : Float) {
+    mutating func setY(y : Float) {
         self.y = CGFloat(y)
     }
-    public mutating func set(x : Double, y: Double) -> PointMutable {
+    mutating func set(x : Double, y: Double) -> PointMutable {
         self.x = CGFloat(x)
         self.y = CGFloat(y)
         return self
     }
     
-    public mutating func set(x : Float, y: Float) -> PointMutable {
+    mutating func set(x : Float, y: Float) -> PointMutable {
         self.x = CGFloat(x)
         self.y = CGFloat(y)
         return self
@@ -67,34 +67,34 @@ typealias PointImpl = CGPoint
 
 extension MKMapPoint : PointMutable {
     
-    public func getX() -> Double {
+    func getX() -> Double {
         return Double(x)
     }
-    public func getY() -> Double {
+    func getY() -> Double {
         return Double(y)
     }
     
-    public mutating func setX(x : Double) {
+    mutating func setX(x : Double) {
         self.x = Double(x)
     }
     
-    public mutating func setX(x : Float) {
+    mutating func setX(x : Float) {
         self.x = Double(x)
     }
-    public mutating func setY(y : Double) {
+    mutating func setY(y : Double) {
         self.y = Double(y)
     }
     
-    public mutating func setY(y : Float) {
+    mutating func setY(y : Float) {
         self.y = Double(y)
     }
-    public mutating func set(x : Double, y: Double) -> PointMutable {
+    mutating func set(x : Double, y: Double) -> PointMutable {
         self.x = Double(x)
         self.y = Double(y)
         return self
     }
     
-    public mutating func set(x : Float, y: Float) -> PointMutable {
+    mutating func set(x : Float, y: Float) -> PointMutable {
         self.x = Double(x)
         self.y = Double(y)
         return self
@@ -102,14 +102,14 @@ extension MKMapPoint : PointMutable {
 }
 
 extension Rect {
-    public func toCGRect() -> CGRect {
+    func toCGRect() -> CGRect {
         return CGRect(x: CGFloat(left), y: CGFloat(bottom), width: CGFloat(right-left), height: CGFloat(top-bottom))
     }
 
 }
 
 extension GeoRect {
-    public func toMapRect() -> MKMapRect {
+    func toMapRect() -> MKMapRect {
         let nw = MKMapPointForCoordinate(CLLocationCoordinate2D(latitude: self.top, longitude: self.left))
         let se = MKMapPointForCoordinate(CLLocationCoordinate2D(latitude: self.bottom, longitude: self.right))
         let nwMapRect = MKMapRect(origin: nw, size: MKMapSize(width: 0, height: 0))
@@ -121,36 +121,37 @@ extension GeoRect {
 }
 
 extension MKMapRect {
-    public func toString() -> String {
+    func toString() -> String {
         return "Map\(Rect(mapRect: self).toString())"
     }
     
-    public func upperLeftQuadrant() -> MKMapRect {
+    func upperLeftQuadrant() -> MKMapRect {
         return MKMapRect(origin: origin, size: MKMapSize(width: size.width/2.0, height: size.height/2.0))
     }
     
-    public func lowerLeftQuadrant() -> MKMapRect {
+    func lowerLeftQuadrant() -> MKMapRect {
         return MKMapRect(origin: MKMapPoint(x: origin.x, y: origin.y + size.height/2.0), size: MKMapSize(width: size.width/2.0, height: size.height/2.0))
     }
     
-    public func upperRightQuadrant() -> MKMapRect {
+    func upperRightQuadrant() -> MKMapRect {
         return MKMapRect(origin: MKMapPoint(x: origin.x + size.width, y: origin.y), size: MKMapSize(width: size.width/2.0, height: size.height/2.0))
     }
     
-    public func lowerRightQuadrant() -> MKMapRect {
+    func lowerRightQuadrant() -> MKMapRect {
         return MKMapRect(origin: MKMapPoint(x: origin.x, y: origin.x + size.height/2.0), size: MKMapSize(width: size.width/2.0, height: size.height/2.0))
     }
 }
 
 extension ScreenPathUtils {
-    public static func cgRectToGeoRect(renderer : MKOverlayRenderer, cgRect : CGRect) -> GeoRect {
+    static func cgRectToGeoRect(renderer : MKOverlayRenderer, cgRect : CGRect) -> GeoRect {
         let mapRect = renderer.mapRectForRect(cgRect)
         return mapRectToGeoRect(mapRect)
     }
-    public static func mapRectToGeoRect(mapRect : MKMapRect) -> GeoRect {
+    static func mapRectToGeoRect(mapRect : MKMapRect) -> GeoRect {
         let nw = MKCoordinateForMapPoint(mapRect.origin)
         let se = MKCoordinateForMapPoint(MKMapPoint(x: mapRect.origin.x + mapRect.size.width, y: mapRect.origin.y - mapRect.size.height))
         return GeoRect(left: nw.longitude, top: nw.latitude, right: se.longitude, bottom: se.latitude)
     }
 }
+
 

@@ -8,46 +8,46 @@
 
 import Foundation
 
-public struct LoginState {
-    public static let LS_LOGIN = 1
-    public static let LS_LOGIN_FAILURE = 25
-    public static let LS_LOGIN_SUCCESS = 27
-    public static let LS_REGISTER = 5
-    public static let LS_REGISTER_SUCCESS = 55
-    public static let LS_REGISTER_FAILURE = 56
-    public static let LS_LOGGED_IN = 6
-    public static let LS_LOGGED_OUT = 7
-    public static let LS_AUTHTOKEN = 9
-    public static let LS_AUTHTOKEN_FAILURE = 10
-    public static let LS_AUTHTOKEN_SUCCESS = 11
+struct LoginState {
+    static let LS_LOGIN = 1
+    static let LS_LOGIN_FAILURE = 25
+    static let LS_LOGIN_SUCCESS = 27
+    static let LS_REGISTER = 5
+    static let LS_REGISTER_SUCCESS = 55
+    static let LS_REGISTER_FAILURE = 56
+    static let LS_LOGGED_IN = 6
+    static let LS_LOGGED_OUT = 7
+    static let LS_AUTHTOKEN = 9
+    static let LS_AUTHTOKEN_FAILURE = 10
+    static let LS_AUTHTOKEN_SUCCESS = 11
 }
 
-public class Login {
+class Login {
     
-    public let LS_TRY_LIMIT : Int = 3
+    let LS_TRY_LIMIT : Int = 3
 
     
-    public var status : String?
-    public var reason : String?
-    public var url : String?
-    public var name : String?
-    public var email : String?
-    public var password : String?
-    public var passwordConfirmation : String?
-    public var driverAuthCode : String?
-    public var roleIntent : String = "passenger"
-    public var rolesLiteral : String?
-    public var roles : [String] = [String]()
-    public var authToken : String?
-    public var loginState : Int = 0
-    public var loginTries : Int = 0
-    public var quiet : Bool = false
+    var status : String?
+    var reason : String?
+    var url : String?
+    var name : String?
+    var email : String?
+    var password : String?
+    var passwordConfirmation : String?
+    var driverAuthCode : String?
+    var roleIntent : String = "passenger"
+    var rolesLiteral : String?
+    var roles : [String] = [String]()
+    var authToken : String?
+    var loginState : Int = 0
+    var loginTries : Int = 0
+    var quiet : Bool = false
     
-    public init() {
+    init() {
         
     }
     
-    public func hasRole(role : String) -> Bool {
+    func hasRole(role : String) -> Bool {
         for r in roles {
             if r == role {
                 return true

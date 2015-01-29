@@ -8,13 +8,13 @@
 
 import Foundation
 
-public class Tag {
-    public var name: String = "";
-    public var attributes: Dictionary<String,String> = Dictionary<String,String>();
-    public var childNodes: [Tag] = Array<Tag>();
-    public var text: String? = "";
+class Tag {
+    var name: String = "";
+    var attributes: Dictionary<String,String> = Dictionary<String,String>();
+    var childNodes: [Tag] = Array<Tag>();
+    var text: String? = "";
     
-    public init(tag: RXMLElement) {
+    init(tag: RXMLElement) {
         self.name = tag.tag;
         for name in tag.attributeNames() {
             let x = tag.attribute(name as String);

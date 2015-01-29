@@ -8,26 +8,25 @@
 
 import Foundation
 
-public class DiscoverApi : ApiBase, EventsApi {
-    public var uiEvents : BuspassEventDistributor
-    public var bgEvents : BuspassEventDistributor
+class DiscoverApi : ApiBase, EventsApi {
+    var uiEvents : BuspassEventDistributor
+    var bgEvents : BuspassEventDistributor
     
-    public override init(httpClient : HttpClient) {
+    override init(httpClient : HttpClient) {
         self.uiEvents = BuspassEventDistributor(name: "UIEvents(Search)")
         self.bgEvents = BuspassEventDistributor(name: "BGEvents(Search)")
         super.init(httpClient: httpClient)
     }
     
-    public func get() -> (HttpStatusLine, DiscoverApi?)  {
-        return (HttpStatusLine(statusCode: 500, reasonPhrase: "Not initialized"),nil);
-    }
-    public func discover(lon : Double, lat : Double, buffer : Double) -> (HttpStatusLine,[Master]) {
+    func discover(lon : Double, lat : Double, buffer : Double) -> (HttpStatusLine,[Master]) {
         return (HttpStatusLine(statusCode: 500, reasonPhrase: "Not initialized"),[Master]())
     }
-    public func discoverWithArgs(args : [String:AnyObject?]) -> (HttpStatusLine,[Master]) {
+    
+    func discoverWithArgs(args : [String:AnyObject?]) -> (HttpStatusLine,[Master]) {
         return discover(args["lon"]! as Double, lat: args["lat"]! as Double, buffer:  args["buffer"]! as Double)
     }
-    public func findMaster(slug : String) -> (HttpStatusLine,Master?) {
+    
+    func findMaster(slug : String) -> (HttpStatusLine,Master?) {
         return (HttpStatusLine(statusCode: 500, reasonPhrase: "Not initialized"),nil);
     }
 }

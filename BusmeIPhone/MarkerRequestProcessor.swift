@@ -8,14 +8,14 @@
 
 import Foundation
 
-public class MarkerRequestProcessor : ArgumentPreparer, ResponseProcessor {
-    public var markerBasket : MarkerBasket
+class MarkerRequestProcessor : ArgumentPreparer, ResponseProcessor {
+    var markerBasket : MarkerBasket
     
-    public init(markerBasket : MarkerBasket) {
+    init(markerBasket : MarkerBasket) {
         self.markerBasket = markerBasket
     }
     
-    public func getArguments() -> [String : [String]]? {
+    func getArguments() -> [String : [String]]? {
         var args = [String:[String]]()
         var ids = [String]()
         var versions = [String]()
@@ -27,7 +27,7 @@ public class MarkerRequestProcessor : ArgumentPreparer, ResponseProcessor {
         args["marker_versions"] = versions
         return args
     }
-    public func onResponse(response: Tag) {
+    func onResponse(response: Tag) {
         var markers = [String : MarkerInfo]()
         for child in response.childNodes {
             if child.name.lowercaseString == "markers" {

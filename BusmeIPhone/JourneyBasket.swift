@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol ProgressListener {
+protocol ProgressListener {
     func onSyncStart()
     func onSyncEnd(nRoutes : Int)
     func onRouteStart(iRoute : Int)
@@ -16,53 +16,53 @@ public protocol ProgressListener {
     func onDone()
 }
 
-public protocol OnIOErrorListener {
+protocol OnIOErrorListener {
     func onIOError(journeyBasket : JourneyBasket, statusLine : HttpStatusLine)
 }
-public protocol OnJourneyAddedListener {
+protocol OnJourneyAddedListener {
     func onJourneyAdded(journeyBasket : JourneyBasket, journey : Route)
 }
-public protocol OnJourneyRemovedListener {
+protocol OnJourneyRemovedListener {
     func onJourneyRemoved(journeyBasket : JourneyBasket, journey : Route)
 }
-public protocol OnBasketUpdateListener {
+protocol OnBasketUpdateListener {
     func onBasketUpdate(journeyBasket : JourneyBasket)
 }
 
-public class JourneyBasket {
-    public var api : BuspassApi
-    public var journeyStore : JourneyStore
-    public var journeys : [Route] = [Route]()
-    public var patterns : [JourneyPattern] = [JourneyPattern]()
-    public var journeyMap : [String:Route] = [String:Route]()
+class JourneyBasket {
+    var api : BuspassApi
+    var journeyStore : JourneyStore
+    var journeys : [Route] = [Route]()
+    var patterns : [JourneyPattern] = [JourneyPattern]()
+    var journeyMap : [String:Route] = [String:Route]()
     
-    public init(api : BuspassApi, journeyStore : JourneyStore) {
+    init(api : BuspassApi, journeyStore : JourneyStore) {
         self.api = api
         self.journeyStore = journeyStore
     }
     
-    public func getRoute(id : String) -> Route? {
+    func getRoute(id : String) -> Route? {
         return journeyMap[id]
     }
     
-    public func getAllRoutes() -> [Route] {
+    func getAllRoutes() -> [Route] {
         return [Route](journeys);
     }
     
-    public func getAllJourneys() -> [Route] {
+    func getAllJourneys() -> [Route] {
         return journeys.filter({(x) in x.isJourney()})
     }
     
-    public func getAllActiveJourneys() -> [Route] {
+    func getAllActiveJourneys() -> [Route] {
         return journeys.filter({(x) in x.isActiveJourney()})
     }
     
-    public func setJourneys(journeys : [Route]) {
+    func setJourneys(journeys : [Route]) {
         self.journeys = journeys
         self.updateJourneyMap()
     }
     
-    public func empty() {
+    func empty() {
         let copyJourneys = [Route](journeys)
         setJourneys([Route]())
         for route in copyJourneys {
@@ -71,7 +71,7 @@ public class JourneyBasket {
         notifyOnBasketUpdateListeners()
     }
     
-    public func updateJourneyMap() {
+    func updateJourneyMap() {
         journeyMap.removeAll(keepCapacity: true)
         for journey in journeys {
             journeyMap[journey.id!] = journey
@@ -79,7 +79,7 @@ public class JourneyBasket {
         
     }
     
-    public func sync(journeyids : [NameId], progress : ProgressListener?, ioError : OnIOErrorListener? ) {
+    func sync(journeyids : [NameId], progress : ProgressListener?, ioError : OnIOErrorListener? ) {
         let copy_journeys = [Route](journeys)
         var addedJourneys = [Route]()
         var removedJourneys = [Route]()
@@ -146,7 +146,7 @@ public class JourneyBasket {
         notifyOnBasketUpdateListeners()
     }
     
-    public func retrieveRouteJourney(nameid : NameId) -> Route? {
+    func retrieveRouteJourney(nameid : NameId) -> Route? {
         var route = journeyStore.getJourney(nameid.id)
         if (route == nil) {
             route = retrieveRouteAndStore(nameid)
@@ -169,7 +169,7 @@ public class JourneyBasket {
         return route
     }
     
-    public func retrieveAndStoreJourneyPattern( id : String ) -> JourneyPattern? {
+    func retrieveAndStoreJourneyPattern( id : String ) -> JourneyPattern? {
         let pattern = retrieveJourneyPattern(id)
         if (pattern != nil) {
             journeyStore.storePattern(pattern!)
@@ -177,7 +177,7 @@ public class JourneyBasket {
         return pattern
     }
     
-    public func retrieveRouteAndStore(nameid : NameId) -> Route? {
+    func retrieveRouteAndStore(nameid : NameId) -> Route? {
         let route = retrieveRoute(nameid)
         if (route != nil) {
             journeyStore.storeJourney(route!)
@@ -185,39 +185,39 @@ public class JourneyBasket {
         return route
     }
     
-    public func retrieveRoute(nameid :NameId) -> Route? {
+    func retrieveRoute(nameid :NameId) -> Route? {
         return api.getRouteDefinition(nameid)
     }
     
-    public func retrieveJourneyPattern(id  : String) -> JourneyPattern? {
+    func retrieveJourneyPattern(id  : String) -> JourneyPattern? {
         return api.getJourneyPattern(id)
     }
     
     private var onJourneyAddedListeners : [OnJourneyAddedListener] = [OnJourneyAddedListener]()
-    public func addOnJourneyAddedListeners(listener : OnJourneyAddedListener) {
+    func addOnJourneyAddedListeners(listener : OnJourneyAddedListener) {
         onJourneyAddedListeners.append(listener)
     }
-    public func notifyOnJourneyAddedListeners(route : Route) {
+    func notifyOnJourneyAddedListeners(route : Route) {
         for listener in onJourneyAddedListeners {
             listener.onJourneyAdded(self, journey: route)
         }
     }
     
     private var onJourneyRemmovedListeners : [OnJourneyRemovedListener] = [OnJourneyRemovedListener]()
-    public func addOnJourneyRemovedListeners(listener : OnJourneyRemovedListener) {
+    func addOnJourneyRemovedListeners(listener : OnJourneyRemovedListener) {
         onJourneyRemmovedListeners.append(listener)
     }
-    public func notifyOnJourneyRemovedListeners(route : Route) {
+    func notifyOnJourneyRemovedListeners(route : Route) {
         for listener in onJourneyRemmovedListeners {
             listener.onJourneyRemoved(self, journey: route)
         }
     }
     private var onBasketUpdateListeners : [OnBasketUpdateListener] = [OnBasketUpdateListener]()
-    public func aedBasketUpdateListeners(listener : OnBasketUpdateListener) {
+    func aedBasketUpdateListeners(listener : OnBasketUpdateListener) {
         onBasketUpdateListeners.append(listener)
     }
 
-    public func notifyOnBasketUpdateListeners() {
+    func notifyOnBasketUpdateListeners() {
         for listener in onBasketUpdateListeners {
             listener.onBasketUpdate(self)
         }

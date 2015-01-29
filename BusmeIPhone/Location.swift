@@ -8,15 +8,15 @@
 
 import Foundation
 
-public class Location {
-    public var name : String
-    public var latitude : Double
-    public var longitude : Double
-    public var speed : Double
-    public var bearing : Double
-    public var time : TimeValue64
+class Location {
+    var name : String
+    var latitude : Double
+    var longitude : Double
+    var speed : Double
+    var bearing : Double
+    var time : TimeValue64
     
-    public init(name: String, lon : Double, lat : Double) {
+    init(name: String, lon : Double, lat : Double) {
         self.name = name
         self.longitude = lon
         self.latitude = lat
@@ -26,9 +26,9 @@ public class Location {
     }
 }
 
-public class LocationEventData {
-    public var location : Location
-    public init(location : Location) {
+class LocationEventData {
+    var location : Location
+    init(location : Location) {
         self.location = location
     }
 }

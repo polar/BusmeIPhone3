@@ -8,37 +8,37 @@
 
 import Foundation
 
-public class MarkerBasket {
-    public var markerStore : MarkerStore
-    public var markerController : MarkerPresentationController?
+class MarkerBasket {
+    var markerStore : MarkerStore
+    var markerController : MarkerPresentationController?
 
-    public init(markerStore : MarkerStore) {
+    init(markerStore : MarkerStore) {
         self.markerStore = markerStore
     }
     
-    public func empty() {
+    func empty() {
         for marker in markerStore.getMarkers() {
             markerController?.removeMarker(marker)
         }
         markerStore.empty()
     }
     
-    public func getMarkers() -> [MarkerInfo] {
+    func getMarkers() -> [MarkerInfo] {
         return markerStore.getMarkers()
     }
     
-    public func getMarkerInfo(id : String) -> MarkerInfo? {
+    func getMarkerInfo(id : String) -> MarkerInfo? {
         return markerStore.getMarkerInfo(id)
     }
     
-    public func resetMarkers(now : TimeValue64 = UtilsTime.current()) {
+    func resetMarkers(now : TimeValue64 = UtilsTime.current()) {
         for marker in markerStore.getMarkers() {
             marker.reset(time: now)
             markerController?.addMarker(marker)
         }
     }
     
-    public func addMarker(marker : MarkerInfo) {
+    func addMarker(marker : MarkerInfo) {
         let m = markerStore.getMarkerInfo(marker.id)
         if (m != nil) {
             if (m!.version < marker.version) {
@@ -52,7 +52,7 @@ public class MarkerBasket {
         }
     }
     
-    public func removeMarker(id : String) {
+    func removeMarker(id : String) {
         let m = markerStore.getMarkerInfo(id)
         if (m != nil) {
             markerStore.removeMarker(m!.id)

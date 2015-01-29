@@ -11,26 +11,26 @@ import CoreLocation
 import CoreGraphics
 import MapKit
 
-public protocol GeoPoint : Point {
+protocol GeoPoint : Point {
     func getLatitude() -> Double
     func getLongitude() -> Double
 }
 
 
-public protocol GeoPointMutable : GeoPoint {
+protocol GeoPointMutable : GeoPoint {
     func setLatitude(lat : Double)
     func setLongitude(lon :Double)
     func set(lat : Double, lon : Double) -> GeoPointMutable
 }
 
-public class BoundingBox : NSObject {
-    public var eastE6 : Int = 0
-    public var westE6 : Int = 0
-    public var northE6 : Int = 0
-    public var southE6 : Int = 0
+class BoundingBox : NSObject {
+    var eastE6 : Int = 0
+    var westE6 : Int = 0
+    var northE6 : Int = 0
+    var southE6 : Int = 0
     
     
-    public init(array: [String]) { // E, S, W, N
+    init(array: [String]) { // E, S, W, N
         super.init()
         setEast((array[2] as NSString).doubleValue)
         setSouth((array[3] as NSString).doubleValue)
@@ -38,7 +38,7 @@ public class BoundingBox : NSObject {
         setNorth((array[1] as NSString).doubleValue)
     }
 
-    public init(north: Double, east: Double, west: Double, south : Double) {
+    init(north: Double, east: Double, west: Double, south : Double) {
         super.init()
 
         setNorth(north)
@@ -47,7 +47,7 @@ public class BoundingBox : NSObject {
         setSouth(south)
     }
     
-    public init(northE6: Int, eastE6: Int, westE6: Int, southE6: Int) {
+    init(northE6: Int, eastE6: Int, westE6: Int, southE6: Int) {
         super.init()
 
         setNorthE6(northE6)
@@ -56,11 +56,11 @@ public class BoundingBox : NSObject {
         setSouthE6(southE6)
     }
     
-    public func toGeoRect() -> GeoRect {
+    func toGeoRect() -> GeoRect {
         return GeoRect(left: west(), top: north(), right: east(), bottom: south())
     }
     
-    public init( coder : NSCoder) {
+    init( coder : NSCoder) {
         super.init()
 
         self.eastE6 = Int(coder.decodeIntForKey("eastE6"))
@@ -69,100 +69,100 @@ public class BoundingBox : NSObject {
         self.southE6 = Int(coder.decodeIntForKey("southE6"))
     }
     
-    public func encodeWithCoder( coder : NSCoder) {
+    func encodeWithCoder( coder : NSCoder) {
         coder.encodeInt(Int32(eastE6), forKey: "eastE6")
         coder.encodeInt(Int32(westE6), forKey: "westE6")
         coder.encodeInt(Int32(southE6), forKey: "southE6")
         coder.encodeInt(Int32(northE6), forKey: "northE6")
     }
     
-    public func east() -> Double {
+    func east() -> Double {
         return Double(eastE6) / 1E6
     }
     
-    public func west() -> Double {
+    func west() -> Double {
         return Double(westE6) / 1E6
     }
     
-    public func north() -> Double {
+    func north() -> Double {
         return Double(northE6) / 1E6
     }
     
-    public func south() -> Double {
+    func south() -> Double {
         return Double(southE6) / 1E6
     }
     
-    public func setEast(x :Double) {
+    func setEast(x :Double) {
         self.eastE6 = Int(x*1E6)
     }
     
-    public func setWest(x :Double) {
+    func setWest(x :Double) {
         self.westE6 = Int(x*1E6)
     }
     
-    public func setNorth(x :Double) {
+    func setNorth(x :Double) {
         self.northE6 = Int(x*1E6)
     }
     
-    public func setSouth(x :Double) {
+    func setSouth(x :Double) {
         self.southE6 = Int(x*1E6)
     }
     
-    public func setEastE6(x :Int) {
+    func setEastE6(x :Int) {
         self.eastE6 = x
     }
     
-    public func setWestE6(x :Int) {
+    func setWestE6(x :Int) {
         self.westE6 = x
     }
     
-    public func setNorthE6(x :Int) {
+    func setNorthE6(x :Int) {
         self.northE6 = x
     }
     
-    public func setSouthE6(x :Int) {
+    func setSouthE6(x :Int) {
         self.southE6 = x    }
 }
 
-public class GeoPointImpl : NSObject, GeoPointMutable {
-    public var latitude  : Double = 0.0
-    public var longitude : Double = 0.0
+class GeoPointImpl : NSObject, GeoPointMutable {
+    var latitude  : Double = 0.0
+    var longitude : Double = 0.0
     
-    public func getLatitude() -> Double {
+    func getLatitude() -> Double {
         return latitude
     }
-    public func getLongitude() -> Double {
+    func getLongitude() -> Double {
         return longitude
     }
-    public func setLatitude(lat: Double) {
+    func setLatitude(lat: Double) {
         self.latitude = lat
     }
-    public func setLongitude(lon: Double) {
+    func setLongitude(lon: Double) {
         self.longitude = lon
     }
-    public func getX() -> Double {
+    func getX() -> Double {
         return self.longitude
     }
-    public func getY() -> Double {
+    func getY() -> Double {
         return self.latitude
     }
 
-    public override init() {
+    override init() {
         super.init()
     }
     
-    public init( coder : NSCoder ) {
+    init( coder : NSCoder ) {
         super.init()
         initWithCoder(coder)
     }
     
-    public func set(lat: Double, lon: Double) -> GeoPointMutable {
+    func set(lat: Double, lon: Double) -> GeoPointMutable {
         self.latitude = lat
         self.longitude = lon
         return self
     }
     
-    public init(lat : Double, lon : Double) {
+    init(lat : Double, lon : Double) {
         super.init()
         setLatitude(lat)
         setLongitude(lon)
@@ -173,37 +173,37 @@ public class GeoPointImpl : NSObject, GeoPointMutable {
         self.longitude = decoder.decodeDoubleForKey("lon")
     }
     
-    public func encodeWithCoder(encoder : NSCoder) {
+    func encodeWithCoder(encoder : NSCoder) {
         encoder.encodeDouble(latitude, forKey: "lat")
         encoder.encodeDouble(longitude, forKey: "lon")
     }
 }
 
-public class DGeoPoint {
-    public var geoPoint : GeoPoint
-    public var bearing : Double
-    public var distance : Double
-    public init(point : GeoPoint, b: Double, d :Double) {
+class DGeoPoint {
+    var geoPoint : GeoPoint
+    var bearing : Double
+    var distance : Double
+    init(point : GeoPoint, b: Double, d :Double) {
         self.geoPoint = point
         self.bearing  = b
         self.distance = d
     }
 }
 
-public class GeoRect : NSObject {
-    public var left : Double
-    public var top : Double
-    public var right : Double
-    public var bottom : Double
+class GeoRect : NSObject {
+    var left : Double
+    var top : Double
+    var right : Double
+    var bottom : Double
     
-    public init( coder : NSCoder ) {
+    init( coder : NSCoder ) {
         self.left = coder.decodeDoubleForKey("left")
         self.top = coder.decodeDoubleForKey("top")
         self.right = coder.decodeDoubleForKey("right")
         self.bottom = coder.decodeDoubleForKey("bottom")
     }
     
-    public init(left : Double, top : Double, right : Double, bottom : Double) {
+    init(left : Double, top : Double, right : Double, bottom : Double) {
         self.left = left
         self.top = top
         self.right = right
@@ -211,7 +211,7 @@ public class GeoRect : NSObject {
         super.init()
     }
     
-    public init(boundingBox : BoundingBox) {
+    init(boundingBox : BoundingBox) {
         self.top = boundingBox.north()
         self.left = boundingBox.west()
         self.right = boundingBox.east()
@@ -219,88 +219,88 @@ public class GeoRect : NSObject {
         super.init()
     }
     
-    public func encodeWithCoder(encoder : NSCoder) {
+    func encodeWithCoder(encoder : NSCoder) {
         encoder.encodeDouble(left, forKey: "left")
         encoder.encodeDouble(top, forKey: "top")
         encoder.encodeDouble(right, forKey: "right")
         encoder.encodeDouble(bottom, forKey: "bottom")
     }
-    public func center() -> GeoPoint {
+    func center() -> GeoPoint {
         return GeoPointImpl(lat: (left + right)/2, lon: (top + bottom)/2)
     }
-    public func height() -> Double {
+    func height() -> Double {
         return bottom - top
     }
-    public func width() -> Double {
+    func width() -> Double {
         return right - left
     }
 }
 
-public class Path  {
-    public var cgpath : CGMutablePath = CGPathCreateMutable()
-    public var transform = CGAffineTransform(a: 1,b: 1,c: 1,d: 1,tx: 0,ty: 0)
-    public var segments = 0
-    public var points = 0
-    public init() {
+class Path  {
+    var cgpath : CGMutablePath = CGPathCreateMutable()
+    var transform = CGAffineTransform(a: 1,b: 1,c: 1,d: 1,tx: 0,ty: 0)
+    var segments = 0
+    var points = 0
+    init() {
     }
     private var empty : Bool = true
     
-    public func isEmpty() -> Bool {
+    func isEmpty() -> Bool {
         return empty;
     }
-    public func moveTo(x: Double, y: Double) {
+    func moveTo(x: Double, y: Double) {
         moveTo(Float(x), y: Float(y))
     }
-    public func moveTo(x: Float, y: Float) {
+    func moveTo(x: Float, y: Float) {
         self.empty = false
         self.segments += 1
         self.points += 1
         CGPathMoveToPoint(self.cgpath, nil, CGFloat(x), CGFloat(y))
     }
-    public func lineTo(x: Double, y: Double) {
+    func lineTo(x: Double, y: Double) {
         lineTo(Float(x), y: Float(y))
     }
-    public func lineTo(x: Float, y: Float) {
+    func lineTo(x: Float, y: Float) {
         self.empty = false
         self.points += 1
         CGPathAddLineToPoint(self.cgpath, nil, CGFloat(x), CGFloat(y))
     }
 }
 
-public struct GeoCalc {
-    public static let LAT_PER_FOOT : Double =  2.738129E-6
-    public static let LON_PER_FOOT : Double = 2.738015E-6
-    public static let FEET_PER_KM : Double = 3280.84
-    public static let EARTH_RADIUS_FEET : Double = 6371.009 * FEET_PER_KM
-    public static let DEFAULT_PRECISION : Double = 1E6
+struct GeoCalc {
+    static let LAT_PER_FOOT : Double =  2.738129E-6
+    static let LON_PER_FOOT : Double = 2.738015E-6
+    static let FEET_PER_KM : Double = 3280.84
+    static let EARTH_RADIUS_FEET : Double = 6371.009 * FEET_PER_KM
+    static let DEFAULT_PRECISION : Double = 1E6
     
-    public static func to_radians(deg : Double) -> Double {
+    static func to_radians(deg : Double) -> Double {
         return deg * M_PI / 180.0
     }
     
-    public static func to_degrees(rad : Double) -> Double {
+    static func to_degrees(rad : Double) -> Double {
         return rad * (180.0 / M_PI)
     }
     
-    public static func to_sign(n : Double) -> Double {
+    static func to_sign(n : Double) -> Double {
         return n < 0.0 ? -1.0 : n == 0.0 ? 0.0 : 1.0
     }
     
-    public static func toGeoPoint(location : Location) -> GeoPoint {
+    static func toGeoPoint(location : Location) -> GeoPoint {
         return GeoPointImpl(lat: location.latitude, lon: location.longitude)
     }
 
-    public static func equalCoordinates(c1 : GeoPoint, c2 : GeoPoint, prec: Double) -> Bool {
+    static func equalCoordinates(c1 : GeoPoint, c2 : GeoPoint, prec: Double) -> Bool {
         let result = floor(c1.getLongitude()*prec) == floor(c2.getLongitude()*prec) &&
             floor(c1.getLatitude()*prec) == floor(c2.getLatitude()*prec)
         return result
     }
 
-    public static func equalCoordinates(c1 : GeoPoint, c2 : GeoPoint) -> Bool {
+    static func equalCoordinates(c1 : GeoPoint, c2 : GeoPoint) -> Bool {
         return equalCoordinates(c1, c2: c2, prec: DEFAULT_PRECISION)
     }
     
-    public static func getCentralAngleHaversine(c1: GeoPoint, c2: GeoPoint) -> Double {
+    static func getCentralAngleHaversine(c1: GeoPoint, c2: GeoPoint) -> Double {
         let dlon = to_radians(c2.getLongitude() - c1.getLongitude())
         let dlat = to_radians(c2.getLatitude() - c1.getLatitude())
         let lat1 = to_radians(c1.getLatitude())
@@ -311,12 +311,12 @@ public struct GeoCalc {
         return angle
     }
     
-    public static func getCentralAngle(c1: GeoPoint, c2: GeoPoint) -> Double {
+    static func getCentralAngle(c1: GeoPoint, c2: GeoPoint) -> Double {
         return getCentralAngleHaversine(c1, c2: c2)
     }
     
     // Returns the distance between two locations in feet.
-    public static func getGeoDistance(c1 : GeoPoint, c2 : GeoPoint) -> Double {
+    static func getGeoDistance(c1 : GeoPoint, c2 : GeoPoint) -> Double {
         if equalCoordinates(c1, c2: c2) {
             return 0.0
         }
@@ -326,7 +326,7 @@ public struct GeoCalc {
         return result
     }
     
-    public static func getGeoAngle(c1 : GeoPoint, c2 : GeoPoint) -> Double {
+    static func getGeoAngle(c1 : GeoPoint, c2 : GeoPoint) -> Double {
         var x = c2.getLongitude() - c1.getLongitude()
         var y = c2.getLatitude() - c1.getLatitude()
         y = y <= -180 ? y + 360 : y
@@ -343,7 +343,7 @@ public struct GeoCalc {
     }
     
     
-    public static func getBearing(gp1 : GeoPoint, gp2 : GeoPoint) -> Double {
+    static func getBearing(gp1 : GeoPoint, gp2 : GeoPoint) -> Double {
         let lat1 = GeoCalc.to_radians(gp1.getLatitude())
         let long1 = GeoCalc.to_radians(gp1.getLongitude())
         let lat2 = GeoCalc.to_radians(gp2.getLatitude())
@@ -356,7 +356,7 @@ public struct GeoCalc {
         return bearing_normalized
     }
     
-    public static func rotate(point : GeoPoint, pivot : GeoPoint, theta : Double, reuse : GeoPointMutable) -> GeoPoint {
+    static func rotate(point : GeoPoint, pivot : GeoPoint, theta : Double, reuse : GeoPointMutable) -> GeoPoint {
         
         let lat : Double = cos(theta) * (point.getLatitude() - pivot.getLatitude()) - sin(theta) * (point.getLongitude() - pivot.getLongitude()) + pivot.getLatitude()
         
@@ -368,7 +368,7 @@ public struct GeoCalc {
     }
 
     
-    public static func rotate(point : GeoPoint, pivot : GeoPoint, theta : Double) -> GeoPoint {
+    static func rotate(point : GeoPoint, pivot : GeoPoint, theta : Double) -> GeoPoint {
         return rotate(point, pivot: pivot, theta: theta, reuse: GeoPointImpl())
     }    
     
@@ -388,7 +388,7 @@ public struct GeoCalc {
     // we are not between c1 and c2, so this function returns 1.4142135623730951 to signify the
     // off lineness
     //
-    public static func offLine(c1 : GeoPoint, c2 :GeoPoint, c3 : GeoPoint) -> Double {
+    static func offLine(c1 : GeoPoint, c2 :GeoPoint, c3 : GeoPoint) -> Double {
 
         if equalCoordinates(c1,c2: c2) {
             return equalCoordinates(c1, c2: c3) ? 0 : getGeoDistance(c1, c2: c3)
@@ -444,7 +444,7 @@ public struct GeoCalc {
     }
     
     // Returns true if point is on line within the buffer (in feet)
-    public static func isOnLine(c1 : GeoPoint, c2 : GeoPoint, buffer : Double, c3 : GeoPoint) -> Bool {
+    static func isOnLine(c1 : GeoPoint, c2 : GeoPoint, buffer : Double, c3 : GeoPoint) -> Bool {
         return offLine(c1,c2: c2, c3: c3) < buffer
     
 //        let theta1 = getGeoAngle(c1, c2: c2)
@@ -460,7 +460,7 @@ public struct GeoCalc {
     }
     
     
-    public static func isOnPath(path : [GeoPoint], buffer : Double, c3 : GeoPoint) -> Bool {
+    static func isOnPath(path : [GeoPoint], buffer : Double, c3 : GeoPoint) -> Bool {
         var p1 = path[0]
         var i = 1
         while (i < path.count) {
@@ -475,7 +475,7 @@ public struct GeoCalc {
     }
     
     
-    public static func isOnPath(path : [CLLocationCoordinate2D], buffer : Double, c3 : GeoPoint) -> Bool {
+    static func isOnPath(path : [CLLocationCoordinate2D], buffer : Double, c3 : GeoPoint) -> Bool {
         var p1 = path[0]
         var i = 1
         while (i < path.count) {
@@ -489,7 +489,7 @@ public struct GeoCalc {
         return false
     }
     
-    public static func pathDistance(path : [GeoPoint]) -> Double {
+    static func pathDistance(path : [GeoPoint]) -> Double {
         var dist = 0.0
         var p1 = path[0]
         var i = 1
@@ -506,7 +506,7 @@ public struct GeoCalc {
     // It can do a single CLLocationCoordinate2D to GeoPoint, but can't do that
     // with [CLLocationCoordinate2D] to [GeoPoint]. So, we have to recreate the function.
     
-    public static func pathDistance(path : [CLLocationCoordinate2D]) -> Double {
+    static func pathDistance(path : [CLLocationCoordinate2D]) -> Double {
         var dist = 0.0
         var p1 = path[0]
         var i = 1
@@ -520,41 +520,41 @@ public struct GeoCalc {
     }
 }
 
-public struct GeoPathUtils {
+struct GeoPathUtils {
     
-    public static func getDistance(path : [GeoPoint]) -> Double {
+    static func getDistance(path : [GeoPoint]) -> Double {
         return GeoCalc.pathDistance(path);
     }
     
-    public static func getDistance(path : [CLLocationCoordinate2D]) -> Double {
+    static func getDistance(path : [CLLocationCoordinate2D]) -> Double {
         return GeoCalc.pathDistance(path);
     }
     
-    public static func getGeoDistance(c1 : GeoPoint, c2 : GeoPoint) -> Double {
+    static func getGeoDistance(c1 : GeoPoint, c2 : GeoPoint) -> Double {
         return GeoCalc.getGeoDistance(c1, c2: c2)
     }
     
-    public static func getCentralAngle(c1 : GeoPoint, c2 : GeoPoint) -> Double {
+    static func getCentralAngle(c1 : GeoPoint, c2 : GeoPoint) -> Double {
         return GeoCalc.getCentralAngle(c1, c2: c2)
     }
     
-    public static func getGeoAngle(c1 : GeoPoint, c2 : GeoPoint) -> Double {
+    static func getGeoAngle(c1 : GeoPoint, c2 : GeoPoint) -> Double {
         return GeoCalc.getGeoAngle(c1, c2: c2)
     }
     
-    public static func isOnLine(c1 : GeoPoint, c2 : GeoPoint, buffer : Double, c3 : GeoPoint) -> Bool {
+    static func isOnLine(c1 : GeoPoint, c2 : GeoPoint, buffer : Double, c3 : GeoPoint) -> Bool {
         return GeoCalc.isOnLine(c1, c2: c2, buffer: buffer, c3: c3)
     }
     
-    public static func isOnPath(path : [GeoPoint], buffer : Double, c3 : GeoPoint) -> Bool {
+    static func isOnPath(path : [GeoPoint], buffer : Double, c3 : GeoPoint) -> Bool {
         return GeoCalc.isOnPath(path, buffer: buffer, c3: c3)
     }
     
-    public static func isOnPath(path : [CLLocationCoordinate2D], buffer : Double, c3 : GeoPoint) -> Bool {
+    static func isOnPath(path : [CLLocationCoordinate2D], buffer : Double, c3 : GeoPoint) -> Bool {
         return GeoCalc.isOnPath(path, buffer: buffer, c3: c3)
     }
     
-    public static func offPath(path : [GeoPoint], point : GeoPoint) -> Double {
+    static func offPath(path : [GeoPoint], point : GeoPoint) -> Double {
         var max = GeoCalc.EARTH_RADIUS_FEET * GeoCalc.EARTH_RADIUS_FEET * M_PI
         var last : GeoPoint? = nil
         if (path.count > 0) {
@@ -570,7 +570,7 @@ public struct GeoPathUtils {
         return max
     }
     
-    public static func whereOnPath(path : [GeoPoint], buffer : Double, c3 : GeoPoint) -> [DGeoPoint] {
+    static func whereOnPath(path : [GeoPoint], buffer : Double, c3 : GeoPoint) -> [DGeoPoint] {
         var results = [DGeoPoint]()
         var distance = 0.0
         var p1 = path[0]
@@ -590,7 +590,7 @@ public struct GeoPathUtils {
         return results
     }
     
-    public static func whereOnPath(path : [CLLocationCoordinate2D], buffer : Double, c3 : GeoPoint) -> [DGeoPoint] {
+    static func whereOnPath(path : [CLLocationCoordinate2D], buffer : Double, c3 : GeoPoint) -> [DGeoPoint] {
         var results = [DGeoPoint]()
         var distance = 0.0
         var p1 = path[0]
@@ -611,7 +611,7 @@ public struct GeoPathUtils {
     }
     
     
-    public static func rectForPath(path : [GeoPoint]) -> GeoRect {
+    static func rectForPath(path : [GeoPoint]) -> GeoRect {
         var left = path[0].getLongitude()
         var bottom = path[0].getLatitude()
         var right = left
@@ -627,7 +627,7 @@ public struct GeoPathUtils {
         return GeoRect(left: left, top: top, right: right, bottom: bottom)
     }
     
-    public static func rectForPath(path : [CLLocationCoordinate2D]) -> GeoRect {
+    static func rectForPath(path : [CLLocationCoordinate2D]) -> GeoRect {
         var left = path[0].longitude
         var bottom = path[0].latitude
         var right = left
@@ -643,7 +643,7 @@ public struct GeoPathUtils {
         return GeoRect(left: left, top: top, right: right, bottom: bottom)
     }
     
-    public static func unionGeoRect(rect1 : GeoRect, rect2: GeoRect) -> GeoRect {
+    static func unionGeoRect(rect1 : GeoRect, rect2: GeoRect) -> GeoRect {
         let left = min(rect1.left, rect2.left)
         let right = max(rect1.right, rect2.right)
         let top = max(rect1.top, rect2.top)

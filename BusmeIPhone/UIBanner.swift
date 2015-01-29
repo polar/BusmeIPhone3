@@ -10,16 +10,16 @@ import Foundation
 import UIKit
 
 
-public class UIBanner : UIViewController {
+class UIBanner : UIViewController {
     weak var api : BuspassApi?
     weak var masterMapScreen : MasterMapScreen?
     
-    public var bannerInfo : BannerInfo
-    public var imageView : UIImageView!
-    public var textView : UILabel!
-    public var imageURL : NSURL?
+    var bannerInfo : BannerInfo
+    var imageView : UIImageView!
+    var textView : UILabel!
+    var imageURL : NSURL?
     
-    public init(bannerInfo : BannerInfo, masterMapScreen : MasterMapScreen) {
+    init(bannerInfo : BannerInfo, masterMapScreen : MasterMapScreen) {
         self.bannerInfo = bannerInfo
         self.masterMapScreen = masterMapScreen
         self.api = masterMapScreen.api
@@ -31,11 +31,11 @@ public class UIBanner : UIViewController {
         self.textView.setTranslatesAutoresizingMaskIntoConstraints(false)
     }
 
-    required public init(coder aDecoder: NSCoder) {
+    required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public override func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(imageView)
         view.addSubview(textView)
@@ -56,7 +56,7 @@ public class UIBanner : UIViewController {
 
     }
     
-    public func addTapRecognizer() {
+    func addTapRecognizer() {
         var recognizer = UITapGestureRecognizer(target: self, action: "onClick:")
         recognizer.numberOfTapsRequired = 1
         recognizer.numberOfTouchesRequired = 1
@@ -91,7 +91,7 @@ public class UIBanner : UIViewController {
         }
     }
     
-    public func onClick(recognizer : UIGestureRecognizer) {
+    func onClick(recognizer : UIGestureRecognizer) {
         if(BLog.DEBUG) { BLog.logger.debug("OnClick!") }
         let eventData = BannerEventData(bannerInfo: bannerInfo, state: BannerEvent.S_RESOLVE)
         eventData.resolve = BannerEvent.R_GO
@@ -99,14 +99,14 @@ public class UIBanner : UIViewController {
         api!.uiEvents.postEvent("BannerEvent", data: eventData)
     }
     
-    public func slide_in(completion : ( finished: Bool) -> Void ) {
+    func slide_in(completion : ( finished: Bool) -> Void ) {
         UIView.animateWithDuration(1.0, delay: 0.0, options: UIViewAnimationOptions.allZeros, animations: {
             self.view.alpha = 1
             self.view.frame.origin = CGPoint(x: 0, y: self.view.frame.origin.y)
             }, completion: completion)
     }
     
-    public func slide_out(completion: (finished : Bool) -> Void ) {
+    func slide_out(completion: (finished : Bool) -> Void ) {
         UIView.animateWithDuration(1.0, delay: 0.0, options: UIViewAnimationOptions.allZeros, animations: {
             self.view.alpha = 0
             self.view.frame.origin = CGPoint(x: UIScreen.mainScreen().bounds.width, y: self.view.frame.origin.y)

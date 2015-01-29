@@ -8,14 +8,14 @@
 
 import Foundation
 
-public class BannerRequestProcessor : ArgumentPreparer, ResponseProcessor {
-    public var bannerBasket : BannerBasket
+class BannerRequestProcessor : ArgumentPreparer, ResponseProcessor {
+    var bannerBasket : BannerBasket
     
-    public init(bannerBasket : BannerBasket) {
+    init(bannerBasket : BannerBasket) {
         self.bannerBasket = bannerBasket
     }
     
-    public func getArguments() -> [String : [String]]? {
+    func getArguments() -> [String : [String]]? {
         var args = [String:[String]]()
         var ids = [String]()
         var versions = [String]()
@@ -27,7 +27,7 @@ public class BannerRequestProcessor : ArgumentPreparer, ResponseProcessor {
         args["banner_versions"] = versions
         return args
     }
-    public func onResponse(response: Tag) {
+    func onResponse(response: Tag) {
         var banners = [String : BannerInfo]()
         for child in response.childNodes {
             if child.name.lowercaseString == "banners" {

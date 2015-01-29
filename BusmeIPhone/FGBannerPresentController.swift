@@ -9,7 +9,7 @@
 import Foundation
 import CoreGraphics
 
-public class FGBannerPresentController : BuspassEventListener {
+class FGBannerPresentController : BuspassEventListener {
 
     let BANNER_HEIGHT = CGFloat(40)
     
@@ -17,7 +17,7 @@ public class FGBannerPresentController : BuspassEventListener {
     weak var masterMapScreen : MasterMapScreen!
     weak var masterController : MasterController!
     
-    public init(masterMapScreen : MasterMapScreen) {
+    init(masterMapScreen : MasterMapScreen) {
         self.masterMapScreen = masterMapScreen
         self.masterController = masterMapScreen.masterController
         self.api = masterMapScreen.api
@@ -39,7 +39,7 @@ public class FGBannerPresentController : BuspassEventListener {
     }
     
     
-    public func onBuspassEvent(event: BuspassEvent) {
+    func onBuspassEvent(event: BuspassEvent) {
         let eventData = event.eventData as? BannerEventData
         if eventData != nil {
             if event.eventName == "BannerPresent:display" {
@@ -53,7 +53,7 @@ public class FGBannerPresentController : BuspassEventListener {
     }
     
     private var currentBanner : UIBanner?
-    public func presentBanner(eventData : BannerEventData) {
+    func presentBanner(eventData : BannerEventData) {
         let newBanner = UIBanner(bannerInfo: eventData.bannerInfo, masterMapScreen: masterMapScreen)
         newBanner.view.frame = CGRect(x: -masterMapScreen.view.frame.size.width, y: CGFloat(masterMapScreen.view.frame.size.height - BANNER_HEIGHT), width: CGFloat(masterMapScreen.view.frame.size.width), height: BANNER_HEIGHT)
         if (currentBanner != nil) {
@@ -81,7 +81,7 @@ public class FGBannerPresentController : BuspassEventListener {
         }
     }
     
-    public func abandonBanner(eventData : BannerEventData) {
+    func abandonBanner(eventData : BannerEventData) {
         if currentBanner != nil {
             let banner = currentBanner!
             self.currentBanner = nil

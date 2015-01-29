@@ -278,7 +278,7 @@ class MasterOverlayView : MKOverlayRenderer, BuspassEventListener {
     
     override func drawMapRect(mapRect: MKMapRect, zoomScale: MKZoomScale, inContext context: CGContext!) {
         let timeStart = CACurrentMediaTime()
-        if true {
+        if BLog.DEBUG_PATTERN {
             CGContextSaveGState(context)
             let mp = MKMapRectInset(mapRect, 3.0/Double(zoomScale), 3.0/Double(zoomScale))
             let cgrect = rectForMapRect(mp)
@@ -303,7 +303,7 @@ class MasterOverlayView : MKOverlayRenderer, BuspassEventListener {
         drawLocators(locs, projection: projection, context: context)
         
         let timeEnd = CACurrentMediaTime()
-        if BLog.DEBUG { BLog.logger.debug("Draw \(count): \(timeEnd - timeStart) secs \(mapRect.toString())") }
+        if BLog.DEBUG_PATTERN { BLog.logger.debug("Draw \(count): \(timeEnd - timeStart) secs \(mapRect.toString())") }
     }
     
     func drawPatterns(patterns : [PatternView], projection: MKMapProjection, context : CGContextRef) {

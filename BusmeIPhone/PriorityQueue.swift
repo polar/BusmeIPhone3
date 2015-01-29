@@ -8,19 +8,19 @@
 
 import Foundation
 
-public class PriorityQueue<T : AnyObject> {
-    public var elems : [T] = [T]()
+class PriorityQueue<T : AnyObject> {
+    var elems : [T] = [T]()
     
-    public let compare : (lhs : T,rhs : T) -> Int
-    public init(compare : (lhs : T,rhs : T) -> Int) {
+    let compare : (lhs : T,rhs : T) -> Int
+    init(compare : (lhs : T,rhs : T) -> Int) {
         self.compare = compare
     }
     
-    public func getElements() -> [T] {
+    func getElements() -> [T] {
         return [T](elems);
     }
     
-    public func doesInclude(elem : T) -> Bool {
+    func doesInclude(elem : T) -> Bool {
         for el in elems {
             if (el === elem) {
                 return true
@@ -29,7 +29,7 @@ public class PriorityQueue<T : AnyObject> {
         return false
     }
     
-    public func push(elem : T) -> T {
+    func push(elem : T) -> T {
         var upper = elems.count - 1
         var lower = 0
         if upper > -1 {
@@ -50,21 +50,21 @@ public class PriorityQueue<T : AnyObject> {
         return elem
     }
     
-    public func poll() -> T? {
+    func poll() -> T? {
         if elems.count > 0 {
             return elems.removeLast()
         }
         return nil
     }
     
-    public func peek() -> T? {
+    func peek() -> T? {
         if elems.count > 0 {
             return elems.last
         }
         return nil
     }
     
-    public func delete(elem : T) -> T? {
+    func delete(elem : T) -> T? {
         for( var i = 0; i < elems.count; i++) {
             if (compare(lhs: elem, rhs: elems[i]) == 0) {
                 return elems.removeAtIndex(i)

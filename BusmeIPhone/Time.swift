@@ -24,13 +24,13 @@ func cmp(i1 : TimeValue64, i2 : TimeValue64) -> Int {
     return i1 < i2 ? -1 : i1 == i2 ? 0 : 1
 }
 
-public struct UtilsTime {
-    public static func current() -> TimeValue64 {
+struct UtilsTime {
+    static func current() -> TimeValue64 {
         let now = Int64(NSDate().timeIntervalSince1970 * 1000)
         return now
     }
     
-    public static func stringForTime(time : TimeValue64) -> String {
+    static func stringForTime(time : TimeValue64) -> String {
         let date_formatter = NSDateFormatter()
         date_formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
         let date = NSDate(timeIntervalSince1970: NSTimeInterval(time/1000))
@@ -38,7 +38,7 @@ public struct UtilsTime {
         return today
     }
     
-    public static func parseInTimeZone(str : String, zone : String) -> TimeValue64 {
+    static func parseInTimeZone(str : String, zone : String) -> TimeValue64 {
         
         let timeZone = NSTimeZone(name: zone)
         NSLog("parseInTimeZone %@ is %@", str, timeZone!)

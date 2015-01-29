@@ -9,8 +9,8 @@
 import Foundation
 import MapKit
 
-public struct IPUtils {
-    public static func mapRectForGeoRect(rect : GeoRect) {
+struct IPUtils {
+    static func mapRectForGeoRect(rect : GeoRect) {
         MKMapRectMake(rect.left, rect.top, rect.right-rect.left, rect.top-rect.bottom);
     }
 }

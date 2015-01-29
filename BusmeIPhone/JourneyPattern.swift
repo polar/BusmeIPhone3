@@ -1,5 +1,5 @@
 //
-//  JourneyPattern.public var  : String?
+//  JourneyPattern.var  : String?
 //  BusmeIPhone
 //
 //  Created by Polar Humenn on 1/5/15.
@@ -10,28 +10,29 @@ import Foundation
 import CoreLocation
 import MapKit
 
-public class JourneyPattern : Storage {
-    public var id : String = ""
-    public var path : [GeoPoint]?
-    public var projectedPath : [Point]?
-    public var distance : Double?
-    public var geoRect : GeoRect?
-    public var nameid : NameId?
+class JourneyPattern : Storage {
+    var id : String = ""
+    var path : [GeoPoint]?
+    var projectedPath : [Point]?
+    var distance : Double?
+    var geoRect : GeoRect?
+    var nameid : NameId?
     
-    public init(id : String) {
+    init(id : String) {
         super.init()
         self.id = id
     }
     
-    public init(tag : Tag) {
+    init(tag : Tag) {
         super.init()
         loadParsedXML(tag)
     }
     
-    public override init(coder: NSCoder) {
+    override init(coder: NSCoder) {
         super.init()
         self.id = coder.decodeObjectForKey("id") as String;
         self.nameid = coder.decodeObjectForKey("nameid") as? NameId
+        self.distance = coder.decodeDoubleForKey("distance")
         let ps = coder.decodeObjectForKey("path") as? [GeoPointImpl]
         if (ps != nil) {
             self.path = toCoordinates(ps!)
@@ -55,7 +56,7 @@ public class JourneyPattern : Storage {
         return ps
     }
     
-    public func encodeWithCoder( encoder : NSCoder) {
+    func encodeWithCoder( encoder : NSCoder) {
         encoder.encodeObject(id, forKey: "id");
         if (nameid != nil) {
             encoder.encodeObject(nameid!, forKey: "nameid")
@@ -72,29 +73,29 @@ public class JourneyPattern : Storage {
         }
     }
     
-    public func getProjectedPath() -> [Point] {
+    func getProjectedPath() -> [Point] {
         if (projectedPath == nil) {
             self.projectedPath = ScreenPathUtils.toProjectedPath(path!)
         }
         return projectedPath!;
     }
     
-    public func getPatternNameId() {
+    func getPatternNameId() {
         self.nameid = NameId(args: [id, id, "P", "1"])
     }
     
-    public func isReady() -> Bool {
+    func isReady() -> Bool {
         return self.path != nil
     }
     
-    public func getDistance() -> Double {
+    func getDistance() -> Double {
         if (distance == nil) {
             self.distance = GeoPathUtils.getDistance(self.path!)
         }
         return distance!
     }
     
-    public func getEndPoint() -> GeoPoint? {
+    func getEndPoint() -> GeoPoint? {
         if (isReady() && path!.count > 0) {
             return path!.last! as GeoPoint
         } else {
@@ -102,14 +103,14 @@ public class JourneyPattern : Storage {
         }
     }
     
-    public func getGeoRect() -> GeoRect {
+    func getGeoRect() -> GeoRect {
         if (geoRect == nil) {
             self.geoRect = GeoPathUtils.rectForPath(path!);
         }
         return geoRect!
     }
     
-    public func loadParsedXML(tag : Tag) {
+    func loadParsedXML(tag : Tag) {
         self.id = tag.attributes["id"]!
         let distlit = tag.attributes["distance"]
         if (distlit != nil) {

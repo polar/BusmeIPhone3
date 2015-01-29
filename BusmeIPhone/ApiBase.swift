@@ -8,10 +8,10 @@
 
 import Foundation;
 
-public class ApiBase {
-    public var httpClient: HttpClient
+class ApiBase {
+    var httpClient: HttpClient
     
-    public init(httpClient: HttpClient) {
+    init(httpClient: HttpClient) {
         self.httpClient = httpClient
     }
     
@@ -19,7 +19,7 @@ public class ApiBase {
 //        self.httpClient.openURL(url)
 //    }
 //    
-    public func getURLResponse(url : String) -> HttpResponse {
+    func getURLResponse(url : String) -> HttpResponse {
         return self.httpClient.getURLResponse(url)
     }
     
@@ -29,7 +29,7 @@ public class ApiBase {
 //    }
 //    
     
-    public func postURLResponse(url : String, parameters: [String: AnyObject]) -> HttpResponse {
+    func postURLResponse(url : String, parameters: [String: AnyObject]) -> HttpResponse {
         return self.httpClient.postURLResponse(url, parameters: parameters)
     }
     
@@ -38,7 +38,7 @@ public class ApiBase {
 //        self.httpClient.postDeleteURL(url)
 //    }
     
-    public func xmlParse(entity: HttpEntity?) -> Tag? {
+    func xmlParse(entity: HttpEntity?) -> Tag? {
         if (entity != nil) {
             let s = entity!.getContent();
             let rxml = RXMLElement.elementFromXMLString(s, encoding: NSUTF8StringEncoding) as RXMLElement;

@@ -9,15 +9,15 @@
 
 import Foundation
 
-public class MarkerPresentationController {
-    public var api : BuspassApi
-    public var markerBasket : MarkerBasket
-    public var currentMarkers : [MarkerInfo] = [MarkerInfo]()
-    public var removeMarkers : [MarkerInfo] = [MarkerInfo]()
-    public var markerQ : PriorityQueue<MarkerInfo>!
-    public var markerPresentationLimit : Int = 10;
+class MarkerPresentationController {
+    var api : BuspassApi
+    var markerBasket : MarkerBasket
+    var currentMarkers : [MarkerInfo] = [MarkerInfo]()
+    var removeMarkers : [MarkerInfo] = [MarkerInfo]()
+    var markerQ : PriorityQueue<MarkerInfo>!
+    var markerPresentationLimit : Int = 10;
     
-    public init(api : BuspassApi, markerBasket : MarkerBasket) {
+    init(api : BuspassApi, markerBasket : MarkerBasket) {
         self.api = api
         self.markerBasket = markerBasket
         markerBasket.markerController = self
@@ -33,7 +33,7 @@ public class MarkerPresentationController {
         }
     }
     
-    public func addMarker(marker : MarkerInfo) {
+    func addMarker(marker : MarkerInfo) {
         var replace = false
         var found = false
         let cMarkers = [MarkerInfo](currentMarkers)
@@ -61,7 +61,7 @@ public class MarkerPresentationController {
         }
     }
     
-    public func removeMarker(marker : MarkerInfo) {
+    func removeMarker(marker : MarkerInfo) {
         removeMarkers.append(marker)
     }
     
@@ -74,7 +74,7 @@ public class MarkerPresentationController {
         }
     }
     
-    public func onDismiss(remind: Bool, markerInfo: MarkerInfo, time : TimeValue64) {
+    func onDismiss(remind: Bool, markerInfo: MarkerInfo, time : TimeValue64) {
         markerInfo.onDismiss(remind)
         if !remind {
             // This means remove it
@@ -83,7 +83,7 @@ public class MarkerPresentationController {
     }
 
     
-    public func roll(now : TimeValue64 = UtilsTime.current()) {
+    func roll(now : TimeValue64 = UtilsTime.current()) {
         let rMarkers = [MarkerInfo](removeMarkers)
         for marker in rMarkers {
             if marker.displayed {
@@ -140,19 +140,19 @@ public class MarkerPresentationController {
         return priority
     }
     
-    public func presentMarker(marker : MarkerInfo) {
+    func presentMarker(marker : MarkerInfo) {
         let evd = MarkerEventData(markerInfo: marker)
         api.uiEvents.postEvent("MarkerPresent:display", data: evd)
     }
     
-    public func abandonMarker(marker : MarkerInfo) {
+    func abandonMarker(marker : MarkerInfo) {
         let evd = MarkerEventData(markerInfo: marker)
         api.uiEvents.postEvent("MarkerPresent:dismiss", data: evd)
     }
     
     // Done on Background
     
-    public func onLocationUpdate(location: GeoPoint, time: TimeValue64 = UtilsTime.current()) {
+    func onLocationUpdate(location: GeoPoint, time: TimeValue64 = UtilsTime.current()) {
         let markers = markerBasket.getMarkers()
         for marker in markers {
             if marker.shouldBeSeen(time) {

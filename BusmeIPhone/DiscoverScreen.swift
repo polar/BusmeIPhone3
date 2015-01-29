@@ -13,18 +13,18 @@ import MapKit
 let APP_VERSION = "1.0.0"
 let PLATFORM_NAME = "iOS"
 
-public class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDelegate, BuspassEventListener {
-    public let mapView : MKMapView!
-    public var api : DiscoverApiVersion1
-    public var mainController : MainController
+class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDelegate, BuspassEventListener {
+    let mapView : MKMapView!
+    var api : DiscoverApiVersion1
+    var mainController : MainController
     
-    required public init(coder aDecoder: NSCoder) {
+    required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public init(mainController : MainController) {
+    init(mainController : MainController) {
         self.mainController = mainController
-        self.api = mainController.api
+        self.api = mainController.discoverController.api
         super.init(nibName: nil, bundle: nil);
         
         self.mapView = MKMapView(frame: UIScreen.mainScreen().bounds)
@@ -36,17 +36,19 @@ public class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDe
     }
     
     // This doesn't get called.
-    public override func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
+        let eventData = DiscoverEventData()
+        mainController.discoverController.api.bgEvents.postEvent("Search:init", data: eventData)
     }
     
-    public func registerForEvents() {
-        api.uiEvents.registerForEvent("Search:Init:return", listener: self)
-        api.uiEvents.registerForEvent("Search:Discover:return", listener: self)
-        api.uiEvents.registerForEvent("Search:Find:return", listener: self)
+    func registerForEvents() {
+        mainController.discoverController.api.uiEvents.registerForEvent("Search:Init:return", listener: self)
+        mainController.discoverController.api.uiEvents.registerForEvent("Search:Discover:return", listener: self)
+        mainController.discoverController.api.uiEvents.registerForEvent("Search:Find:return", listener: self)
     }
     
-    public func onBuspassEvent(event: BuspassEvent) {
+    func onBuspassEvent(event: BuspassEvent) {
         let eventName = event.eventName
         let eventData = event.eventData as? DiscoverEventData
         if eventData != nil {
@@ -116,7 +118,7 @@ public class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDe
     
     // UIAlertViewDelegate
     
-    public func alertView(alertView: UIAlertView, willDismissWithButtonIndex buttonIndex: Int) {
+    func alertView(alertView: UIAlertView, willDismissWithButtonIndex buttonIndex: Int) {
         self.discoverInProgress = false
     }
     
@@ -143,7 +145,7 @@ public class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDe
         }
         
         let eventData = DiscoverEventData(loc: loc, buf: buf, dialog: dialog)
-        mainController.api.bgEvents.postEvent("Search:discover", data: eventData)
+        mainController.discoverController.api.bgEvents.postEvent("Search:discover", data: eventData)
     }
     
     // Find
@@ -160,7 +162,7 @@ public class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDe
     
     func performFindFromLoc(loc : CLLocationCoordinate2D) {
         let eventData = DiscoverEventData(loc: loc, dialog: nil)
-        api.bgEvents.postEvent("Search:find", data: eventData)
+        mainController.discoverController.api.bgEvents.postEvent("Search:find", data: eventData)
     }
     
     func onFindReturn(eventData : DiscoverEventData) {
@@ -177,6 +179,7 @@ public class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDe
             if !discoverController.getMasters().isEmpty {
                 let mastersTableScreen = MastersTableScreen()
                 mastersTableScreen.setDiscoverController(discoverController)
+                mastersTableScreen.setMainController(mainController)
                 self.navigationController?.pushViewController(mastersTableScreen, animated: true)
             }
         }
@@ -185,12 +188,12 @@ public class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDe
     func doMasterInit(master : Master) {
         self.navigationController?.popViewControllerAnimated(true)
         let eventData = MainEventData(master : master)
-        api.uiEvents.postEvent("Main:Discover:return", data: eventData)
+        mainController.api.uiEvents.postEvent("Main:Discover:return", data: eventData)
     }
     
     // MKOverlayRenderer
     
-    public func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {
+    func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {
         if (overlay is BusmeSite) {
             return BusmeSiteView(overlay: overlay)
         }

@@ -10,51 +10,51 @@ import Foundation
 import CoreLocation
 import MapKit
 
-public class Route : Storage {
-    public var busAPI : BuspassApi?
-    public var name : String?
-    public var type : String?
-    public var id : String?
-    public var code : String?
-    public var direction : String?
-    public var distance : Double?
-    public var vid : String?
-    public var workingVid : String?
-    public var timeless : Bool = false
-    public var sort : Double?
-    public var version : TimeValue64?
-    public var nw_lon : Double?
-    public var nw_lat : Double?
-    public var se_lon : Double?
-    public var se_lat : Double?
-    public var locationRefreshRate : Double = 10.0
-    public var startOffset : Double?
-    public var duration : Double?
-    public var startTime : Double?
-    public var endTime : Double?
-    public var schedStartTime : TimeValue64?
-    public var actualStartTime : TimeValue64?
-    public var routeid : String?
-    public var patternid : String?
-    public var patternids : [String]?
-    public var lastKnownLocation : GeoPoint?
-    public var lastKnownTime : String?
-    public var lastKnownTimediff : Double?
-    public var lastKnownDistance : Double?
-    public var lastKnownDirection : Double?
-    public var onRoute : Bool = false
-    public var timeZone : String?
-    public var reported : Bool = false
-    public var reporting : Bool = false
+class Route : Storage {
+    var busAPI : BuspassApi?
+    var name : String?
+    var type : String?
+    var id : String?
+    var code : String?
+    var direction : String?
+    var distance : Double?
+    var vid : String?
+    var workingVid : String?
+    var timeless : Bool = false
+    var sort : Double?
+    var version : TimeValue64?
+    var nw_lon : Double?
+    var nw_lat : Double?
+    var se_lon : Double?
+    var se_lat : Double?
+    var locationRefreshRate : Double = 10.0
+    var startOffset : Double?
+    var duration : Double?
+    var startTime : Double?
+    var endTime : Double?
+    var schedStartTime : TimeValue64?
+    var actualStartTime : TimeValue64?
+    var routeid : String?
+    var patternid : String?
+    var patternids : [String]?
+    var lastKnownLocation : GeoPoint?
+    var lastKnownTime : String?
+    var lastKnownTimediff : Double?
+    var lastKnownDistance : Double?
+    var lastKnownDirection : Double?
+    var onRoute : Bool = false
+    var timeZone : String?
+    var reported : Bool = false
+    var reporting : Bool = false
     
 
 
-    public init(tag : Tag) {
+    init(tag : Tag) {
         super.init()
         loadParsedXML(tag)
     }
     
-    public var journeyStore : JourneyStore?
+    var journeyStore : JourneyStore?
     
     override init(coder : NSCoder) {
         super.init()
@@ -93,7 +93,7 @@ public class Route : Storage {
         self.reported = coder.decodeBoolForKey("reported")
     }
     
-    public func encodeWithCoder(coder : NSCoder) {
+    func encodeWithCoder(coder : NSCoder) {
         if (name != nil) { coder.encodeObject(name!, forKey: "name") }
         if (type != nil) { coder.encodeObject(type!, forKey: "type") }
         if (id != nil) { coder.encodeObject(id!, forKey: "id") }
@@ -129,70 +129,79 @@ public class Route : Storage {
         coder.encodeBool(reported, forKey: "reported")
     }
     
-    public override func preSerialize(api : ApiBase, time : TimeValue64) {
+    override func preSerialize(api : ApiBase, time : TimeValue64) {
         
     }
     
-    public override func postSerialize(api : ApiBase, time : TimeValue64) {
+    override func postSerialize(api : ApiBase, time : TimeValue64) {
         self.busAPI = api as? BuspassApi
     }
     
-    public func isJourney() -> Bool {
+    func isJourney() -> Bool {
         return "journey" == type!
     }
     
-    public func isRouteDefinition() -> Bool {
+    func isRouteDefinition() -> Bool {
         return "route" == type!
     }
     
     // Set by JourneyBasket.
     
     private var activeJourney : Bool = false
-    public func setActive(active: Bool) {
+    func setActive(active: Bool) {
         activeJourney = active
     }
-    public func isActiveJourney() -> Bool {
+    func isActiveJourney() -> Bool {
         // TODO This might be a litle different. The fact that it shows up in the sync, should
         // mean it's active.
         return isJourney() && activeJourney // lastKnownLocation != nil
     }
-    public func isReporting() -> Bool {
+    func isReporting() -> Bool {
         return reporting
     }
-    public func isReported() -> Bool {
+    func isReported() -> Bool {
         return reported
     }
-    public func isTimeless() -> Bool {
+    func isTimeless() -> Bool {
         return timeless
     }
-    public func getStartTime() -> TimeValue64 {
+    func getStartTime() -> TimeValue64 {
         if (schedStartTime != nil) {
             return schedStartTime!
         } else {
             return UtilsTime.current()
         }
     }
-    public func getEndTime() -> TimeValue64 {
+    func getEndTime() -> TimeValue64 {
         return getStartTime() + Int64(duration! * 60)
     }
-    public func isFinished() -> Bool {
+    func isFinished() -> Bool {
         let loc = lastKnownLocation
         if (loc != nil) {
             let distance = lastKnownDistance!
-            let path_distance = getJourneyPattern(patternid!)!.distance!
-            let dist_from_last = GeoCalc.getGeoDistance(loc!, c2: getJourneyPattern(patternid!)!.getEndPoint()!)
-            return path_distance - distance < 10 && dist_from_last < 3 // feet
+            if patternid != nil {
+                let pattern = getJourneyPattern(patternid!)
+                if pattern != nil {
+                    let path_distance = pattern!.distance!
+                    let dist_from_last = GeoCalc.getGeoDistance(loc!, c2: pattern!.getEndPoint()!)
+                    return path_distance - distance < 10 && dist_from_last < 3 // feet
+                } else {
+                    return false
+                }
+            } else {
+                return false
+            }
         } else {
             return false
         }
     }
-    public func getJourneyPattern(id : String) -> JourneyPattern? {
+    func getJourneyPattern(id : String) -> JourneyPattern? {
         return journeyStore!.getPattern(id)
     }
     
     private var _journeyPatterns : [JourneyPattern] = [JourneyPattern]()
     
-    public func getJourneyPatterns() -> [JourneyPattern] {
+    func getJourneyPatterns() -> [JourneyPattern] {
         if self._journeyPatterns.count == 0 {
             var pids : [String] = patternids != nil ? patternids! : [String]()
             pids += patternid != nil ? [patternid!] : [String]()
@@ -214,7 +223,7 @@ public class Route : Storage {
     
     private var _paths : [[GeoPoint]] = [[GeoPoint]]()
     
-    public func getPaths() -> [[GeoPoint]] {
+    func getPaths() -> [[GeoPoint]] {
         if (_paths.count == 0) {
             var paths = [[GeoPoint]]()
             for pat in getJourneyPatterns() {
@@ -229,7 +238,7 @@ public class Route : Storage {
     
     private var _projectedPaths : [[Point]] = [[Point]]()
     
-    public func getProjectedPaths() -> [[Point]] {
+    func getProjectedPaths() -> [[Point]] {
         if (_projectedPaths.count == 0) {
             var paths = [[Point]]()
             for pat in getJourneyPatterns() {
@@ -242,7 +251,7 @@ public class Route : Storage {
         return _projectedPaths
     }
     
-    public func getStartingPoint() -> GeoPoint? {
+    func getStartingPoint() -> GeoPoint? {
         if isJourney() {
             getJourneyPatterns()
             let path = getPaths().first
@@ -253,21 +262,21 @@ public class Route : Storage {
         return nil
     }
     
-    public func isStartingJourney() -> Bool {
+    func isStartingJourney() -> Bool {
         if (busAPI != nil) {
             return isStartingJourney(busAPI!.activeStartDisplayThreshold, time: UtilsTime.current())
         } else {
             return false
         }
     }
-    public func isStartingJourney(threshold : Double) -> Bool {
+    func isStartingJourney(threshold : Double) -> Bool {
         if (busAPI != nil) {
             return isStartingJourney(threshold, time: UtilsTime.current())
         } else {
             return false
         }
     }
-    public func isStartingJourney(threshold : Double, time : TimeValue64) -> Bool {
+    func isStartingJourney(threshold : Double, time : TimeValue64) -> Bool {
         if (isJourney() && busAPI != nil) {
             let startMeasure = getStartingMeasure(threshold, time: time)
             return 0.0 < startMeasure && startMeasure < 1.0
@@ -275,7 +284,7 @@ public class Route : Storage {
         return false
     }
     
-    public func isNotYetStartingJourney() -> Bool {
+    func isNotYetStartingJourney() -> Bool {
         if (isJourney() && busAPI != nil) {
             let startMeasure = getStartingMeasure(busAPI!.activeStartDisplayThreshold, time: UtilsTime.current())
             return startMeasure < 0.0
@@ -283,21 +292,21 @@ public class Route : Storage {
         return false
     }
     
-    public func getStartingMeasure() -> Double {
+    func getStartingMeasure() -> Double {
         if (busAPI != nil) {
             return getStartingMeasure(busAPI!.activeStartDisplayThreshold, time: UtilsTime.current())
         } else {
             return 1.0
         }
     }
-    public func getStartingMeasure(threshold : Double) -> Double {
+    func getStartingMeasure(threshold : Double) -> Double {
         if (busAPI != nil) {
             return getStartingMeasure(threshold, time: UtilsTime.current())
         } else {
             return 1.0
         }
     }
-    public func getStartingMeasure(threshold : Double, time: TimeValue64) -> Double {
+    func getStartingMeasure(threshold : Double, time: TimeValue64) -> Double {
         let startTime = getStartTime()
         let timediff = Double(time - startTime) * 1000.0 // time in seconds, threshold in millis
         var ret = 1.0
@@ -328,7 +337,7 @@ public class Route : Storage {
         return ret
     }
     
-    public func isNearRoute(point : GeoPoint, buffer : Double) -> Bool {
+    func isNearRoute(point : GeoPoint, buffer : Double) -> Bool {
         var isNearRoute = false
         for jp in getJourneyPatterns() {
             let path = jp.path!
@@ -340,7 +349,7 @@ public class Route : Storage {
         return isNearRoute
     }
     
-    public func whereOnPaths(point : GeoPoint, buffer : Double) -> [DGeoPoint] {
+    func whereOnPaths(point : GeoPoint, buffer : Double) -> [DGeoPoint] {
         var result = [DGeoPoint]()
         for jp in getJourneyPatterns() {
             let path = jp.path!
@@ -351,7 +360,7 @@ public class Route : Storage {
     }
     
     private var _zoomcenter : CLLocationCoordinate2D?
-    public func getZoomCenter() -> GeoPoint {
+    func getZoomCenter() -> GeoPoint {
         if (_zoomcenter == nil) {
             let lat = se_lat! + (nw_lat! - se_lat!)/2.0
             let dx = nw_lon! - se_lon!
@@ -363,12 +372,12 @@ public class Route : Storage {
         return _zoomcenter!
     }
     
-    public func updateStartTimes(nameid : NameId) {
+    func updateStartTimes(nameid : NameId) {
         self.actualStartTime = nameid.time_start
         self.schedStartTime = nameid.sched_time_start
     }
     
-    public func loadParsedXML(tag : Tag) -> Route? {
+    func loadParsedXML(tag : Tag) -> Route? {
         self.type = tag.attributes["type"]
         self.id = tag.attributes["id"]
         self.name = tag.attributes["name"]
@@ -455,7 +464,7 @@ public class Route : Storage {
         }
     }
     
-    public func isValid() -> Bool {
+    func isValid() -> Bool {
         var valid = type != nil && id != nil && name != nil && code != nil && version != nil && sort != nil && nw_lon != nil && nw_lat != nil && se_lon != nil && se_lat != nil
         if valid {
             if (type! == "route") {
@@ -467,7 +476,7 @@ public class Route : Storage {
         return valid
     }
 
-    public func pushCurrentLocation(loc : JourneyLocation) -> (GeoPoint, GeoPoint?) {
+    func pushCurrentLocation(loc : JourneyLocation) -> (GeoPoint, GeoPoint?) {
         let gp = GeoPointImpl(lat: loc.lat, lon: loc.lon)
         let lastLocation = lastKnownLocation
         self.lastKnownLocation = gp
@@ -480,7 +489,7 @@ public class Route : Storage {
         return (lastKnownLocation!, lastLocation)
     }
     
-    public func toString() -> String {
+    func toString() -> String {
         var s = ""
         if isRouteDefinition() {
             s = "Route(\(code), \(name), paths=\(getPaths().count), id=\(id)"

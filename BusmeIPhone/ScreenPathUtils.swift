@@ -11,37 +11,37 @@ import CoreLocation
 import CoreGraphics
 import MapKit
 
-public struct ScreenPathUtils {
-    public static let MAX_ZOOM_LEVEL = 22
+struct ScreenPathUtils {
+    static let MAX_ZOOM_LEVEL = 22
     
-    public static let EarthRadius : Double = 6378137
-    public static let MinLatitude : Double = -85.05112878
-    public static let MaxLatitude : Double = 85.05112878
-    public static let MinLongitude : Double = -180
-    public static let MaxLongitude : Double = 180
-    public static let PI : Double = 3.14159
+    static let EarthRadius : Double = 6378137
+    static let MinLatitude : Double = -85.05112878
+    static let MaxLatitude : Double = 85.05112878
+    static let MinLongitude : Double = -180
+    static let MaxLongitude : Double = 180
+    static let PI : Double = 3.14159
     
-    public static let DefaultTileSize : Int = 256
+    static let DefaultTileSize : Int = 256
     
-    public static var mTileSize = DefaultTileSize
+    static var mTileSize = DefaultTileSize
     
-    public static func setTileSize( tileSize : Int) {
+    static func setTileSize( tileSize : Int) {
         mTileSize = tileSize
     }
-    public static func clip(n : Double, minValue : Double, maxValue : Double) -> Double {
+    static func clip(n : Double, minValue : Double, maxValue : Double) -> Double {
         return min(max(n,minValue),maxValue)
     }
-    public static func getMapSize(levelOfDetail : Int) -> Int {
+    static func getMapSize(levelOfDetail : Int) -> Int {
         return (mTileSize << levelOfDetail)
     }
-    public static func getGroundResolution(latitude : Double, levelOfDetail : Int) -> Double {
+    static func getGroundResolution(latitude : Double, levelOfDetail : Int) -> Double {
         let lat = clip(latitude, minValue: MinLatitude, maxValue: MaxLatitude)
         return cos(lat * PI / 180) * 2 * PI * EarthRadius / Double(getMapSize(levelOfDetail))
     }
-    public static func getMapScale(latitude : Double, levelOfDetail : Int, screenDpi : Double) -> Double {
+    static func getMapScale(latitude : Double, levelOfDetail : Int, screenDpi : Double) -> Double {
         return getGroundResolution(latitude, levelOfDetail: levelOfDetail) * screenDpi / 0.0254
     }
-    public static func latLongToPixelXY(latitude : Double, longitude: Double, levelOfDetail : Int, reuse : PointMutable? = nil) -> PointMutable {
+    static func latLongToPixelXY(latitude : Double, longitude: Double, levelOfDetail : Int, reuse : PointMutable? = nil) -> PointMutable {
         var out = reuse != nil ? reuse! : PointImpl()
         let lat = clip(latitude, minValue: MinLatitude, maxValue: MaxLatitude)
         let lon = clip(longitude, minValue: MinLongitude, maxValue: MaxLongitude)
@@ -56,11 +56,11 @@ public struct ScreenPathUtils {
     }
     
     // Iphone specific
-    public static func latLongToProjectedXY(latitude : Double, longitude : Double) -> Point {
+    static func latLongToProjectedXY(latitude : Double, longitude : Double) -> Point {
         let nw = MKMapPointForCoordinate(CLLocationCoordinate2D(latitude: latitude, longitude: longitude))
         return nw
     }
-    public static func pixelXYToLatLong(pixelX : CGFloat, pixelY : CGFloat, levelOfDetail : Int, reuse : GeoPointMutable? = nil) -> GeoPointMutable {
+    static func pixelXYToLatLong(pixelX : CGFloat, pixelY : CGFloat, levelOfDetail : Int, reuse : GeoPointMutable? = nil) -> GeoPointMutable {
         var out : GeoPointMutable = reuse != nil ? reuse! : GeoPointImpl()
         
         let mapSize = getMapSize(levelOfDetail)
@@ -72,7 +72,7 @@ public struct ScreenPathUtils {
         
         return out.set(latitude, lon: longitude)
     }
-    public static func toScreenPath(geoPoints : [GeoPoint], zoomLevel : Int = MAX_ZOOM_LEVEL) -> [Point] {
+    static func toScreenPath(geoPoints : [GeoPoint], zoomLevel : Int = MAX_ZOOM_LEVEL) -> [Point] {
         var thePath = [Point]()
         if geoPoints.count > 0 {
             thePath.append(latLongToPixelXY(geoPoints[0].getLatitude(), longitude: geoPoints[0].getLongitude(), levelOfDetail: zoomLevel))
@@ -82,7 +82,7 @@ public struct ScreenPathUtils {
         }
         return thePath
     }
-    public static func toProjectedPath(geoPoints : [GeoPoint]) -> [Point] {
+    static func toProjectedPath(geoPoints : [GeoPoint]) -> [Point] {
         var thePath = [Point]()
         var lastPoint : Point? = nil
         if geoPoints.count > 0 {
@@ -99,14 +99,14 @@ public struct ScreenPathUtils {
         }
         return thePath
     }
-    public static func projectedToScreenPath(projectedPath : [Point], projection : Projection) -> [Point] {
+    static func projectedToScreenPath(projectedPath : [Point], projection : Projection) -> [Point] {
         var ps = [Point]()
         for point in projectedPath {
             ps.append(projection.translatePoint(point))
         }
         return ps
     }
-    public static func toReducedScreenPath(geoPoints : [GeoPoint], zoomLevel : Int = MAX_ZOOM_LEVEL) -> [Point] {
+    static func toReducedScreenPath(geoPoints : [GeoPoint], zoomLevel : Int = MAX_ZOOM_LEVEL) -> [Point] {
         var thePath = [Point]()
         var lastPoint : Point? = nil
         if geoPoints.count > 0 {
@@ -124,7 +124,7 @@ public struct ScreenPathUtils {
         return thePath
     }
     
-    public static func toClippedScreenPath(projectedPath : [Point], projection : Projection, path: Path? = nil) -> Path {
+    static func toClippedScreenPath(projectedPath : [Point], projection : Projection, path: Path? = nil) -> Path {
         var out = path == nil ? Path() : path!
         let rect = projection.screenRect
         var last : Point? = nil

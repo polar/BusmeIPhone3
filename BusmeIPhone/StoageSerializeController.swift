@@ -8,16 +8,16 @@
 
 import Foundation
 
-public class StorageSerializeController {
-    public var api : BuspassApi
-    public var externalStorageController : ExternalStorageController
+class StorageSerializeController {
+    var api : BuspassApi
+    var externalStorageController : ExternalStorageController
     
-    public init(api : BuspassApi, externalStorageController : ExternalStorageController) {
+    init(api : BuspassApi, externalStorageController : ExternalStorageController) {
         self.api = api
         self.externalStorageController = externalStorageController
     }
     
-    public func retrieveStorage(filename : String, api : BuspassApi) -> Storage? {
+    func retrieveStorage(filename : String, api : BuspassApi) -> Storage? {
         if externalStorageController.isAvailable() {
             let store = externalStorageController.deserializeObjectFromFile(filename)
             if store != nil {
@@ -28,7 +28,7 @@ public class StorageSerializeController {
         return nil
     }
     
-    public func cacheStorage(storage :Storage, filename : String, api : BuspassApi) -> Bool {
+    func cacheStorage(storage :Storage, filename : String, api : BuspassApi) -> Bool {
         if externalStorageController.isAvailable() {
             if externalStorageController.isWriteable() {
                 storage.preSerialize(api, time: UtilsTime.current())

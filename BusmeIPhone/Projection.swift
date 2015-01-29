@@ -10,23 +10,23 @@ import Foundation
 import CoreGraphics
 import MapKit
 
-public class Projection {
+class Projection {
     let MAX_ZOOM_LEVEL = 22
     
-    public var zoomLevel : Int = 0
-    public var worldSize_2 : Int = 0
-    public var offsetX : Double = 0
-    public var offsetY : Double = 0
+    var zoomLevel : Int = 0
+    var worldSize_2 : Int = 0
+    var offsetX : Double = 0
+    var offsetY : Double = 0
     
-    public var screenRect : Rect
+    var screenRect : Rect
     
-    public init(zoom : Int, rect : Rect) {
+    init(zoom : Int, rect : Rect) {
         self.zoomLevel = zoom
         self.worldSize_2 = ScreenPathUtils.getMapSize(zoom)
         self.screenRect = rect
     }
     
-    public func translatePoint(projectedPoint : Point) -> PointMutable {
+    func translatePoint(projectedPoint : Point) -> PointMutable {
         var out = PointImpl()
         
         let zoomDifference = MAX_ZOOM_LEVEL - zoomLevel
@@ -39,7 +39,7 @@ public class Projection {
     }
 
     
-    public func translatePoint(projectedPoint : Point, inout reuse : PointMutable) -> PointMutable {
+    func translatePoint(projectedPoint : Point, inout reuse : PointMutable) -> PointMutable {
         var out = reuse
         
         let zoomDifference = MAX_ZOOM_LEVEL - zoomLevel
@@ -51,11 +51,11 @@ public class Projection {
         return out.set(x, y: y)
     }
     
-    public func fromPixels(x : Double, y : Double) -> GeoPoint {
+    func fromPixels(x : Double, y : Double) -> GeoPoint {
         return ScreenPathUtils.pixelXYToLatLong(CGFloat(screenRect.left + x + Double(worldSize_2)), pixelY: CGFloat(screenRect.top + y + Double(worldSize_2)), levelOfDetail: zoomLevel)
     }
     
-    public func toMapPixels(geoPoint : GeoPoint, reuse : PointMutable? = nil) -> Point {
+    func toMapPixels(geoPoint : GeoPoint, reuse : PointMutable? = nil) -> Point {
         var out = reuse == nil ? CGPoint() as PointMutable : reuse!
         ScreenPathUtils.latLongToPixelXY(geoPoint.getLatitude(), longitude: geoPoint.getLongitude(), levelOfDetail: zoomLevel, reuse: out)
         out.setX(out.getX() + offsetX)
@@ -65,17 +65,19 @@ public class Projection {
     
 }
 
-public class MKMapProjection : Projection {
-    public var renderer : MKOverlayRenderer
-    public var zoomScale : MKZoomScale
-    public var lineWidth : CGFloat
-    public var mapRect : MKMapRect
-    public var cgRect : CGRect
-    var writeLock : dispatch_semaphore_t
+class MKMapProjection : Projection {
+    var renderer : MKOverlayRenderer
+    var zoomScale : MKZoomScale
+    var lineWidth : CGFloat
+    var mapRect : MKMapRect
+    var cgRect : CGRect
     
+    // NOT_USED 
+    
+    var writeLock : dispatch_semaphore_t
     var patternCGPaths : [String:CGPath] = [String:CGPath]()
     
-    public init(renderer: MKOverlayRenderer, zoomScale: MKZoomScale, mapRect: MKMapRect) {
+    init(renderer: MKOverlayRenderer, zoomScale: MKZoomScale, mapRect: MKMapRect) {
         self.renderer = renderer
         self.zoomScale = zoomScale
         let zoom = 22 + Int(log(zoomScale))  // MAX_ZOOM_LEVEL - -log(zoomScale)
@@ -87,22 +89,26 @@ public class MKMapProjection : Projection {
         super.init(zoom: zoom, rect: Rect(cgRect: cgRect))
     }
     
-    public override func translatePoint(projectedPoint: Point) -> PointMutable {
+    override func translatePoint(projectedPoint: Point) -> PointMutable {
         let cgPoint = renderer.pointForMapPoint(projectedPoint as MKMapPoint)
         return cgPoint
     }
     
-    public override func translatePoint(projectedPoint: Point, inout reuse: PointMutable) -> PointMutable {
+    override func translatePoint(projectedPoint: Point, inout reuse: PointMutable) -> PointMutable {
         let cgPoint = renderer.pointForMapPoint(projectedPoint as MKMapPoint)
         reuse.set(Double(cgPoint.x), y: Double(cgPoint.y))
         return cgPoint
     }
     
-    public func storeCGPath(journeyPattern : JourneyPattern, cgPath : CGPath) {
+    // NOT_USED
+    
+    func storeCGPath(journeyPattern : JourneyPattern, cgPath : CGPath) {
         dispatch_semaphore_wait(writeLock, DISPATCH_TIME_FOREVER)
         patternCGPaths[journeyPattern.id] = cgPath
         dispatch_semaphore_signal(writeLock)
     }
+    
+    // NOT USED
     
     func hasCGPath(journeyPattern : JourneyPattern) -> Bool {
         return patternCGPaths[journeyPattern.id] != nil
@@ -115,7 +121,9 @@ public class MKMapProjection : Projection {
         return path.cgpath
     }
     
-    public func getCGPath(journeyPattern : JourneyPattern) -> CGPath {
+    // NOT USED overridden below
+    
+    func getCGPath(journeyPattern : JourneyPattern) -> CGPath {
         var cgPath = patternCGPaths[journeyPattern.id]
         let hasPath = cgPath != nil
         if !hasPath {
@@ -139,6 +147,8 @@ class MKMapControlledProjection : MKMapProjection {
         self.name = controller.getProjectionName(mapRect, zoomScale: zoomScale)
         controller.register(self)
     }
+    
+    // NOT USED
 
     func createSubProjections() {
         if zoomLevel > 2 && upperLeft == nil {
@@ -156,6 +166,9 @@ class MKMapControlledProjection : MKMapProjection {
             projectionController.register(lowerLeft!)
         }
     }
+    
+    
+    // NOT USED
     
     func createPathsForSubProjections(journeyPattern : JourneyPattern) {
         if upperLeft != nil {
@@ -175,14 +188,51 @@ class MKMapControlledProjection : MKMapProjection {
         }
     }
     
+    // NOT USED
+    
     func internalCreateCGPath(journeyPattern : JourneyPattern) {
         let cgPath = super.createCGPath(journeyPattern)
     }
     
+    // NOT USED
+    // Called by the controller to create a CGPath. We tried to create CGPaths specific
+    // to sub projections in the background. However, it appears that the CPPath is the
+    // same regardless of the projection since the CGPath seems to be tied more to the
+    // Mercator projection than the actual screen. The Graphics Context will clip the
+    // path more efficiently.
     override func createCGPath(journeyPattern: JourneyPattern) -> CGPath {
         let cgPath = super.createCGPath(journeyPattern)
         createSubProjections()
         createPathsForSubProjections(journeyPattern)
         return cgPath
     }
+    
+    // On the iPhone, the projection doesn't seem to matter. The CGPaths
+    // are tied more to the Mercator projection than the actual screen. Therefore,
+    // the CGPath is the same for any mapRect. We just let the CGGraphics Context
+    // clip the path. So, we store a CGPath for the journeyPattern in a controller
+    // hash. We do not pre-create subprojections in order to create clipped paths
+    // in the background. We just do it once, and store it. Of course, we should
+    // probably clear it if it gets replaced.
+    
+    override func getCGPath(journeyPattern : JourneyPattern) -> CGPath {
+        var cgPath = projectionController.cgPaths[journeyPattern.id]
+        let hasPath = cgPath != nil
+        if !hasPath {
+            let projectedPath = journeyPattern.getProjectedPath()
+            // The only thing the projection is used here for is a reference to the renderer.pointForMapPoint()
+            let cgPoints = ScreenPathUtils.projectedToScreenPath(projectedPath, projection: self)
+            let path = CGPathCreateMutable()
+            if cgPoints.count > 1 {
+                CGPathMoveToPoint(path, nil, CGFloat(cgPoints[0].getX()), CGFloat(cgPoints[0].getY()))
+                for(var i = 1; i < cgPoints.count; i++) {
+                    CGPathAddLineToPoint(path, nil, CGFloat(cgPoints[i].getX()), CGFloat(cgPoints[i].getY()))
+                }
+                projectionController.storeCGPath(journeyPattern, cgPath: path)
+            }
+            return path
+        }
+        return cgPath!
+    }
+
 }

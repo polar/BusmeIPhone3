@@ -9,66 +9,66 @@
 
 import Foundation
 
-public class BuspassEvent {
-    public var eventName : String;
-    public var eventData : AnyObject?;
+class BuspassEvent {
+    var eventName : String;
+    var eventData : AnyObject?;
     
-    public init(name : String, data: AnyObject?) {
+    init(name : String, data: AnyObject?) {
         self.eventName = name;
         self.eventData = data;
     }
 }
 
-public protocol BuspassEventListener : class {
+protocol BuspassEventListener : class {
     func onBuspassEvent(event : BuspassEvent)
 }
 
-public class BuspassEventNotifier {
-    public var eventName : String;
-    public var eventListeners : [BuspassEventListener] = [BuspassEventListener]();
+class BuspassEventNotifier {
+    var eventName : String;
+    var eventListeners : [BuspassEventListener] = [BuspassEventListener]();
     
-    public init(name : String) {
+    init(name : String) {
         self.eventName = name
     }
     
-    public func register(listener : BuspassEventListener) {
+    func register(listener : BuspassEventListener) {
         self.eventListeners.append(listener);
     }
     
-    public func unregister(listener : BuspassEventListener) {
+    func unregister(listener : BuspassEventListener) {
         self.eventListeners =
             self.eventListeners.filter({(x : BuspassEventListener) in listener !== x});
     }
     
-    public func reset() {
+    func reset() {
         self.eventListeners = [BuspassEventListener]();
     }
     
-    public func notifyEventListeners(event: BuspassEvent) {
+    func notifyEventListeners(event: BuspassEvent) {
         for listener in eventListeners {
             listener.onBuspassEvent(event)
         }
     }
 }
 
-public protocol BuspassPostListener : class {
+protocol BuspassPostListener : class {
     func onPostEvent(event : BuspassEvent)
 }
 
-public class BuspassEventDistributor {
-    public var name : String
-    public var postEventListener : BuspassPostListener?
-    public var eventNotifiers : [String:BuspassEventNotifier] = [String:BuspassEventNotifier]();
-    public var eventQ : [BuspassEvent] = [BuspassEvent]();
+class BuspassEventDistributor {
+    var name : String
+    var postEventListener : BuspassPostListener?
+    var eventNotifiers : [String:BuspassEventNotifier] = [String:BuspassEventNotifier]();
+    var eventQ : [BuspassEvent] = [BuspassEvent]();
 
     var writeLock : dispatch_semaphore_t
     
-    public init(name : String) {
+    init(name : String) {
         self.name = name
         self.writeLock = dispatch_semaphore_create(1)
     }
     
-    public func registerForEvent(eventName : String, listener : BuspassEventListener) {
+    func registerForEvent(eventName : String, listener : BuspassEventListener) {
         var notifier = eventNotifiers[eventName]
         if notifier == nil {
             notifier = BuspassEventNotifier(name: eventName)
@@ -77,17 +77,17 @@ public class BuspassEventDistributor {
         notifier!.register(listener)
     }
     
-    public func unregisterForEvent(eventName : String, listener : BuspassEventListener) {
+    func unregisterForEvent(eventName : String, listener : BuspassEventListener) {
         var notifier = eventNotifiers[eventName]
         if notifier != nil {
             notifier!.unregister(listener)
         }
     }
     
-    public func postBuspassEvent(event : BuspassEvent) {
+    func postBuspassEvent(event : BuspassEvent) {
         dispatch_semaphore_wait(writeLock, DISPATCH_TIME_FOREVER)
         
-        if (BLog.DEBUG) { BLog.logger.debug("\(event.eventName)") }
+        if (BLog.DEBUG) { BLog.logger.debug("\(name):post \(event.eventName)") }
 
         eventQ.insert(event, atIndex: 0);
         
@@ -98,12 +98,12 @@ public class BuspassEventDistributor {
         }
     }
     
-    public func postEvent(eventName : String, data : AnyObject) {
+    func postEvent(eventName : String, data : AnyObject) {
         let event = BuspassEvent(name: eventName, data: data)
         postBuspassEvent(event)
     }
     
-    public func peek() -> BuspassEvent? {
+    func peek() -> BuspassEvent? {
         dispatch_semaphore_wait(writeLock, DISPATCH_TIME_FOREVER)
         let last = eventQ.last
         dispatch_semaphore_signal(writeLock)
@@ -111,11 +111,11 @@ public class BuspassEventDistributor {
         return last;
     }
     
-    public func top() -> BuspassEvent? {
+    func top() -> BuspassEvent? {
         return peek();
     }
     
-    public func roll() -> BuspassEvent? {
+    func roll() -> BuspassEvent? {
         // fatal error: cannot remove last from empty array.
         dispatch_semaphore_wait(writeLock, DISPATCH_TIME_FOREVER)
         if self.eventQ.count > 0 {
@@ -134,7 +134,7 @@ public class BuspassEventDistributor {
         return nil
     }
     
-    public func rollAll() {
+    func rollAll() {
         var event = roll();
         while (event != nil) {
             event = roll()

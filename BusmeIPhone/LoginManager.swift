@@ -8,22 +8,22 @@
 
 import Foundation
 
-public class LoginManager {
-    public let LOGIN_TRY_LIMIT = 3
+class LoginManager {
+    let LOGIN_TRY_LIMIT = 3
     
-    public var api : BuspassApi
-    public var login : Login
-    public var authToken : String?
-    public var roleIntent : String = "passenger"
-    public var email : String?
+    var api : BuspassApi
+    var login : Login
+    var authToken : String?
+    var roleIntent : String = "passenger"
+    var email : String?
     
-    public init(api : BuspassApi) {
+    init(api : BuspassApi) {
         self.api = api
         self.login = Login()
         
     }
     
-    public func enterProtocol(newLogin : Login? = nil) {
+    func enterProtocol(newLogin : Login? = nil) {
         if (newLogin != nil) { self.login = newLogin! }
         switch(login.loginState) {
         case LoginState.LS_AUTHTOKEN:
@@ -44,7 +44,7 @@ public class LoginManager {
         }
     }
     
-    public func authTokenLogin() {
+    func authTokenLogin() {
         let (response, tag) = api.authTokenLogin(login)
         if tag != nil {
             login.status = tag!.attributes["status"]
@@ -80,7 +80,7 @@ public class LoginManager {
         login.loginState = LoginState.LS_AUTHTOKEN_FAILURE
     }
     
-    public func passwordRegistration() {
+    func passwordRegistration() {
         let (response, tag) = api.passwordRegistration(login)
         if tag != nil {
             login.status = tag!.attributes["status"]
@@ -116,7 +116,7 @@ public class LoginManager {
         login.loginState = LoginState.LS_REGISTER_FAILURE
     }
     
-    public func passwordLogin() {
+    func passwordLogin() {
         let (response, tag) = api.passwordRegistration(login)
         if tag != nil {
             login.status = tag!.attributes["status"]
@@ -152,7 +152,7 @@ public class LoginManager {
         login.loginState = LoginState.LS_LOGIN_FAILURE
     }
     
-    public func exitProtocol() {
+    func exitProtocol() {
         switch(login.loginState) {
         case LoginState.LS_AUTHTOKEN_SUCCESS, LoginState.LS_AUTHTOKEN_FAILURE:
             confirmAuthTokenLogin();
@@ -168,7 +168,7 @@ public class LoginManager {
         }
     }
 
-    public func confirmPasswordLogin() {
+    func confirmPasswordLogin() {
         switch (login.loginState) {
         case LoginState.LS_LOGIN_SUCCESS:
             login.loginState = LoginState.LS_LOGGED_IN
@@ -201,7 +201,7 @@ public class LoginManager {
         }
     }
     
-    public func confirmRegisterLogin() {
+    func confirmRegisterLogin() {
         switch (login.loginState) {
         case LoginState.LS_REGISTER_SUCCESS:
             login.loginState = LoginState.LS_LOGGED_IN
@@ -236,7 +236,7 @@ public class LoginManager {
         }
     }
     
-    public func confirmAuthTokenLogin() {
+    func confirmAuthTokenLogin() {
         switch (login.loginState) {
         case LoginState.LS_AUTHTOKEN_SUCCESS:
             login.loginState = LoginState.LS_LOGGED_IN
@@ -255,7 +255,7 @@ public class LoginManager {
         }
     }
     
-    public func performLogout() {
+    func performLogout() {
         
     }
 

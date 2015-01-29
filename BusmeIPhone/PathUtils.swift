@@ -12,37 +12,37 @@ import MapKit
 
 // PointImpl is an extension of a native type.
 
-public struct Rect {
+struct Rect {
     let ORIENT_UL = 0
     let ORIENT_LL = 1
-    public var left : Double
-    public var top : Double
-    public var right : Double
-    public var bottom : Double
-    public var orient : Int = 0 // ORIENT_UL
+    var left : Double
+    var top : Double
+    var right : Double
+    var bottom : Double
+    var orient : Int = 0 // ORIENT_UL
     
-    public init(left: Float, top : Float, right: Float, bottom : Float) {
+    init(left: Float, top : Float, right: Float, bottom : Float) {
         self.left = Double(left)
         self.top = Double(top)
         self.right = Double(right)
         self.bottom = Double(bottom)
     }
     
-    public init(left: Double, top : Double, right : Double, bottom : Double) {
+    init(left: Double, top : Double, right : Double, bottom : Double) {
         self.left = left
         self.top = top
         self.right = right
         self.bottom = bottom
     }
     
-    public init(boundingBox : BoundingBox) {
+    init(boundingBox : BoundingBox) {
         self.left = boundingBox.west()
         self.top = boundingBox.north()
         self.right = boundingBox.east()
         self.bottom = boundingBox.south()
     }
     
-    public init(mapRect : MKMapRect) {
+    init(mapRect : MKMapRect) {
         // MapRect is Upper Left Oriented and increasing right down
         self.left = mapRect.origin.x
         self.top = mapRect.origin.y
@@ -51,7 +51,7 @@ public struct Rect {
     }
     
     
-    public init(cgRect : CGRect) {
+    init(cgRect : CGRect) {
         // CGREct is Lower Left Oriented and increasing right up
         self.left = Double(cgRect.origin.x)
         self.bottom = Double(cgRect.origin.y)
@@ -60,69 +60,69 @@ public struct Rect {
         self.orient = ORIENT_LL
     }
     
-    public init(geoRect : GeoRect) {
+    init(geoRect : GeoRect) {
         self.left = geoRect.left
         self.right = geoRect.right
         self.top = geoRect.top
         self.bottom = geoRect.bottom
     }
     
-    public func dup() -> Rect {
+    func dup() -> Rect {
         return Rect(left: left, top: top, right: right, bottom: bottom)
     }
     
-    public func center() -> Point {
+    func center() -> Point {
         return PointImpl(x: (left + right)/2, y: (top + bottom)/2)
     }
     
-    public func width() -> Double {
+    func width() -> Double {
         return right - left
     }
     
-    public func height() -> Double {
+    func height() -> Double {
         return orient == ORIENT_UL ? top - bottom : bottom - top
     }
     
-    public func area() -> Double {
+    func area() -> Double {
         return width() * height()
     }
     
-    public mutating func offsetTo(x : Double, y : Double) {
+    mutating func offsetTo(x : Double, y : Double) {
         self.left += x
         self.right += x
         self.top += y
         self.bottom += y
     }
     
-    public mutating func setWidthCenter(width : Double) {
+    mutating func setWidthCenter(width : Double) {
         let left = (self.right - self.left)/2.0 - width/2.0
         let right = (self.right - self.left)/2.0 + width/2.0
         self.left = left
         self.right = right
     }
     
-    public mutating func setHeightCenter(height : Double) {
+    mutating func setHeightCenter(height : Double) {
         let top = (self.top - self.bottom)/2.0 - height/2.0
         let bottom = (self.top - self.bottom)/2.0 + height/2.0
         self.top = top
         self.bottom = bottom
     }
     
-    public mutating func setWidthHeightCenter(width : Double, height : Double) {
+    mutating func setWidthHeightCenter(width : Double, height : Double) {
         setWidthCenter(width)
         setHeightCenter(height)
     }
     
-    public mutating func setWidthHeight(width: Double, height : Double) {
+    mutating func setWidthHeight(width: Double, height : Double) {
         self.right = self.left + width
         self.bottom = self.top + height
     }
     
-    public func containsXY(x : Float, y : Float) -> Bool {
+    func containsXY(x : Float, y : Float) -> Bool {
         return containsXY(Double(x), y: Double(y))
     }
     
-    public func containsXY(x : Double, y : Double) -> Bool {
+    func containsXY(x : Double, y : Double) -> Bool {
         let xint = floor(x*1E6)
         let yint = floor(y*1E6)
         let horizontal = floor(left*1E6) <= xint && xint <= floor(right*1E6)
@@ -130,11 +130,11 @@ public struct Rect {
         return horizontal && vertical
     }
     
-    public func containsPoint(point : Point) -> Bool {
+    func containsPoint(point : Point) -> Bool {
         return containsXY(point.getX(), y: point.getY())
     }
     
-    public func intersectRect(rect :Rect) -> Bool {
+    func intersectRect(rect :Rect) -> Bool {
         return rect.containsXY(left, y: top) ||
             rect.containsXY(right, y:  top) ||
             rect.containsXY(left, y: bottom) ||
@@ -145,7 +145,7 @@ public struct Rect {
             self.containsXY(rect.right, y: rect.bottom)
     }
     
-    public func intersecsLine(c1 : Point, c2 : Point) -> Bool {
+    func intersecsLine(c1 : Point, c2 : Point) -> Bool {
         // Completely Outside
         if (c1.getX() <= left && c2.getX() <= left) || (c1.getY() <= bottom && c2.getY() <= bottom) || (right <= c1.getX() && right <= c2.getX()) || (top <= c1.getY() && top <= c2.getY()) {
             return false
@@ -165,17 +165,17 @@ public struct Rect {
         return false
     }
     
-    public func toString() -> String {
+    func toString() -> String {
         return "Rect(left:\(left),top:\(top),right:\(right),bottom:\(bottom))"
     }
 }
 
-public protocol Point {
+protocol Point {
     func getX() -> Double
     func getY() -> Double
 }
 
-public protocol PointMutable : Point {
+protocol PointMutable : Point {
     mutating func setX(x : Float)
     mutating func setY(y : Float)
     
@@ -185,8 +185,8 @@ public protocol PointMutable : Point {
     mutating func set(x : Float, y: Float) -> PointMutable
 }
 
-public struct PathUtils {
-    public static func isOnPath(points : [Point], rect : Rect) -> Bool {
+struct PathUtils {
+    static func isOnPath(points : [Point], rect : Rect) -> Bool {
         if points.count == 0 {
             return false
         }

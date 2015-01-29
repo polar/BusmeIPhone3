@@ -8,36 +8,36 @@
 
 import Foundation
 
-public class MasterMessagePresentationController {
-    public var api : BuspassApi
-    public var masterMessageBasket : MasterMessageBasket
-    public var currentMasterMessage : MasterMessage?
-    public var masterMessageQ : PriorityQueue<MasterMessage>!
+class MasterMessagePresentationController {
+    var api : BuspassApi
+    var masterMessageBasket : MasterMessageBasket
+    var currentMasterMessage : MasterMessage?
+    var masterMessageQ : PriorityQueue<MasterMessage>!
     
-    public init(api : BuspassApi, basket: MasterMessageBasket) {
+    init(api : BuspassApi, basket: MasterMessageBasket) {
         self.api = api
         self.masterMessageBasket = basket
         self.masterMessageQ = PriorityQueue<MasterMessage>(compare: self.compare)
     }
     
-    public func addMasterMessage(masterMessage: MasterMessage) {
+    func addMasterMessage(masterMessage: MasterMessage) {
         if (!masterMessageQ.doesInclude(masterMessage)) {
             masterMessageQ.push(masterMessage)
         }
     }
     
-    public func removeMasterMessage(masterMessage: MasterMessage) {
+    func removeMasterMessage(masterMessage: MasterMessage) {
         if (currentMasterMessage === masterMessage) {
             abandonMasterMessage(masterMessage)
         }
         masterMessageQ.delete(masterMessage)
     }
     
-    public func doesContain(masterMessage: MasterMessage) -> Bool {
+    func doesContain(masterMessage: MasterMessage) -> Bool {
         return masterMessageQ.doesInclude(masterMessage)
     }
     
-    public func onDismiss(remind: Bool, masterMessage : MasterMessage, time: TimeValue64) {
+    func onDismiss(remind: Bool, masterMessage : MasterMessage, time: TimeValue64) {
         if currentMasterMessage != nil {
             if currentMasterMessage === masterMessage {
                 currentMasterMessage = nil
@@ -52,7 +52,7 @@ public class MasterMessagePresentationController {
         }
     }
     
-    public func roll(removeCurrent : Bool, now : TimeValue64 = UtilsTime.current()) {
+    func roll(removeCurrent : Bool, now : TimeValue64 = UtilsTime.current()) {
         if (currentMasterMessage != nil) {
             if (!removeCurrent && !currentMasterMessage!.isDisplayTimeExpired(now)) {
                 return
@@ -88,7 +88,7 @@ public class MasterMessagePresentationController {
     }
     
     
-    public func onLocationUpdate(location: GeoPoint, now: TimeValue64 = UtilsTime.current()) {
+    func onLocationUpdate(location: GeoPoint, now: TimeValue64 = UtilsTime.current()) {
         for masterMessage in masterMessageBasket.getMasterMessages() {
             if (masterMessage.point == nil ||
                 GeoCalc.getGeoAngle(location, c2: masterMessage.point!) < masterMessage.radius) {

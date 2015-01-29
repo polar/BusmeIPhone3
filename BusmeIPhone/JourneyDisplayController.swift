@@ -8,54 +8,54 @@
 
 import Foundation
 
-public protocol OnJourneyDisplayAddedListener {
+protocol OnJourneyDisplayAddedListener {
     func onJourneyDisplayAdded(journey : JourneyDisplay)
 }
 
-public protocol OnJourneyDisplayRemovedListener {
+protocol OnJourneyDisplayRemovedListener {
     func onJourneyDisplayRemoved(journey : JourneyDisplay)
 }
 
-public class JourneyDisplayEventData {
-    public var id : String
-    public var journeyDisplay : JourneyDisplay?
-    public var journeyDisplayController : JourneyDisplayController?
+class JourneyDisplayEventData {
+    var id : String
+    var journeyDisplay : JourneyDisplay?
+    var journeyDisplayController : JourneyDisplayController?
     
-    public init(journeyDisplay : JourneyDisplay) {
+    init(journeyDisplay : JourneyDisplay) {
         self.journeyDisplay = journeyDisplay
         self.id = journeyDisplay.route.id!
     }
     
-    public init(id : String) {
+    init(id : String) {
         self.id = id
     }
 }
 
-public class JourneyDisplayController : OnJourneyAddedListener, OnJourneyRemovedListener {
-    public var api : BuspassApi
-    public var journeyBasket : JourneyBasket
+class JourneyDisplayController : OnJourneyAddedListener, OnJourneyRemovedListener {
+    var api : BuspassApi
+    var journeyBasket : JourneyBasket
     
-    public var onJourneyDisplayAddedListener : OnJourneyDisplayAddedListener?
-    public var onJourneyDisplayRemovedListener : OnJourneyDisplayRemovedListener?
-    public var journeyDisplays = [JourneyDisplay]()
-    public var journeyDisplayMap = [String:JourneyDisplay]()
+    var onJourneyDisplayAddedListener : OnJourneyDisplayAddedListener?
+    var onJourneyDisplayRemovedListener : OnJourneyDisplayRemovedListener?
+    var journeyDisplays = [JourneyDisplay]()
+    var journeyDisplayMap = [String:JourneyDisplay]()
     var writeLock = dispatch_semaphore_create(1)
     
-    public init(api :BuspassApi, basket : JourneyBasket) {
+    init(api :BuspassApi, basket : JourneyBasket) {
         self.api = api
         self.journeyBasket = basket
         basket.addOnJourneyAddedListeners(self)
         basket.addOnJourneyRemovedListeners(self)
     }
     
-    public func getJourneyDisplays() -> [JourneyDisplay] {
+    func getJourneyDisplays() -> [JourneyDisplay] {
         dispatch_semaphore_wait(writeLock, DISPATCH_TIME_FOREVER)
         let result = [JourneyDisplay](journeyDisplays)
         dispatch_semaphore_signal(writeLock)
         return result
     }
     
-    public func getJourneyPatterns() -> [JourneyPattern] {
+    func getJourneyPatterns() -> [JourneyPattern] {
         dispatch_semaphore_wait(writeLock, DISPATCH_TIME_FOREVER)
         var patterns = [String:JourneyPattern]()
         for jd in journeyDisplays {
@@ -69,7 +69,7 @@ public class JourneyDisplayController : OnJourneyAddedListener, OnJourneyRemoved
         return patterns.values.array
     }
     
-    public func onJourneyAdded(journeyBasket : JourneyBasket, journey : Route) {
+    func onJourneyAdded(journeyBasket : JourneyBasket, journey : Route) {
         let newRoute = JourneyDisplay(journeyDisplayController: self, route: journey)
         dispatch_semaphore_wait(writeLock, DISPATCH_TIME_FOREVER)
         journeyDisplays.append(newRoute)
@@ -87,7 +87,7 @@ public class JourneyDisplayController : OnJourneyAddedListener, OnJourneyRemoved
         }
     }
     
-    public func onJourneyRemoved(journeyBasket : JourneyBasket, journey : Route) {
+    func onJourneyRemoved(journeyBasket : JourneyBasket, journey : Route) {
         dispatch_semaphore_wait(writeLock, DISPATCH_TIME_FOREVER)
 
         let jd = journeyDisplayMap[journey.id!]
@@ -102,12 +102,12 @@ public class JourneyDisplayController : OnJourneyAddedListener, OnJourneyRemoved
     }
     
     
-    public func presentJourneyDisplay(jd : JourneyDisplay) {
+    func presentJourneyDisplay(jd : JourneyDisplay) {
         let evd = JourneyDisplayEventData(journeyDisplay: jd)
         api.uiEvents.postEvent("JourneyAdded", data: evd)
     }
     
-    public func abandonJourneyDisplay(jd : JourneyDisplay) {
+    func abandonJourneyDisplay(jd : JourneyDisplay) {
         let evd = JourneyDisplayEventData(journeyDisplay: jd)
         api.uiEvents.postEvent("JourneyRemoved", data: evd)
         

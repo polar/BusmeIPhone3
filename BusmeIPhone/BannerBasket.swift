@@ -9,15 +9,15 @@
 import Foundation
 import CoreLocation
 
-public class BannerBasket {
-    public var bannerStore : BannerStore
+class BannerBasket {
+    var bannerStore : BannerStore
     weak var bannerController : BannerPresentationController?
         
-    public init(bannerStore : BannerStore) {
+    init(bannerStore : BannerStore) {
         self.bannerStore = bannerStore
     }
     
-    public func addBanner(banner : BannerInfo) {
+    func addBanner(banner : BannerInfo) {
         let b = bannerStore.banners[banner.id]
         if b != nil {
             if b!.version < banner.version {
@@ -31,7 +31,7 @@ public class BannerBasket {
         }
     }
     
-    public func removeBanner(id : String) {
+    func removeBanner(id : String) {
         let banner = bannerStore.getBannerInfo(id)
         if (banner != nil) {
             bannerStore.removeBanner(id)
@@ -39,16 +39,16 @@ public class BannerBasket {
         }
     }
     
-    public func removeBanner( banner : BannerInfo) {
+    func removeBanner( banner : BannerInfo) {
         bannerStore.removeBanner(banner.id)
         bannerController?.removeBanner(banner)
     }
     
-    public func getBanners() -> [BannerInfo] {
+    func getBanners() -> [BannerInfo] {
         return bannerStore.banners.values.array
     }
     
-    public func empty() {
+    func empty() {
         for banner in getBanners() {
             removeBanner(banner)
         }

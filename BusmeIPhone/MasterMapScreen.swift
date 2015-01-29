@@ -11,13 +11,13 @@ import CoreLocation
 import UIKit
 import MapKit
 
-public class MasterMapScreen : UIViewController, MKMapViewDelegate {
-    public var mapView : MKMapView!
-    public var activityView : UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
-    public var activityBarButton : UIBarButtonItem!
-    public var titleView : UIBarButtonItem!
-    public var menuButton : UIBarButtonItem!
-    public var master : Master!
+class MasterMapScreen : UIViewController, MKMapViewDelegate {
+    var mapView : MKMapView!
+    var activityView : UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+    var activityBarButton : UIBarButtonItem!
+    var titleView : UIBarButtonItem!
+    var menuButton : UIBarButtonItem!
+    var master : Master!
     
     var syncProgressDialogController : SyncProgressDialogController!
     
@@ -25,14 +25,14 @@ public class MasterMapScreen : UIViewController, MKMapViewDelegate {
     var tabButton : TabButton?
     
 
-    public var api : BuspassApi!
-    public var masterController : MasterController!
-    public var fgBannerPresentationController : FGBannerPresentController!
-    public var fgMarkerPresentationController : FGMarkerPresentController!
-    public var fgMasterMessagePresentationController : FGMasterMessagePresentController!
+    var api : BuspassApi!
+    var masterController : MasterController!
+    var fgBannerPresentationController : FGBannerPresentController!
+    var fgMarkerPresentationController : FGMarkerPresentController!
+    var fgMasterMessagePresentationController : FGMasterMessagePresentController!
     var masterOverlay : MasterOverlay!
     
-    public func setMasterController(masterController : MasterController) {
+    func setMasterController(masterController : MasterController) {
         self.masterController = masterController
         self.api = masterController.api
         self.master = masterController.master
@@ -43,7 +43,7 @@ public class MasterMapScreen : UIViewController, MKMapViewDelegate {
         self.masterOverlay = MasterOverlay(master: masterController.master, masterController: masterController)
     }
     
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         // Map
         self.mapView = MKMapView(frame: UIScreen.mainScreen().bounds)
@@ -68,12 +68,12 @@ public class MasterMapScreen : UIViewController, MKMapViewDelegate {
         mapView.addOverlay(masterOverlay)
     }
 
-    override public func didReceiveMemoryWarning() {
+    override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-    override public func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent) {
+    override func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent) {
         if (motion == UIEventSubtype.MotionShake) {
             routesView?.toggleSlide()
             routesView?.reload()
@@ -97,7 +97,7 @@ public class MasterMapScreen : UIViewController, MKMapViewDelegate {
         mapView.removeAnnotation(annotation)
     }
     
-    public func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+    func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
         if annotation.isKindOfClass(MarkerAnnotation) {
             let maview = MarkerAnnotationView(markerAnnotation: annotation as MarkerAnnotation)
             maview.masterMapScreen = self
@@ -106,7 +106,7 @@ public class MasterMapScreen : UIViewController, MKMapViewDelegate {
         return nil
     }
     
-    public func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {
+    func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {
         let overlayView =  MasterOverlayView(overlay: overlay as MasterOverlay, mapView: mapView, masterController: masterController)
         overlayView.setCenterAndZoom()
         return overlayView

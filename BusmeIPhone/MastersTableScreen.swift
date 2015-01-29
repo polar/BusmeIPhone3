@@ -9,24 +9,29 @@
 import Foundation
 import UIKit
 
-public class MastersTableScreen : UITableViewController, UITableViewDelegate,UISearchDisplayDelegate {
+class MastersTableScreen : UITableViewController, UITableViewDelegate,UISearchDisplayDelegate {
     weak var discoverController : DiscoverController?
-    public var masters : [Master] = [Master]()
+    weak var mainController : MainController?
+    var masters : [Master] = [Master]()
 
-    public func setDiscoverController(discoverController :DiscoverController) {
+    func setDiscoverController(discoverController :DiscoverController) {
         self.discoverController = discoverController
         self.masters = discoverController.getMasters()
         makeSearchable()
     }
     
-    public override func viewDidLoad() {
+    func setMainController(mainController : MainController) {
+        self.mainController = mainController
+    }
+    
+    override func viewDidLoad() {
         super.viewDidLoad()
         tableView.tableHeaderView = searchBar
     }
     
-    public var eventData : DiscoverEventData?
+    var eventData : DiscoverEventData?
     
-    public func reloadTableView() {
+    func reloadTableView() {
         let ms = discoverController?.getMasters()
         if ms != nil {
             self.masters = ms!
@@ -36,7 +41,7 @@ public class MastersTableScreen : UITableViewController, UITableViewDelegate,UIS
     }
     // MARK: TableView
     
-    override public func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tableView == self.searchDisplayController!.searchResultsTableView {
             return self.filteredMasters.count
         } else {
@@ -44,7 +49,7 @@ public class MastersTableScreen : UITableViewController, UITableViewDelegate,UIS
         }
     }
     
-    override public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         //ask for a reusable cell from the tableview, the tableview will create a new one if it doesn't have any
         var cell : UITableViewCell? = self.tableView.dequeueReusableCellWithIdentifier("Cell") as? UITableViewCell
         
@@ -68,7 +73,7 @@ public class MastersTableScreen : UITableViewController, UITableViewDelegate,UIS
         return cell!
     }
     
-    override public func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         var master : Master!
         
@@ -90,7 +95,7 @@ public class MastersTableScreen : UITableViewController, UITableViewDelegate,UIS
     func doMasterInit(master : Master) {
         self.navigationController?.popViewControllerAnimated(true)
         let eventData = MainEventData(master: master)
-        discoverController!.api.uiEvents.postEvent("Main:Discover:return", data: eventData)
+        mainController!.api.uiEvents.postEvent("Main:Discover:return", data: eventData)
     }
     
     // Searchable

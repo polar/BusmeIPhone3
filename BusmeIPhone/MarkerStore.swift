@@ -8,9 +8,9 @@
 
 import Foundation
 
-public class MarkerStore : Storage {
+class MarkerStore : Storage {
     
-    public var markers : [String:MarkerInfo] = [String:MarkerInfo]()
+    var markers : [String:MarkerInfo] = [String:MarkerInfo]()
     
     override init() {
         super.init()
@@ -23,43 +23,43 @@ public class MarkerStore : Storage {
         }
     }
     
-    public func encodeWithCoder( coder : NSCoder ) {
+    func encodeWithCoder( coder : NSCoder ) {
         coder.encodeObject(markers, forKey: "markers")
     }
     
-    public override func preSerialize(api: ApiBase, time: TimeValue64) {
+    override func preSerialize(api: ApiBase, time: TimeValue64) {
         for marker in markers.values.array {
             marker.preSerialize(api, time: time)
         }
     }
     
-    public override func postSerialize(api: ApiBase, time: TimeValue64) {
+    override func postSerialize(api: ApiBase, time: TimeValue64) {
         for marker in markers.values.array {
             marker.postSerialize(api, time: time)
         }
     }
     
-    public func getMarkers() -> [MarkerInfo] {
+    func getMarkers() -> [MarkerInfo] {
         return markers.values.array
     }
     
-    public func getMarkerInfo(id: String) -> MarkerInfo? {
+    func getMarkerInfo(id: String) -> MarkerInfo? {
         return markers[id]
     }
     
-    public func empty() {
+    func empty() {
         self.markers = [String:MarkerInfo]()
     }
     
-    public func doesContainMarker(id : String) -> Bool {
+    func doesContainMarker(id : String) -> Bool {
         return markers[id] != nil
     }
     
-    public func storeMarker(marker : MarkerInfo) {
+    func storeMarker(marker : MarkerInfo) {
         markers[marker.id] = marker
     }
     
-    public func removeMarker(id : String) {
+    func removeMarker(id : String) {
         let marker = markers[id]
         if marker != nil {
             markers[id] = nil

@@ -18,6 +18,9 @@ class ProjectionController {
     var bgQueue : dispatch_queue_t
     var mapInset : MKMapSize
     
+    var cgPaths = [String:CGPath]()
+    var writeLock : dispatch_queue_t = dispatch_semaphore_create(1)
+    
     init(renderer : MKOverlayRenderer) {
         self.renderer = renderer
         bgQueue =  dispatch_queue_create("projections", DISPATCH_QUEUE_CONCURRENT)
@@ -31,6 +34,13 @@ class ProjectionController {
         let name = "\(Rect(mapRect:mapRect).toString()) - \(zoomLevel)"
         return name
     }
+    
+    func storeCGPath(journeyPattern : JourneyPattern, cgPath : CGPath) {
+        dispatch_semaphore_wait(writeLock, DISPATCH_TIME_FOREVER)
+        cgPaths[journeyPattern.id] = cgPath
+        dispatch_semaphore_signal(writeLock)
+    }
+
     
     func getProjection(mapRect: MKMapRect, zoomScale : MKZoomScale) -> MKMapProjection {
         let name = getProjectionName(mapRect, zoomScale: zoomScale)
@@ -46,6 +56,12 @@ class ProjectionController {
     func register(mapProjection : MKMapControlledProjection) {
         projections[mapProjection.name] = mapProjection
     }
+    
+    // NOT_USED on iPhone. 
+    
+    // This method gets called by the MKMapControlledProjection to generate a CGPath. However, we find
+    // on the iPhone that the The CGPath is the same for every projection. So, we just store a copy for
+    // each journeyPattern in the controller instead.
     
     func createPath(projection : MKMapControlledProjection, journeyPattern : JourneyPattern) {
         let mapRect = MKMapRectInset(journeyPattern.getGeoRect().toMapRect(), -mapInset.width, -mapInset.height)

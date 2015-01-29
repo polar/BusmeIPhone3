@@ -8,32 +8,32 @@
 
 import Foundation
 
-public class MasterMessageBasket {
-    public var masterMessageStore : MasterMessageStore
+class MasterMessageBasket {
+    var masterMessageStore : MasterMessageStore
     weak var masterMessageController : MasterMessagePresentationController?
     
-    public init(masterMessageStore : MasterMessageStore) {
+    init(masterMessageStore : MasterMessageStore) {
         self.masterMessageStore = masterMessageStore
     }
     
-    public func getMasterMessages() -> [MasterMessage] {
+    func getMasterMessages() -> [MasterMessage] {
         return masterMessageStore.getMasterMessages()
     }
     
-    public func resetMasterMessages(now : TimeValue64 = UtilsTime.current()) {
+    func resetMasterMessages(now : TimeValue64 = UtilsTime.current()) {
         for masterMessage in masterMessageStore.getMasterMessages() {
             masterMessage.reset(time: now)
             masterMessageController?.addMasterMessage(masterMessage)
         }
     }
     
-    public func empty() {
+    func empty() {
         for msg in getMasterMessages() {
             removeMasterMessage(msg)
         }
     }
     
-    public func addMasterMessage(masterMessage : MasterMessage) {
+    func addMasterMessage(masterMessage : MasterMessage) {
         let m = masterMessageStore.getMasterMessage(masterMessage.id)
         if (m != nil) {
             if (m!.version < masterMessage.version) {
@@ -47,12 +47,12 @@ public class MasterMessageBasket {
         }
     }
     
-    public func removeMasterMessage(masterMessage: MasterMessage) {
+    func removeMasterMessage(masterMessage: MasterMessage) {
         masterMessageStore.removeMasterMessage(masterMessage.id)
         masterMessageController?.removeMasterMessage(masterMessage)
     }
     
-    public func removeMasterMessage(id : String) {
+    func removeMasterMessage(id : String) {
         let m = masterMessageStore.getMasterMessage(id)
         if (m != nil) {
             masterMessageStore.removeMasterMessage(m!.id)

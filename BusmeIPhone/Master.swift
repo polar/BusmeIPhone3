@@ -8,23 +8,23 @@
 
 import Foundation
 
-public class Master : NSObject {
-    public var lon : Double?
-    public var lat : Double?
-    public var slug : String?
-    public var name : String?
-    public var apiUrl : String?
-    public var title : String?
-    public var masterDescription : String?
-    public var bbox : BoundingBox?
-    public var timeFormat : String = "%l:%M %P"
+class Master : NSObject {
+    var lon : Double?
+    var lat : Double?
+    var slug : String?
+    var name : String?
+    var apiUrl : String?
+    var title : String?
+    var masterDescription : String?
+    var bbox : BoundingBox?
+    var timeFormat : String = "%l:%M %P"
     
-    public init( coder : NSCoder ) {
+    init( coder : NSCoder ) {
         super.init()
         initWithCoder(coder)
     }
     
-    public init(tag : Tag) {
+    init(tag : Tag) {
         super.init()
         loadParsedXML(tag)
     }
@@ -42,7 +42,7 @@ public class Master : NSObject {
         self.timeFormat = coder.decodeObjectForKey("timeFormat") as String
     }
     
-    public func encodeWithCoder(coder : NSCoder) {
+    func encodeWithCoder(coder : NSCoder) {
         coder.encodeDouble(lon!, forKey: "lon")
         coder.encodeDouble(lat!, forKey: "lat")
         coder.encodeObject(slug!, forKey: "slug")
@@ -54,7 +54,7 @@ public class Master : NSObject {
         coder.encodeObject(timeFormat, forKey: "timeFormat")
     }
     
-    public func loadParsedXML(tag : Tag) {
+    func loadParsedXML(tag : Tag) {
         let lon = tag.attributes["lon"]
         let lat = tag.attributes["lat"]
         self.slug = tag.attributes["slug"]
@@ -83,11 +83,11 @@ public class Master : NSObject {
         }
     }
     
-    public func isValid() -> Bool {
+    func isValid() -> Bool {
         return lon != nil && lat != nil && name != nil && slug != nil && title != nil && apiUrl != nil && masterDescription != nil && bbox != nil
     }
     
-    public func toString() -> String {
+    func toString() -> String {
         return "<Master slug=\(slug) lon=\(lon) lat=\(lat) name=\(name) url=\(apiUrl)>"
     }
     

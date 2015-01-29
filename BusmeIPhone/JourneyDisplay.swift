@@ -8,23 +8,23 @@
 
 import Foundation
 
-public struct JourneyIcon {
-    public static let ROUTE_ICON = 1
-    public static let ROUTE_ICON_ACTIVE = 2
-    public static let PURPLE_DOT_ICON = 3
-    public static let BLUE_CIRCLE_ICON = 4
-    public static let GREEN_ARROW_ICON = 5
-    public static let BLUE_ARROW_ICON = 6
-    public static let BUS_ICON_ACTIVE = 7
-    public static let RED_ARROW_ICON = 8
+struct JourneyIcon {
+    static let ROUTE_ICON = 1
+    static let ROUTE_ICON_ACTIVE = 2
+    static let PURPLE_DOT_ICON = 3
+    static let BLUE_CIRCLE_ICON = 4
+    static let GREEN_ARROW_ICON = 5
+    static let BLUE_ARROW_ICON = 6
+    static let BUS_ICON_ACTIVE = 7
+    static let RED_ARROW_ICON = 8
 }
 
-public protocol OnVisibilityListener {
+protocol OnVisibilityListener {
     func onChange(which : String, value : Bool)
 }
 
-public class JourneyDisplay {
-    public var route : Route
+class JourneyDisplay {
+    var route : Route
     
     private var nameVisible : Bool = false
     private var nameHighlighted : Bool = false
@@ -35,37 +35,37 @@ public class JourneyDisplay {
     private var onVisibilityListener : OnVisibilityListener?
     private var journeyDisplayController : JourneyDisplayController
     
-    public init(journeyDisplayController : JourneyDisplayController, route : Route) {
+    init(journeyDisplayController : JourneyDisplayController, route : Route) {
         self.journeyDisplayController = journeyDisplayController
         self.route = route
     }
     
-    public func isStartingJourney() -> Bool {
+    func isStartingJourney() -> Bool {
         return route.isStartingJourney()
     }
     
-    public func isFinished() -> Bool {
+    func isFinished() -> Bool {
         return route.isFinished()
     }
     
-    public func isActive() -> Bool {
+    func isActive() -> Bool {
         return route.isActiveJourney() && !isFinished() || isStartingJourney()
     }
     
-    public func isNameVisible() -> Bool {
+    func isNameVisible() -> Bool {
         return nameVisible && !route.isFinished()
     }
     
-    public func isPathVisible() -> Bool {
+    func isPathVisible() -> Bool {
         return pathVisible
     }
     
-    public func isHidden() -> Bool {
+    func isHidden() -> Bool {
         return !pathVisible
     }
     
     private var geoRect : GeoRect?
-    public func getGeoRect() -> GeoRect {
+    func getGeoRect() -> GeoRect {
         if geoRect != nil {
             return geoRect!
         }
@@ -78,49 +78,49 @@ public class JourneyDisplay {
         return geoRect!
     }
     
-    public func setPathVisible(visible : Bool) {
+    func setPathVisible(visible : Bool) {
         self.pathVisible = visible
         notifyVisibilityListener("path", value: self.pathVisible)
     }
     
-    public func setPathHidden(hidden : Bool) {
+    func setPathHidden(hidden : Bool) {
         self.pathVisible = !hidden
         notifyVisibilityListener("path", value: self.pathVisible)
     }
     
-    public func setNameVisible(visible : Bool) {
+    func setNameVisible(visible : Bool) {
         self.nameVisible = visible
         notifyVisibilityListener("name", value: self.nameVisible)
     }
     
-    public func setNameHidden(hidden : Bool) {
+    func setNameHidden(hidden : Bool) {
         self.nameVisible = !hidden
         notifyVisibilityListener("name", value: self.nameVisible)
     }
     
-    public func notifyVisibilityListener(which : String, value : Bool) {
+    func notifyVisibilityListener(which : String, value : Bool) {
         self.onVisibilityListener?.onChange(which, value: value)
     }
     
-    public func isTracking() -> Bool {
+    func isTracking() -> Bool {
         return tracking
     }
     
-    public func isNameHighlighted() -> Bool {
+    func isNameHighlighted() -> Bool {
         return nameHighlighted
     }
-    public func setNameHighlighted( value : Bool) {
+    func setNameHighlighted( value : Bool) {
         self.nameHighlighted = value
     }
     
-    public func isPathHighlighted() -> Bool {
+    func isPathHighlighted() -> Bool {
         return pathHighlighted
     }
-    public func setPathHighlighted( value : Bool) {
+    func setPathHighlighted( value : Bool) {
         self.pathHighlighted = value
     }
     
-    public func hasActiveJourneys() -> Bool {
+    func hasActiveJourneys() -> Bool {
         if route.isRouteDefinition() {
             for jd in journeyDisplayController.getJourneyDisplays() {
                 if jd.isActive() {
@@ -133,7 +133,7 @@ public class JourneyDisplay {
         return false
     }
     
-    public func getIcon() -> Int {
+    func getIcon() -> Int {
         if route.isRouteDefinition() {
             if hasActiveJourneys() {
                 return JourneyIcon.ROUTE_ICON_ACTIVE
@@ -157,7 +157,7 @@ public class JourneyDisplay {
         }
     }
     
-    public func doesInclude(array: [JourneyDisplay], elem: JourneyDisplay?) -> Bool {
+    func doesInclude(array: [JourneyDisplay], elem: JourneyDisplay?) -> Bool {
         if elem != nil {
             for x in array {
                 if (x === elem) {
@@ -169,7 +169,7 @@ public class JourneyDisplay {
     }
     
     private var myRouteDefinition : JourneyDisplay?
-    public func getRouteDefinition() -> JourneyDisplay? {
+    func getRouteDefinition() -> JourneyDisplay? {
         if doesInclude(journeyDisplayController.getJourneyDisplays(), elem: myRouteDefinition) {
             return myRouteDefinition
         }
@@ -186,7 +186,7 @@ public class JourneyDisplay {
         return nil
     }
     
-    public func getActiveJourneys() -> [JourneyDisplay] {
+    func getActiveJourneys() -> [JourneyDisplay] {
         var jds = [JourneyDisplay]()
         if route.isRouteDefinition() {
             for jd in journeyDisplayController.getJourneyDisplays() {
@@ -214,7 +214,7 @@ public class JourneyDisplay {
     }
 
     
-    public func compareTo(jd :JourneyDisplay) ->Int {
+    func compareTo(jd :JourneyDisplay) ->Int {
         if (route.isJourney() && jd.route.isJourney() || !route.isJourney() && !jd.route.isJourney()) {
             let cmp = compare(route.sort!, i2: jd.route.sort!)
             if (cmp == 0) {

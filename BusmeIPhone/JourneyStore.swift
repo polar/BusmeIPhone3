@@ -8,15 +8,15 @@
 
 import Foundation
 
-public class JourneyStore : Storage {
+class JourneyStore : Storage {
     
-    public var journeys : [String:Route] = [String:Route]()
-    public var patterns : [String:JourneyPattern] = [String:JourneyPattern]()
+    var journeys : [String:Route] = [String:Route]()
+    var patterns : [String:JourneyPattern] = [String:JourneyPattern]()
     
     override init() {
         super.init()
     }
-    public override init( coder : NSCoder) {
+    override init( coder : NSCoder) {
         super.init()
         let journeys = coder.decodeObjectForKey("journeys") as? [String:Route]
         if journeys != nil {
@@ -32,12 +32,12 @@ public class JourneyStore : Storage {
         }
     }
     
-    public func encodeWithCoder( coder : NSCoder ) {
+    func encodeWithCoder( coder : NSCoder ) {
         coder.encodeObject(journeys, forKey: "journeys")
         coder.encodeObject(patterns, forKey: "patterns")
     }
     
-    public override func preSerialize(api: ApiBase, time: TimeValue64) {
+    override func preSerialize(api: ApiBase, time: TimeValue64) {
         for pattern in patterns.values.array {
             pattern.preSerialize(api, time: time)
         }
@@ -46,7 +46,7 @@ public class JourneyStore : Storage {
         }
     }
     
-    public override func postSerialize(api: ApiBase, time: TimeValue64) {
+    override func postSerialize(api: ApiBase, time: TimeValue64) {
         for pattern in patterns.values.array {
             pattern.postSerialize(api, time: time)
         }
@@ -55,15 +55,15 @@ public class JourneyStore : Storage {
         }
     }
     
-    public func getPattern(id: String) -> JourneyPattern? {
+    func getPattern(id: String) -> JourneyPattern? {
         return patterns[id]
     }
     
-    public func getJourney(id: String) -> Route? {
+    func getJourney(id: String) -> Route? {
         return journeys[id]
     }
     
-    public func empty() {
+    func empty() {
         for journey in journeys.values.array {
             journey.journeyStore = nil
         }
@@ -71,24 +71,24 @@ public class JourneyStore : Storage {
         patterns = [String:JourneyPattern]()
     }
     
-    public func doesContainPattern(id : String) -> Bool {
+    func doesContainPattern(id : String) -> Bool {
         return patterns[id] != nil
     }
     
-    public func doesContainJourney(id :String) -> Bool {
+    func doesContainJourney(id :String) -> Bool {
         return journeys[id] != nil
     }
     
-    public func storePattern(pattern : JourneyPattern) {
+    func storePattern(pattern : JourneyPattern) {
         patterns[pattern.id] = pattern
     }
     
-    public func storeJourney(journey : Route) {
+    func storeJourney(journey : Route) {
         journey.journeyStore = self
         journeys[journey.id!] = journey
     }
     
-    public func removeJourney(id : String) {
+    func removeJourney(id : String) {
         let journey = journeys[id]
         if journey != nil {
             journey!.journeyStore = nil
@@ -96,7 +96,7 @@ public class JourneyStore : Storage {
         }
     }
     
-    public func removePattern(id : String) {
+    func removePattern(id : String) {
         patterns[id] = nil
     }
 }

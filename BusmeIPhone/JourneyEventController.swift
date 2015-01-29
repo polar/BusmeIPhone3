@@ -8,10 +8,10 @@
 
 import Foundation
 
-public class JourneyEventController : BuspassEventListener {
-    public var api : BuspassApi
+class JourneyEventController : BuspassEventListener {
+    var api : BuspassApi
     
-    public init( api : BuspassApi) {
+    init( api : BuspassApi) {
         self.api = api
         api.uiEvents.registerForEvent("JourneyEvent", listener: self)
     }
@@ -20,7 +20,7 @@ public class JourneyEventController : BuspassEventListener {
         api.uiEvents.unregisterForEvent("JourneyEvent", listener: self)
     }
     
-    public func onBuspassEvent(event: BuspassEvent) {
+    func onBuspassEvent(event: BuspassEvent) {
         let eventData = event.eventData as? JourneyEventData
         if eventData != nil {
             switch (eventData!.action) {
@@ -50,35 +50,35 @@ public class JourneyEventController : BuspassEventListener {
             }
         }
     }
-    public func onRoutePosting(eventData : JourneyEventData) {
+    func onRoutePosting(eventData : JourneyEventData) {
         
     }
     
-    public func onRouteStart(eventData : JourneyEventData) {
+    func onRouteStart(eventData : JourneyEventData) {
         
     }
     
-    public func onOffRoute(eventData : JourneyEventData) {
+    func onOffRoute(eventData : JourneyEventData) {
         
     }
     
-    public func onOnRoute(eventData : JourneyEventData) {
+    func onOnRoute(eventData : JourneyEventData) {
         
     }
     
-    public func onUpdateRoute(eventData : JourneyEventData) {
+    func onUpdateRoute(eventData : JourneyEventData) {
         
     }
     
-    public func onAtRouteEnd(eventData : JourneyEventData) {
+    func onAtRouteEnd(eventData : JourneyEventData) {
         
     }
     
-    public func onOnRouteEnd(eventData : JourneyEventData) {
+    func onOnRouteEnd(eventData : JourneyEventData) {
         
     }
     
-    public func onOnRouteDone(eventData : JourneyEventData) {
+    func onOnRouteDone(eventData : JourneyEventData) {
         
     }
 }

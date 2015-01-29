@@ -8,26 +8,26 @@
 
 import Foundation
 
-public class BannerPresentationController {
-    public var api : BuspassApi
-    public var bannerBasket : BannerBasket
-    public var currentBanner : BannerInfo?
-    public var bannerQ : PriorityQueue<BannerInfo>!
+class BannerPresentationController {
+    var api : BuspassApi
+    var bannerBasket : BannerBasket
+    var currentBanner : BannerInfo?
+    var bannerQ : PriorityQueue<BannerInfo>!
     
-    public init(api : BuspassApi, basket: BannerBasket) {
+    init(api : BuspassApi, basket: BannerBasket) {
         self.api = api
         self.bannerBasket = basket
         self.bannerQ = PriorityQueue<BannerInfo>(compare: self.compare)
         bannerBasket.bannerController = self
     }
     
-    public func addBanner(banner: BannerInfo) {
+    func addBanner(banner: BannerInfo) {
         if (!bannerQ.doesInclude(banner)) {
             bannerQ.push(banner)
         }
     }
     
-    public func removeBanner(banner: BannerInfo) {
+    func removeBanner(banner: BannerInfo) {
         if (currentBanner === banner) {
             abandonBanner(banner)
             banner.onDismiss(true)
@@ -36,7 +36,7 @@ public class BannerPresentationController {
         bannerQ.delete(banner)
     }
     
-    public func removeBanner(id: String) {
+    func removeBanner(id: String) {
         if (currentBanner?.id == id) {
             abandonBanner(currentBanner!)
             currentBanner!.onDismiss(true)
@@ -51,11 +51,11 @@ public class BannerPresentationController {
         }
     }
     
-    public func doesContain(banner: BannerInfo) -> Bool {
+    func doesContain(banner: BannerInfo) -> Bool {
         return bannerQ.doesInclude(banner)
     }
     
-    public func roll(removeCurrent : Bool, now : TimeValue64 = UtilsTime.current()) {
+    func roll(removeCurrent : Bool, now : TimeValue64 = UtilsTime.current()) {
         if (currentBanner != nil) {
             if (!removeCurrent && !currentBanner!.isDisplayTimeExpired(now)) {
                 return
@@ -77,7 +77,7 @@ public class BannerPresentationController {
         }
     }
     
-    public func onDismiss(remind: Bool, bannerInfo: BannerInfo, time : TimeValue64) {
+    func onDismiss(remind: Bool, bannerInfo: BannerInfo, time : TimeValue64) {
         bannerInfo.onDismiss(remind)
         if !remind {
             // User doesn't get a choice on remove the banner from display
@@ -96,7 +96,7 @@ public class BannerPresentationController {
     
     // Done on Background
     
-    public func onLocationUpdate(location: GeoPoint, now: TimeValue64 = UtilsTime.current()) {
+    func onLocationUpdate(location: GeoPoint, now: TimeValue64 = UtilsTime.current()) {
         for banner in bannerBasket.getBanners() {
             if (banner.point == nil ||
                 GeoCalc.getGeoAngle(location, c2: banner.point!) < banner.radius) {

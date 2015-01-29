@@ -9,7 +9,7 @@
 import Foundation
 import CoreGraphics
 
-public class FGMarkerPresentController : BuspassEventListener {
+class FGMarkerPresentController : BuspassEventListener {
     
     weak var api : BuspassApi!
     weak var masterMapScreen : MasterMapScreen!
@@ -17,7 +17,7 @@ public class FGMarkerPresentController : BuspassEventListener {
     
     var currentMarkerMessageController : MarkerMessageViewController?
     
-    public init(masterMapScreen : MasterMapScreen) {
+    init(masterMapScreen : MasterMapScreen) {
         self.masterMapScreen = masterMapScreen
         self.masterController = masterMapScreen.masterController
         self.api = masterMapScreen.api
@@ -39,7 +39,7 @@ public class FGMarkerPresentController : BuspassEventListener {
     }
     
     
-    public func onBuspassEvent(event: BuspassEvent) {
+    func onBuspassEvent(event: BuspassEvent) {
         let eventData = event.eventData as? MarkerEventData
         if eventData != nil {
             if event.eventName == "MarkerPresent:display" {
@@ -53,14 +53,14 @@ public class FGMarkerPresentController : BuspassEventListener {
     }
     
     private var currentMarkers : [String:MarkerAnnotation] = [String:MarkerAnnotation]()
-    public func presentMarker(eventData : MarkerEventData) {
+    func presentMarker(eventData : MarkerEventData) {
         let markerInfo = eventData.markerInfo
         let annotation = MarkerAnnotation(markerInfo: markerInfo)
         currentMarkers[markerInfo.id] = annotation
         masterMapScreen.addMarkerAnnotation(annotation)
     }
     
-    public func abandonMarker(eventData : MarkerEventData) {
+    func abandonMarker(eventData : MarkerEventData) {
         let markerInfo = eventData.markerInfo
         let annotation = currentMarkers[markerInfo.id]
         if annotation != nil {

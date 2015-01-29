@@ -8,16 +8,16 @@
 
 import Foundation
 
-public class NameId : Storage {
-    public var name : String
-    public var id : String
-    public var route_id : String?
-    public var type : String?
-    public var version : TimeValue64?;
-    public var sched_time_start : TimeValue64?
-    public var time_start : TimeValue64?
+class NameId : Storage {
+    var name : String
+    var id : String
+    var route_id : String?
+    var type : String?
+    var version : TimeValue64?;
+    var sched_time_start : TimeValue64?
+    var time_start : TimeValue64?
     
-    public init(id: String, name: String) {
+    init(id: String, name: String) {
         self.name = name
         self.id = id
         super.init()
@@ -34,7 +34,7 @@ public class NameId : Storage {
         self.time_start = decoder.decodeInt64ForKey("time_start")
     }
     
-    public func encodeWithCoder(encoder : NSCoder) {
+    func encodeWithCoder(encoder : NSCoder) {
         encoder.encodeObject(id, forKey: "id")
         encoder.encodeObject(name, forKey: "name")
         encoder.encodeObject(route_id, forKey: "route_id")
@@ -51,7 +51,7 @@ public class NameId : Storage {
         }
     }
     
-    public init(args: [String]) {
+    init(args: [String]) {
         self.name = args[0].stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
         self.id = args[1].stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
         super.init()

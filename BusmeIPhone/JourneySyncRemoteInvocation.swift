@@ -15,31 +15,31 @@ class JourneySyncEventData {
     }
 }
 
-public class JourneySyncUpdateProgressListener : InvocationProgressListener {
+class JourneySyncUpdateProgressListener : InvocationProgressListener {
     var journeySyncProgressListener : JourneySyncProgressListener
     
-    public init(journeySyncProgressListener : JourneySyncProgressListener) {
+    init(journeySyncProgressListener : JourneySyncProgressListener) {
         self.journeySyncProgressListener = journeySyncProgressListener
     }
-    public override func onUpdateStart(time: TimeValue64, isForced: Bool) {
+    override func onUpdateStart(time: TimeValue64, isForced: Bool) {
         journeySyncProgressListener.onBegin(isForced)
     }
-    public override func onRequestStart(time: TimeValue64) {
+    override func onRequestStart(time: TimeValue64) {
         journeySyncProgressListener.onSyncStart()
     }
-    public override func onUpdateFinish(makeRequest: Bool, time: TimeValue64) {
+    override func onUpdateFinish(makeRequest: Bool, time: TimeValue64) {
         journeySyncProgressListener.onDone()
     }
 }
 
-public class JourneySyncRemoteInvocation : RemoteInvocation {
+class JourneySyncRemoteInvocation : RemoteInvocation {
     let busApi : BuspassApi
-    public var journeyDisplayController : JourneyDisplayController
-    public var journeySyncRequestProcessor : JourneySyncRequestProcessor
-    public var journeySyncProgressListener : JourneySyncProgressListener
-    public var journeySyncUpdateProgressListener : JourneySyncUpdateProgressListener
+    var journeyDisplayController : JourneyDisplayController
+    var journeySyncRequestProcessor : JourneySyncRequestProcessor
+    var journeySyncProgressListener : JourneySyncProgressListener
+    var journeySyncUpdateProgressListener : JourneySyncUpdateProgressListener
     
-    public init(api : BuspassApi, journeyDisplayController : JourneyDisplayController, journeySyncProgressListener : JourneySyncProgressListener) {
+    init(api : BuspassApi, journeyDisplayController : JourneyDisplayController, journeySyncProgressListener : JourneySyncProgressListener) {
         self.journeyDisplayController = journeyDisplayController
         self.journeySyncProgressListener = journeySyncProgressListener
         self.journeySyncRequestProcessor = JourneySyncRequestProcessor(journeyBasket: journeyDisplayController.journeyBasket, progressListener: journeySyncProgressListener)
@@ -51,7 +51,7 @@ public class JourneySyncRemoteInvocation : RemoteInvocation {
         addResponseProcessor(journeySyncRequestProcessor)
     }
     
-    public override func getRequestUrl() -> String? {
+    override func getRequestUrl() -> String? {
         if busApi.isReady() {
             let query = busApi.getDefaultQuery().toString()
             return busApi.buspass!.getRouteJourneyIds1Url! + query
@@ -59,7 +59,7 @@ public class JourneySyncRemoteInvocation : RemoteInvocation {
         return nil
     }
     
-    public override func handleResponse(tag: Tag?) -> Bool {
+    override func handleResponse(tag: Tag?) -> Bool {
         if tag != nil {
             if "response" == tag!.name.lowercaseString {
                 let updateRate = tag!.attributes["updateRate"] as NSString?
@@ -78,7 +78,7 @@ public class JourneySyncRemoteInvocation : RemoteInvocation {
         return false
     }
     
-    public func perform(isForced : Bool) {
+    func perform(isForced : Bool) {
         invoke(journeySyncUpdateProgressListener, isForced: isForced)
     }
     

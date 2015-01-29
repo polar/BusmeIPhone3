@@ -8,32 +8,32 @@
 
 import Foundation
 
-public struct MasterMessageEvent {
-    public static let S_PRESENT  = 0
-    public static let S_RESOLVE  = 1
-    public static let S_RESOLVED = 2
-    public static let S_ERROR    = 3
-    public static let S_DONE     = 4
+struct MasterMessageEvent {
+    static let S_PRESENT  = 0
+    static let S_RESOLVE  = 1
+    static let S_RESOLVED = 2
+    static let S_ERROR    = 3
+    static let S_DONE     = 4
     
-    public static let R_GO     = 1
-    public static let R_REMIND = 2
-    public static let R_REMOVE = 3
-    public static let R_CANCEL = 4
+    static let R_GO     = 1
+    static let R_REMIND = 2
+    static let R_REMOVE = 3
+    static let R_CANCEL = 4
 }
 
-public class MasterMessageEventData {
-    public var state : Int = MasterMessageEvent.S_PRESENT
-    public var thruUrl : String?
-    public var masterMessage : MasterMessage
-    public var resolve : Int = MasterMessageEvent.R_CANCEL
-    public var resolveData : AnyObject?
-    public var time : TimeValue64 = 0
+class MasterMessageEventData {
+    var state : Int = MasterMessageEvent.S_PRESENT
+    var thruUrl : String?
+    var masterMessage : MasterMessage
+    var resolve : Int = MasterMessageEvent.R_CANCEL
+    var resolveData : AnyObject?
+    var time : TimeValue64 = 0
     
-    public init(masterMessage : MasterMessage) {
+    init(masterMessage : MasterMessage) {
         self.masterMessage = masterMessage
     }
     
-    public func dup() -> MasterMessageEventData {
+    func dup() -> MasterMessageEventData {
         let evd = MasterMessageEventData(masterMessage: masterMessage)
         evd.state = state
         evd.resolve = resolve
@@ -43,7 +43,7 @@ public class MasterMessageEventData {
         return evd
     }
     
-    public func empty() {
+    func empty() {
         //self.masterMessage = nil
         self.thruUrl = nil
         self.resolveData = nil
@@ -51,11 +51,11 @@ public class MasterMessageEventData {
     
 }
 
-public class MasterMessageForeground : BuspassEventListener {
-    public var api : BuspassApi
+class MasterMessageForeground : BuspassEventListener {
+    var api : BuspassApi
     weak var masterMessagePresentationController : MasterMessagePresentationController?
     
-    public init(api: BuspassApi) {
+    init(api: BuspassApi) {
         self.api = api
         self.api.uiEvents.registerForEvent("MasterMessageEvent", listener: self)
     }
@@ -64,7 +64,7 @@ public class MasterMessageForeground : BuspassEventListener {
         self.api.uiEvents.unregisterForEvent("MasterMessageEvent", listener: self)
     }
     
-    public func onBuspassEvent(event: BuspassEvent) {
+    func onBuspassEvent(event: BuspassEvent) {
         let evd = event.eventData as MasterMessageEventData
         switch(evd.state) {
         case MasterMessageEvent.S_PRESENT:
@@ -135,10 +135,10 @@ public class MasterMessageForeground : BuspassEventListener {
     }
 }
 
-public class MasterMessageBackground : BuspassEventListener {
-    public var api : BuspassApi
+class MasterMessageBackground : BuspassEventListener {
+    var api : BuspassApi
     
-    public init(api : BuspassApi) {
+    init(api : BuspassApi) {
         self.api = api
         self.api.bgEvents.registerForEvent("MasterMessageEvent", listener: self)
     }
@@ -147,7 +147,7 @@ public class MasterMessageBackground : BuspassEventListener {
         self.api.bgEvents.unregisterForEvent("MasterMessageEvent", listener: self)
     }
     
-    public func onBuspassEvent(event: BuspassEvent) {
+    func onBuspassEvent(event: BuspassEvent) {
         let evd = event.eventData! as MasterMessageEventData
         switch(evd.state) {
         case MasterMessageEvent.S_RESOLVE:

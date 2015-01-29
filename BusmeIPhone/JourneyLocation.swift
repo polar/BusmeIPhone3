@@ -9,47 +9,47 @@
 import Foundation
 import CoreLocation
 
-public class PostLocation {
-    public var journey : Route
-    public var location : Location
+class PostLocation {
+    var journey : Route
+    var location : Location
     
-    public init(journey:Route, location : Location) {
+    init(journey:Route, location : Location) {
         self.journey = journey
         self.location = location
     }
 }
 
-public class JourneyLocation : GeoPoint {
-    public var routeId : String?
-    public var lat : Double = 0
-    public var lon : Double = 0
-    public var dir : Double = 0
-    public var reported_time : TimeValue64 = 0
-    public var recorded_time : TimeValue64 = 0
-    public var timediff : Double = 0
-    public var onroute : Bool = false
-    public var reported : Bool = false
-    public var distance : Double = 0
-    public var time : Double = -1
+class JourneyLocation : GeoPoint {
+    var routeId : String?
+    var lat : Double = 0
+    var lon : Double = 0
+    var dir : Double = 0
+    var reported_time : TimeValue64 = 0
+    var recorded_time : TimeValue64 = 0
+    var timediff : Double = 0
+    var onroute : Bool = false
+    var reported : Bool = false
+    var distance : Double = 0
+    var time : Double = -1
 
-    public init(tag: Tag) {
+    init(tag: Tag) {
         loadParsedXMLTag(tag)
     }
     
     // GeoPoint Protocol 
-    public func getLatitude() -> Double {
+    func getLatitude() -> Double {
         return lat
     }
-    public func getLongitude() -> Double {
+    func getLongitude() -> Double {
         return lon
     }
-    public func getX() -> Double {
+    func getX() -> Double {
         return lon
     }
-    public func getY() -> Double {
+    func getY() -> Double {
         return lat
     }
-    public func loadParsedXMLTag(tag : Tag) {
+    func loadParsedXMLTag(tag : Tag) {
         self.routeId = tag.attributes["id"]
         self.lat = (tag.attributes["lat"]! as NSString).doubleValue
         self.lon = (tag.attributes["lon"]! as NSString).doubleValue
@@ -61,11 +61,11 @@ public class JourneyLocation : GeoPoint {
         self.onroute = tag.attributes["onroute"] == "true"
     }
     
-    public func isValid() -> Bool {
+    func isValid() -> Bool {
         return routeId != nil
     }
     
-    public func getRouteId() -> String {
+    func getRouteId() -> String {
         return routeId!
     }
 }

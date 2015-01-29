@@ -9,48 +9,59 @@
 import Foundation
 import UIKit
 
-public class MainEventData {
-    public var dialog : UIAlertView?
-    public var error : HttpStatusLine?
-    public var returnStatus : String?
-    public var master : Master?
-    public var location : GeoPoint?
-    public var discoverApi: DiscoverApiVersion1?
-    public var masterApi: BuspassApi?
-    public var oldController : MasterController?
-    public var saveAsDefault : Bool = false
+class MainEventData {
+    var dialog : UIAlertView?
+    var error : HttpStatusLine?
+    var returnStatus : String?
+    var master : Master?
+    var location : GeoPoint?
+    var discoverApi: DiscoverApiVersion1?
+    var masterApi: BuspassApi?
+    var discoverController : DiscoverController?
+    var masterController : MasterController?
+    var oldMasterController : MasterController?
+    var oldDiscoverController : DiscoverController?
+    var saveAsDefault : Bool = false
+    var forceDiscover : Bool = false
     
-    public init() {
+    init() {
         
     }
     
-    public init(master : Master) {
+    init(forceDiscover: Bool) {
+        self.forceDiscover = forceDiscover
+    }
+    
+    init(discoverApi : DiscoverApiVersion1) {
+        self.discoverApi = discoverApi
+    }
+    
+    init(master : Master) {
         self.master = master
     }
     
-    public init(masterApi : BuspassApi, master : Master) {
+    init(masterApi : BuspassApi, master : Master) {
         self.masterApi = masterApi
         self.master = master
     }
 }
 
-public class MainController : BuspassEventListener {
-    public var api : DiscoverApiVersion1
-    public var discoverController : DiscoverController!
-    public var masterController : MasterController?
-    public var configurator : Configurator
+class MainController : BuspassEventListener {
+    var api : MainApi
+    var discoverController : DiscoverController!
+    var masterController : MasterController?
+    var configurator : Configurator
     
     
-    public init(configurator : Configurator, discoverApi : DiscoverApiVersion1) {
+    init(configurator : Configurator, api : MainApi) {
         self.configurator = configurator
-        self.api = discoverApi
-        self.discoverController = DiscoverController(mainController: self)
+        self.api = api
         api.bgEvents.registerForEvent("Main:init", listener: self)
         api.bgEvents.registerForEvent("Main:Discover:init", listener: self)
         api.bgEvents.registerForEvent("Main:Master:init", listener: self)
     }
     
-    public func onBuspassEvent(event: BuspassEvent) {
+    func onBuspassEvent(event: BuspassEvent) {
         let eventName = event.eventName
         let eventData = event.eventData as? MainEventData
         if eventData != nil {
@@ -65,37 +76,62 @@ public class MainController : BuspassEventListener {
     }
     
     func onInit(eventData : MainEventData) {
-        let (status, api1) = api.get()
-        if (api1 == nil) {
-            eventData.error = status
-            eventData.returnStatus = "Error"
+        let evd = MainEventData()
+        evd.dialog = eventData.dialog
+        if eventData.forceDiscover {
+            let (status, discoverApi) = api.get()
+            if (discoverApi != nil) {
+                evd.discoverApi = discoverApi
+                let loc = configurator.getLastLocation()
+                if loc != nil {
+                    evd.location = loc!
+                }
+                evd.returnStatus = "Discover"
+            } else {
+                evd.returnStatus = "Error"
+                evd.error = status
+            }
         } else {
             let defaultMaster = configurator.getDefaultMaster()
             if (defaultMaster != nil && defaultMaster!.isValid()) {
-                eventData.master = defaultMaster!
-                eventData.returnStatus = "Master"
+                evd.master = defaultMaster!
+                evd.returnStatus = "Master"
             } else {
-                let loc = configurator.getLastLocation()
-                if loc != nil {
-                    eventData.location = loc!
+                let (status, discoverApi) = api.get()
+                if discoverApi != nil {
+                    evd.discoverApi = discoverApi
+                    let loc = configurator.getLastLocation()
+                    if loc != nil {
+                        evd.location = loc!
+                    }
+                    evd.returnStatus = "Discover"
+                } else {
+                    evd.returnStatus = "Error"
+                    evd.error = status
                 }
-                eventData.returnStatus = "Discover"
             }
         }
-        api.uiEvents.postEvent("Main:Init:return", data: eventData)
+        api.uiEvents.postEvent("Main:Init:return", data: evd)
     }
     
     func onDiscoverInit(eventData : MainEventData) {
+        let evd = MainEventData()
+        evd.dialog = eventData.dialog
         let oldDiscoverController = discoverController
-        self.discoverController = DiscoverController(mainController: self)
+        self.discoverController = DiscoverController(api: eventData.discoverApi!)
         if oldDiscoverController != nil {
             oldDiscoverController.unregisterForEvents()
         }
-        eventData.returnStatus = "DiscoverReady"
-        api.uiEvents.postEvent("Main:Discover:Init:return", data: eventData)
+        evd.discoverApi = eventData.discoverApi
+        evd.discoverController = discoverController
+        evd.oldDiscoverController = oldDiscoverController
+        evd.returnStatus = "DiscoverReady"
+        api.uiEvents.postEvent("Main:Discover:Init:return", data: evd)
     }
     
     func onMasterInit(eventData : MainEventData) {
+        let evd = MainEventData()
+        evd.dialog = eventData.dialog
         let oldMasterController : MasterController? = masterController
         if oldMasterController != nil {
             // TODO Posible Error
@@ -109,8 +145,9 @@ public class MainController : BuspassEventListener {
             // TODO Possible Error
             configurator.saveAsDefaultMaster(eventData.master!)
         }
-        eventData.oldController = oldMasterController
-        eventData.returnStatus = "MasterInitialized"
-        api.uiEvents.postEvent("Main:Master:Init:return", data: eventData)
+        evd.masterController = masterController
+        evd.oldMasterController = oldMasterController
+        evd.returnStatus = "MasterInitialized"
+        api.uiEvents.postEvent("Main:Master:Init:return", data: evd)
     }
 }

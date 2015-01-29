@@ -8,16 +8,16 @@
 
 import Foundation
 
-public class BannerInfo : MessageBase, StorageProtocol {
+class BannerInfo : MessageBase, StorageProtocol {
     
-    public override func isValid() -> Bool {
+    override func isValid() -> Bool {
         return !(id.isEmpty) && title != nil && msgDescription != nil
     }
     
-    public func preSerialize(api: ApiBase, time: TimeValue64) {
+    func preSerialize(api: ApiBase, time: TimeValue64) {
 
     }
-    public func postSerialize(api: ApiBase, time: TimeValue64) {
+    func postSerialize(api: ApiBase, time: TimeValue64) {
 
     }
 }

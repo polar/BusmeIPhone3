@@ -156,7 +156,7 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
     }
     
     func busmeSelect(menuItem : MenuItem) {
-        mainController!.api.bgEvents.postEvent("Main:init", data: MainEventData())
+        mainController!.api.bgEvents.postEvent("Main:init", data: MainEventData(forceDiscover: true))
     }
     
     func busmeSaveAsDefault(menuItem : MenuItem) {

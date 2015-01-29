@@ -8,34 +8,34 @@
 
 import Foundation
 
-public class MessageSpec : NSObject {
-    public var id : String = ""
-    public var version : TimeValue64 = 0
-    public var expiryTime : TimeValue64 = 0
+class MessageSpec : NSObject {
+    var id : String = ""
+    var version : TimeValue64 = 0
+    var expiryTime : TimeValue64 = 0
     
-    public override init() {
+    override init() {
         super.init()
     }
     
-    public init(id : String, version: TimeValue64, expiryTime : TimeValue64) {
+    init(id : String, version: TimeValue64, expiryTime : TimeValue64) {
         self.id = id
         self.version = version
         self.expiryTime = expiryTime
     }
     
-    public init(coder: NSCoder) {
+    init(coder: NSCoder) {
         self.id = coder.decodeObjectForKey("id") as String;
         self.version = coder.decodeInt64ForKey("version")
         self.expiryTime = coder.decodeInt64ForKey("expiryTime")
     }
     
-    public func encodeWithCoder(encoder: NSCoder) {
+    func encodeWithCoder(encoder: NSCoder) {
         encoder.encodeObject(id, forKey: "id")
         encoder.encodeInt64(version, forKey: "version")
         encoder.encodeInt64(expiryTime, forKey: "expiryTime")
     }
     
-    public func getId() -> String {
+    func getId() -> String {
         return id
     }
 

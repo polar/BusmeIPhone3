@@ -8,14 +8,14 @@
 
 import Foundation
 
-public class JourneyCurrentLocationRequestProcessor : ArgumentPreparer, ResponseProcessor {
-    public var journeyDisplayController : JourneyDisplayController
+class JourneyCurrentLocationRequestProcessor : ArgumentPreparer, ResponseProcessor {
+    var journeyDisplayController : JourneyDisplayController
     
-    public init(controller : JourneyDisplayController) {
+    init(controller : JourneyDisplayController) {
         self.journeyDisplayController = controller
     }
     
-    public func getArguments() -> [String : [String]]? {
+    func getArguments() -> [String : [String]]? {
         var args = [String:[String]]()
         var ids = [String]()
         for journeyDisplay in journeyDisplayController.getJourneyDisplays().filter({(x) in x.route.isJourney() && x.isPathVisible()}) {
@@ -25,7 +25,7 @@ public class JourneyCurrentLocationRequestProcessor : ArgumentPreparer, Response
         return args
     }
     
-    public func onResponse(response: Tag) {
+    func onResponse(response: Tag) {
         var journeyLocations = [String : JourneyLocation]()
         for child in response.childNodes {
             if child.name.lowercaseString == "jps" {
@@ -46,7 +46,7 @@ public class JourneyCurrentLocationRequestProcessor : ArgumentPreparer, Response
         return GeoCalc.equalCoordinates(loc1, c2: loc2)
     }
     
-    public func pushCurrentLocations( journeyLocations : [String : JourneyLocation] ) {
+    func pushCurrentLocations( journeyLocations : [String : JourneyLocation] ) {
         let journeyBasket = journeyDisplayController.journeyBasket
         for key in journeyLocations.keys {
             let loc = journeyLocations[key]!

@@ -9,7 +9,7 @@
 import Foundation
 import AlamoFire
 
-public class HttpResponse {
+class HttpResponse {
     private var response: NSHTTPURLResponse?;
     private var data: AnyObject?;
     private var error: NSError?;
@@ -20,7 +20,7 @@ public class HttpResponse {
         self.error = error;
     }
     
-    public func getEntity() -> HttpEntity? {
+    func getEntity() -> HttpEntity? {
         if (error != nil) {
             return nil;
         } else {
@@ -28,7 +28,7 @@ public class HttpResponse {
         }
     }
     
-    public func getStatusLine() -> HttpStatusLine {
+    func getStatusLine() -> HttpStatusLine {
         if (error != nil) {
             return HttpStatusLine(statusCode: error!.code, reasonPhrase: error!.description);
         } else {

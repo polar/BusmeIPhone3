@@ -9,26 +9,33 @@
 import Foundation
 import UIKit
 
-public class DiscoverEventData {
-    public var dialog : UIAlertView?
-    public var loc : GeoPoint?
-    public var buf : Double?
+class DiscoverEventData {
+    var dialog : UIAlertView?
+    var loc : GeoPoint?
+    var buf : Double?
     
-    public var master: Master?
-    public var masters : [Master]?
-    public var error: HttpStatusLine?
+    var master: Master?
+    var masters : [Master]?
+    var error: HttpStatusLine?
     
-    public init(master: Master) {
+    init() {
+    }
+    
+    init(dialog : UIAlertView) {
+        self.dialog = dialog
+    }
+    
+    init(master: Master) {
         self.master = master
     }
     
-    public init(loc : GeoPoint, buf : Double, dialog : UIAlertView?) {
+    init(loc : GeoPoint, buf : Double, dialog : UIAlertView?) {
         self.dialog = dialog
         self.loc = loc
         self.buf = buf
     }
     
-    public init(loc : GeoPoint, dialog : UIAlertView?) {
+    init(loc : GeoPoint, dialog : UIAlertView?) {
         self.dialog = dialog
         self.loc = loc
     }
