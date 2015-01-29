@@ -138,8 +138,15 @@ class Locator {
         if arrowImage != nil {
             let arrow = rotateImageBy(arrowImage!, radians: direction)
             let image = overlay(baseImage, image2: arrow)
-            let matrix = CGAffineTransformMakeRotation(CGFloat(direction))
-            let hspot = CGPointApplyAffineTransform(hotspot, matrix)
+            // Slide center to 0,0
+            let matrix1 = CGAffineTransformMakeTranslation(-image.size.width/2, -image.size.height/2)
+            // Rotate around 0,0
+            let matrix2 = CGAffineTransformMakeRotation(CGFloat(direction))
+            let matrix3 = CGAffineTransformConcat(matrix1, matrix2)
+            // Slide origin to 0,0
+            let matrix4 = CGAffineTransformMakeTranslation(image.size.width/2, image.size.height/2)
+            let matrix5 = CGAffineTransformConcat(matrix3, matrix4)
+            let hspot = CGPointApplyAffineTransform(hotspot, matrix5)
             return Icon(image: image, hotspot: hspot)
         } else {
             return Icon(image: baseImage, hotspot: hotspot)

@@ -132,11 +132,11 @@ class MKMapControlledProjection : MKMapProjection {
     var upperRight : MKMapControlledProjection?
     var lowerLeft : MKMapControlledProjection?
     var lowerRight : MKMapControlledProjection?
+    
     init(controller : ProjectionController, zoomScale: MKZoomScale, mapRect: MKMapRect) {
         self.projectionController = controller
         super.init(renderer: controller.renderer, zoomScale: zoomScale, mapRect: mapRect)
-        self.name = "\(Rect(mapRect: mapRect).toString()) - \(zoomLevel)"
-        
+        self.name = controller.getProjectionName(mapRect, zoomScale: zoomScale)
         controller.register(self)
     }
 

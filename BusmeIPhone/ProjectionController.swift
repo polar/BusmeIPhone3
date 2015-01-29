@@ -26,12 +26,17 @@ class ProjectionController {
     
     var projections : [String:MKMapProjection] = [String:MKMapProjection]()
     
-    func getProjection(mapRect: MKMapRect, zoomScale : MKZoomScale) -> MKMapProjection {
+    func getProjectionName(mapRect : MKMapRect, zoomScale : MKZoomScale) -> String {
         let zoomLevel = 22+Int(log(zoomScale))
         let name = "\(Rect(mapRect:mapRect).toString()) - \(zoomLevel)"
-        if BLog.DEBUG { BLog.logger.debug("Projection:\(name)") }
+        return name
+    }
+    
+    func getProjection(mapRect: MKMapRect, zoomScale : MKZoomScale) -> MKMapProjection {
+        let name = getProjectionName(mapRect, zoomScale: zoomScale)
         var projection = projections[name]
         if projection == nil {
+            if BLog.DEBUG { BLog.logger.debug("No Projection \(name)") }
             // Self Registers
             projection = MKMapControlledProjection(controller: self, zoomScale: zoomScale, mapRect: mapRect)
         }

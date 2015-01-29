@@ -85,7 +85,7 @@ public class Logger {
 }
 
 public struct BLog {
-    public static let DEBUG = false
+    public static let DEBUG = true
     public static let ERROR = true
     public static let WARN = true
     public static let INFO = true
