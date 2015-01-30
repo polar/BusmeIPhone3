@@ -46,7 +46,7 @@ class ProjectionController {
         let name = getProjectionName(mapRect, zoomScale: zoomScale)
         var projection = projections[name]
         if projection == nil {
-            if BLog.DEBUG { BLog.logger.debug("No Projection \(name)") }
+            //if BLog.DEBUG { BLog.logger.debug("No Projection \(name)") }
             // Self Registers
             projection = MKMapControlledProjection(controller: self, zoomScale: zoomScale, mapRect: mapRect)
         }
@@ -54,7 +54,8 @@ class ProjectionController {
     }
     
     func register(mapProjection : MKMapControlledProjection) {
-        projections[mapProjection.name] = mapProjection
+        // Okay, to save memory we don't save these.
+        //projections[mapProjection.name] = mapProjection
     }
     
     // NOT_USED on iPhone. 

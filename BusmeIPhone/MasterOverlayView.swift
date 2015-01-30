@@ -366,7 +366,7 @@ class MasterOverlayView : MKOverlayRenderer, BuspassEventListener {
     
     func drawLocatorIcon(point : CGPoint, icon: Icon, projection : MKMapProjection, context: CGContextRef) -> CGRect {
         let scale        = max(1.0, (4.0-(19.0-Double(projection.zoomLevel))/2.0)/2.0)
-        let scaledIcon   = icon.scaleBy(scale)
+        let scaledIcon   = icon.scaleBy(scale/2.0)
         let x            = point.x - scaledIcon.hotspot.x/projection.zoomScale
         let y            = point.y - scaledIcon.hotspot.y/projection.zoomScale
         let width        = scaledIcon.image.size.width/projection.zoomScale

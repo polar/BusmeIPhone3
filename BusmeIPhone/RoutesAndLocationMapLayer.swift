@@ -57,6 +57,10 @@ class RouteAndLocationsMapLayer {
     }
     
     func getJourneyLocator(journeyDisplay : JourneyDisplay, disposition : Int) -> LocatorArgs? {
+        if journeyDisplay.route.getJourneyPatterns().isEmpty || !journeyDisplay.route.getJourneyPatterns()[0].isReady() {
+            // We need a path, it may have not come in yet.
+            return nil
+        }
         let timeNow = UtilsTime.current()
         var onRoute = false
         var isReporting = false

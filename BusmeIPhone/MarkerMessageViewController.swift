@@ -27,7 +27,7 @@ class MarkerMessageViewController : UIViewController, UIAlertViewDelegate {
         self.masterMapScreen = masterMapScreen
         self.api = masterMapScreen.masterController.api
         
-        self.alertView = UIAlertView(title: markerInfo.title, message: markerInfo.description, delegate: nil, cancelButtonTitle: "Cancel")
+        self.alertView = UIAlertView(title: markerInfo.title, message: markerInfo.content, delegate: nil, cancelButtonTitle: "Cancel")
         
         buttonIndexes.insert(B_CANCEL, atIndex: 0)
         var index = 1

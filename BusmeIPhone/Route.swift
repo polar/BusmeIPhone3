@@ -181,7 +181,7 @@ class Route : Storage {
             let distance = lastKnownDistance!
             if patternid != nil {
                 let pattern = getJourneyPattern(patternid!)
-                if pattern != nil {
+                if (pattern != nil && pattern!.isReady()) {
                     let path_distance = pattern!.distance!
                     let dist_from_last = GeoCalc.getGeoDistance(loc!, c2: pattern!.getEndPoint()!)
                     return path_distance - distance < 10 && dist_from_last < 3 // feet

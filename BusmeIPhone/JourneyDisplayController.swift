@@ -56,30 +56,30 @@ class JourneyDisplayController : OnJourneyAddedListener, OnJourneyRemovedListene
     }
     
     func getJourneyPatterns() -> [JourneyPattern] {
-        dispatch_semaphore_wait(writeLock, DISPATCH_TIME_FOREVER)
         var patterns = [String:JourneyPattern]()
-        for jd in journeyDisplays {
+        for jd in getJourneyDisplays() {
             if jd.route.isRouteDefinition() {
                 for pat in jd.route.getJourneyPatterns() {
                     patterns[pat.id] = pat
                 }
             }
         }
-        dispatch_semaphore_signal(writeLock)
         return patterns.values.array
     }
     
     func onJourneyAdded(journeyBasket : JourneyBasket, journey : Route) {
         let newRoute = JourneyDisplay(journeyDisplayController: self, route: journey)
+        
         dispatch_semaphore_wait(writeLock, DISPATCH_TIME_FOREVER)
         journeyDisplays.append(newRoute)
         journeyDisplayMap[journey.id!] = newRoute
+        dispatch_semaphore_signal(writeLock)
+        
         onJourneyDisplayAddedListener?.onJourneyDisplayAdded(newRoute)
         presentJourneyDisplay(newRoute)
-        dispatch_semaphore_signal(writeLock)
     }
     
-    func removeFromJourneys(journeyDisplay : JourneyDisplay) {
+    private func removeFromJourneys(journeyDisplay : JourneyDisplay) {
         for(var i = 0; i < journeyDisplays.count; i++) {
             if (journeyDisplays[i] === journeyDisplay) {
                 journeyDisplays.removeAtIndex(i)
@@ -94,10 +94,13 @@ class JourneyDisplayController : OnJourneyAddedListener, OnJourneyRemovedListene
         if (jd != nil) {
             journeyDisplayMap[journey.id!] = nil
             removeFromJourneys(jd!)
+            dispatch_semaphore_signal(writeLock)
+            
             onJourneyDisplayRemovedListener?.onJourneyDisplayRemoved(jd!)
             abandonJourneyDisplay(jd!)
+        } else {
+            dispatch_semaphore_signal(writeLock)
         }
-        dispatch_semaphore_signal(writeLock)
 
     }
     
@@ -110,6 +113,5 @@ class JourneyDisplayController : OnJourneyAddedListener, OnJourneyRemovedListene
     func abandonJourneyDisplay(jd : JourneyDisplay) {
         let evd = JourneyDisplayEventData(journeyDisplay: jd)
         api.uiEvents.postEvent("JourneyRemoved", data: evd)
-        
     }
 }

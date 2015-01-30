@@ -104,9 +104,6 @@ class JourneyBasket {
             if addJourney {
                 let route = retrieveRouteJourney(nameid)
                 if (route != nil) {
-                    if route!.isJourney() {
-                        let measure = route!.getStartingMeasure()
-                    }
                     addedJourneys.append(route!)
                 }
             }
@@ -126,9 +123,6 @@ class JourneyBasket {
             if removeJourney {
                removedJourneys.append(route)
             } else {
-                if route.isJourney() {
-                    let measure = route.getStartingMeasure()
-                }
                 keepJourneys.append(route)
             }
         }
