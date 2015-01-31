@@ -173,7 +173,7 @@ class Route : Storage {
         }
     }
     func getEndTime() -> TimeValue64 {
-        return getStartTime() + Int64(duration! * 60)
+        return getStartTime() + Int64(duration! * 60 * 1000)
     }
     func isFinished() -> Bool {
         let loc = lastKnownLocation

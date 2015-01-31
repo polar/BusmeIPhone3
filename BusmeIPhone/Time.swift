@@ -38,6 +38,15 @@ struct UtilsTime {
         return today
     }
     
+    static func hhmmaForTime(time : TimeValue64) -> String {
+        let date_formatter = NSDateFormatter()
+        date_formatter.dateFormat = "hh:mm a"
+        let date = NSDate(timeIntervalSince1970: NSTimeInterval(time/1000))
+        let timeLit = date_formatter.stringFromDate(date)
+        return timeLit
+
+    }
+    
     static func parseInTimeZone(str : String, zone : String) -> TimeValue64 {
         
         let timeZone = NSTimeZone(name: zone)

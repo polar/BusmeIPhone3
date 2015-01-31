@@ -27,10 +27,10 @@ class PatternView {
             self.color = UIColor(red: 1, green: 0, blue: 0, alpha: 0.9)
             break
         case Disposition.NORMAL:
-            self.color = UIColor(red: 0.1, green: 0, blue: 1, alpha: 0.5)
+            self.color = UIColor(red: 0.3, green: 0, blue: 1, alpha: 0.4)
             break
         default:
-            self.color = UIColor(red: 0.1, green: 1, blue: 1, alpha: 0.5)
+            self.color = UIColor(red: 0.2, green: 1, blue: 1, alpha: 0.5)
         }
     }
 
@@ -116,7 +116,7 @@ class MasterOverlayView : MKOverlayRenderer, BuspassEventListener {
     init(overlay: MasterOverlay, mapView: MKMapView, masterController: MasterController) {
         self.mapView = mapView
         self.masterController = masterController
-        self.mapLayer = RouteAndLocationsMapLayer(api: masterController.api, journeyDisplayController: masterController.journeyDisplayController, journeyLocationPoster: masterController.journeyLocationPoster)
+        self.mapLayer = RouteAndLocationsMapLayer(api: masterController.api, journeyVisibilityController: masterController.journeyVisibilityController, journeyDisplayController: masterController.journeyDisplayController, journeyLocationPoster: masterController.journeyLocationPoster)
         super.init(overlay: overlay)
         self.projectionController = ProjectionController(renderer: self)
         registerForEvents()
@@ -359,14 +359,20 @@ class MasterOverlayView : MKOverlayRenderer, BuspassEventListener {
         let mapPoint = MKMapPointForCoordinate(coord)
         let cgPoint = pointForMapPoint(mapPoint)
         let jd = locatorView.params.journeyDisplay
-        let imageRect = drawLocatorIcon(cgPoint, icon: locatorView.getIcon(), projection: projection, context: context)
+        let imageRect = drawLocatorIcon(cgPoint, icon: locatorView.getIcon(), label: jd.route.code!, projection: projection, context: context)
         let mapRect = mapRectForRect(imageRect)
         recordLocatorMapRect(jd, mapRect: mapRect)
     }
     
-    func drawLocatorIcon(point : CGPoint, icon: Icon, projection : MKMapProjection, context: CGContextRef) -> CGRect {
-        let scale        = max(1.0, (4.0-(19.0-Double(projection.zoomLevel))/2.0)/2.0)
-        let scaledIcon   = icon.scaleBy(scale/2.0)
+    func drawLocatorIcon(point : CGPoint, icon: Icon, label: String, projection : MKMapProjection, context: CGContextRef) -> CGRect {
+        // At one we want to be biggish: 2.0
+        // At 4 we reduce to 8 to 4.0
+        // At 8 to 13 to 3.0
+        // At 13  to 16 we stay at 1.0
+        // At 17 on we go to 0.5
+        let zl = Double(projection.zoomLevel)
+        let scale = zl < 4.0 ? 2.0 : zl < 8.0 ? 2-(4.0-zl)/2.0 : zl < 13.0 ? 4.0+(8-zl)/5.0 : zl < 16 ? 1.0 : 0.9
+        let scaledIcon   = icon.scaleWithText(scale, text: label, color: icon.labelColor, fontSize: 42)
         let x            = point.x - scaledIcon.hotspot.x/projection.zoomScale
         let y            = point.y - scaledIcon.hotspot.y/projection.zoomScale
         let width        = scaledIcon.image.size.width/projection.zoomScale

@@ -85,6 +85,9 @@
 		F37FCE5E1A6781FB009DB82B /* BusmeSite.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37FCE5D1A6781FB009DB82B /* BusmeSite.swift */; };
 		F37FCE601A678876009DB82B /* BusmeSiteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37FCE5F1A678876009DB82B /* BusmeSiteView.swift */; };
 		F385E5971A7ABF7B00358A47 /* MainApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = F385E5961A7ABF7B00358A47 /* MainApi.swift */; };
+		F385E59A1A7B45A700358A47 /* JourneyLocationAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F385E5991A7B45A700358A47 /* JourneyLocationAnnotation.swift */; };
+		F385E59C1A7B489A00358A47 /* JourneyLocationAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F385E59B1A7B489A00358A47 /* JourneyLocationAnnotationView.swift */; };
+		F385E59E1A7B4DD800358A47 /* FGJourneyLocationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F385E59D1A7B4DD800358A47 /* FGJourneyLocationController.swift */; };
 		F39802011A59FEB400D6C2B0 /* Buspass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39802001A59FEB400D6C2B0 /* Buspass.swift */; };
 		F39802061A5A075600D6C2B0 /* BuspassApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39802051A5A075600D6C2B0 /* BuspassApi.swift */; };
 		F39802081A5A08A400D6C2B0 /* BuspasEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39802071A5A08A400D6C2B0 /* BuspasEvents.swift */; };
@@ -242,6 +245,9 @@
 		F37FCE5D1A6781FB009DB82B /* BusmeSite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BusmeSite.swift; sourceTree = "<group>"; };
 		F37FCE5F1A678876009DB82B /* BusmeSiteView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BusmeSiteView.swift; sourceTree = "<group>"; };
 		F385E5961A7ABF7B00358A47 /* MainApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainApi.swift; sourceTree = "<group>"; };
+		F385E5991A7B45A700358A47 /* JourneyLocationAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JourneyLocationAnnotation.swift; sourceTree = "<group>"; };
+		F385E59B1A7B489A00358A47 /* JourneyLocationAnnotationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JourneyLocationAnnotationView.swift; sourceTree = "<group>"; };
+		F385E59D1A7B4DD800358A47 /* FGJourneyLocationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FGJourneyLocationController.swift; sourceTree = "<group>"; };
 		F39802001A59FEB400D6C2B0 /* Buspass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = Buspass.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F39802051A5A075600D6C2B0 /* BuspassApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuspassApi.swift; sourceTree = "<group>"; };
 		F39802071A5A08A400D6C2B0 /* BuspasEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BuspasEvents.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -322,6 +328,7 @@
 				F3406A491A65C8D8000C04F4 /* MasterMapScreen.swift */,
 				F3406A431A65B0AC000C04F4 /* FGBannerPresentController.swift */,
 				F3529EDC1A70265800036288 /* FGMarkerPresentController.swift */,
+				F385E59D1A7B4DD800358A47 /* FGJourneyLocationController.swift */,
 				F3406A451A65B3D9000C04F4 /* UIBanner.swift */,
 				F3E8A9551A696EFC0034F17E /* MasterMainMenu.swift */,
 				F3E8A9581A69BE110034F17E /* BannerTimer.swift */,
@@ -332,6 +339,8 @@
 				F3E8A9621A6C62340034F17E /* TabButton.swift */,
 				F3529ECC1A6F102200036288 /* SyncProgressDialog.swift */,
 				F3529ED11A6F607D00036288 /* MarkerAnnotation.swift */,
+				F385E5991A7B45A700358A47 /* JourneyLocationAnnotation.swift */,
+				F385E59B1A7B489A00358A47 /* JourneyLocationAnnotationView.swift */,
 				F3529ED41A6F624000036288 /* MarkerAnnotationView.swift */,
 				F3529ED61A6F659F00036288 /* UIMarker.swift */,
 				F3529ED81A701B4400036288 /* MarkerMessageViewController.swift */,
@@ -711,6 +720,7 @@
 				F37FCE601A678876009DB82B /* BusmeSiteView.swift in Sources */,
 				F3F87A301A5ED10600EB1EC1 /* BannerEvent.swift in Sources */,
 				F3140F391A5F38CA0024A65D /* MasterMessageStore.swift in Sources */,
+				F385E59A1A7B45A700358A47 /* JourneyLocationAnnotation.swift in Sources */,
 				F37633B91A5AFA57005AFB8F /* JourneyStore.swift in Sources */,
 				F3ED41A81A5F0E3500C6FFC9 /* MarkerPresentationController.swift in Sources */,
 				F37633BB1A5AFACC005AFB8F /* JourneyPattern.swift in Sources */,
@@ -747,10 +757,12 @@
 				F3C8FE521A5359B0009FF404 /* AppDelegate.swift in Sources */,
 				F33B69BA1A5B43D2004C7742 /* IPUtils.swift in Sources */,
 				F35E28EB1A647D2A004DF0D7 /* MasterMessageRequestProcessor.swift in Sources */,
+				F385E59C1A7B489A00358A47 /* JourneyLocationAnnotationView.swift in Sources */,
 				F37633B51A5ADB7B005AFB8F /* NameId.swift in Sources */,
 				F3140F521A6186E30024A65D /* PathUtils.swift in Sources */,
 				F37602121A76A9A4002976B7 /* RoutesAndLocationMapLayer.swift in Sources */,
 				F3140F3D1A5F3B2A0024A65D /* MasterMessageEvent.swift in Sources */,
+				F385E59E1A7B4DD800358A47 /* FGJourneyLocationController.swift in Sources */,
 				F35E28FC1A65731F004DF0D7 /* RequestController.swift in Sources */,
 				F3C8FE891A535B0D009FF404 /* HttpClient.swift in Sources */,
 				F39802011A59FEB400D6C2B0 /* Buspass.swift in Sources */,

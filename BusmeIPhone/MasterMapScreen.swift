@@ -11,7 +11,7 @@ import CoreLocation
 import UIKit
 import MapKit
 
-class MasterMapScreen : UIViewController, MKMapViewDelegate {
+class MasterMapScreen : UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIGestureRecognizerDelegate {
     var mapView : MKMapView!
     var activityView : UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
     var activityBarButton : UIBarButtonItem!
@@ -31,6 +31,7 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate {
     var fgMarkerPresentationController : FGMarkerPresentController!
     var fgMasterMessagePresentationController : FGMasterMessagePresentController!
     var masterOverlay : MasterOverlay!
+    var locationManager : CLLocationManager!
     
     func setMasterController(masterController : MasterController) {
         self.masterController = masterController
@@ -41,6 +42,10 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate {
         self.fgMarkerPresentationController = FGMarkerPresentController(masterMapScreen: self)
         self.fgMasterMessagePresentationController = FGMasterMessagePresentController(masterMapScreen: self)
         self.masterOverlay = MasterOverlay(master: masterController.master, masterController: masterController)
+        self.locationManager = CLLocationManager()
+        if locationManager.respondsToSelector("requestWhenInUseAuthorization") {
+            locationManager.requestWhenInUseAuthorization()
+        }
     }
     
     override func viewDidLoad() {
@@ -66,11 +71,61 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate {
         view.autoresizesSubviews = false
         routesView!.viewWillAppear(false)
         mapView.addOverlay(masterOverlay)
+        mapView.showsUserLocation = true
+        initializeTouches()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    // Touches
+    
+    func initializeTouches() {
+        var dtapR = UITapGestureRecognizer(target: self, action: "onDoubleTap:")
+        dtapR.numberOfTapsRequired = 2
+        dtapR.numberOfTouchesRequired = 2
+        dtapR.delegate = self
+        view.addGestureRecognizer(dtapR)
+        
+        var tapR = UITapGestureRecognizer(target: self, action: "onClick:")
+        tapR.numberOfTapsRequired = 1
+        tapR.numberOfTouchesRequired = 1
+        tapR.delegate = self
+        view.addGestureRecognizer(tapR)
+        
+        var pressR = UILongPressGestureRecognizer(target: self, action: "onPress:")
+        pressR.delegate = self
+        view.addGestureRecognizer(pressR)
+    }
+    
+    func onDoubleTap(genstureRecognizer: UIGestureRecognizer) {
+        if locationManager.location != nil {
+            setCenter(locationManager.location!.coordinate, animated: true)
+        }
+    }
+    
+    func onClick(gestureRecognizer : UIGestureRecognizer) {
+        if BLog.DEBUG { BLog.logger.debug("onClick\(gestureRecognizer.locationInView(mapView))") }
+    }
+    
+    func onPress(gestureRecognizer : UIGestureRecognizer) {
+        if BLog.DEBUG { BLog.logger.debug("onPress\(gestureRecognizer.locationInView(mapView))") }
+    }
+
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
+        if routesView != nil && routesView!.view != nil {
+            if mapView != nil {
+                let point = touch.locationInView(mapView)
+                let result = !CGRectContainsPoint(routesView!.view!.frame, point)
+                return result
+            } else {
+                return true
+            }
+        } else {
+            return true
+        }
     }
     
     override func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent) {
@@ -102,6 +157,11 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate {
             let maview = MarkerAnnotationView(markerAnnotation: annotation as MarkerAnnotation)
             maview.masterMapScreen = self
             return maview
+        } else if annotation.isKindOfClass(JourneyLocationAnnotation) {
+            let jaview = JourneyLocationAnnotationView(journeyLocationAnnotation: annotation as JourneyLocationAnnotation)
+            jaview.masterMapScreen = self
+        } else {
+            if BLog.DEBUG { BLog.logger.debug("userLocationView?") }
         }
         return nil
     }
@@ -110,5 +170,10 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate {
         let overlayView =  MasterOverlayView(overlay: overlay as MasterOverlay, mapView: mapView, masterController: masterController)
         overlayView.setCenterAndZoom()
         return overlayView
+    }
+    
+    func locationManager(manager: CLLocationManager!, didUpdateToLocation newLocation: CLLocation!, fromLocation oldLocation: CLLocation!) {
+        if BLog.DEBUG { BLog.logger.debug("userLocation\(newLocation.coordinate)") }
+        
     }
 }

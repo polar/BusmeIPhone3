@@ -45,11 +45,13 @@ class RouteAndLocationsMapLayer {
     var api : BuspassApi
     var journeyDisplayController : JourneyDisplayController
     var journeyLocationPoster : JourneyLocationPoster
+    var journeyVisibilityController : JourneyVisibilityController
     
-    init(api : BuspassApi, journeyDisplayController : JourneyDisplayController, journeyLocationPoster : JourneyLocationPoster ) {
+    init(api : BuspassApi, journeyVisibilityController: JourneyVisibilityController, journeyDisplayController : JourneyDisplayController, journeyLocationPoster : JourneyLocationPoster ) {
         self.api = api
         self.journeyDisplayController = journeyDisplayController
         self.journeyLocationPoster = journeyLocationPoster
+        self.journeyVisibilityController = journeyVisibilityController
     }
     
     func getCurrentLocation() -> Location? {
@@ -146,24 +148,36 @@ class RouteAndLocationsMapLayer {
         var highlighted : [LocatorArgs] = [LocatorArgs]()
         var postingRoute : JourneyDisplay? = nil
         var placed = 0
-        for jd in journeyDisplays {
-            if jd.isPathVisible() && jd.route.isJourney() {
-                if jd.route.isReporting() {
-                    postingRoute = jd
-                } else {
-                    if !jd.isFinished() {
-                        if jd.isPathHighlighted() {
-                            let locarg = getJourneyLocator(jd, disposition: Disposition.HIGHLIGHT)
-                            if locarg != nil {
-                                highlighted.append(locarg!)
+        let state = journeyVisibilityController.getCurrentState()
+        if state.state == state.S_VEHICLE {
+            let jd = state.selectedRoute!
+            let pats = jd.route.getJourneyPatterns()
+            if pats.count > 0 && pats[0].isReady() {
+                let locarg = getJourneyLocator(jd, disposition: Disposition.TRACK)
+                if locarg != nil {
+                    locators.append(locarg!)
+                }
+            }
+        } else {
+            for jd in journeyDisplays {
+                if selected(state, journeyDisplay: jd) && jd.isPathVisible() && jd.route.isJourney() {
+                    if jd.route.isReporting() {
+                        postingRoute = jd
+                    } else {
+                        if !jd.isFinished() {
+                            if jd.isPathHighlighted() {
+                                let locarg = getJourneyLocator(jd, disposition: Disposition.HIGHLIGHT)
+                                if locarg != nil {
+                                    highlighted.append(locarg!)
+                                }
+                            } else {
+                                let locarg = getJourneyLocator(jd, disposition: Disposition.NORMAL)
+                                if locarg != nil {
+                                    locators.append(locarg!)
+                                }
                             }
-                        } else {
-                            let locarg = getJourneyLocator(jd, disposition: Disposition.NORMAL)
-                            if locarg != nil {
-                                locators.append(locarg!)
-                            }
+                            placed += 1
                         }
-                        placed += 1
                     }
                 }
             }
@@ -178,28 +192,42 @@ class RouteAndLocationsMapLayer {
         return locators
     }
     
+    private func selected(state : VisualState, journeyDisplay : JourneyDisplay) -> Bool {
+        return (state.selectedRoutes.count == 0 || state.selectedRoutes.member(journeyDisplay) != nil)
+    }
+    
     // Returns the list with the hightlighted patterns last
     func getRoutePatterns(journeyDisplays : [JourneyDisplay]) -> [PatternArgs] {
+        var args = [PatternArgs]()
         var patterns : [String:JourneyPattern] = [String:JourneyPattern]()
         var highlighted : [String:JourneyPattern] = [String:JourneyPattern]()
-        for jd in journeyDisplays {
-            if jd.isPathVisible() {
-                if jd.isPathHighlighted() {
-                    for p in jd.route.getJourneyPatterns() {
-                        if p.isReady() {
-                            highlighted[p.id] = p
+        let state = journeyVisibilityController.getCurrentState()
+        if state.state == state.S_VEHICLE {
+            let jd = state.selectedRoute!
+            let pats = jd.route.getJourneyPatterns()
+            if pats.count > 0 && pats[0].isReady() {
+                let pat = PatternArgs(journeyPattern: pats[0], disposition: Disposition.TRACK)
+                args.append(pat)
+            }
+        } else {
+            for jd in journeyDisplays {
+                if selected(state, journeyDisplay: jd) && jd.isPathVisible() {
+                    if jd.isPathHighlighted() {
+                        for p in jd.route.getJourneyPatterns() {
+                            if p.isReady() {
+                                highlighted[p.id] = p
+                            }
                         }
-                    }
-                } else {
-                    for p in jd.route.getJourneyPatterns() {
-                        if p.isReady() {
-                            patterns[p.id] = p
+                    } else {
+                        for p in jd.route.getJourneyPatterns() {
+                            if p.isReady() {
+                                patterns[p.id] = p
+                            }
                         }
                     }
                 }
             }
         }
-        var args = [PatternArgs]()
         for p in patterns.values.array {
             args.append(PatternArgs(journeyPattern: p, disposition: Disposition.NORMAL))
         }

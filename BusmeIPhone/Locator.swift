@@ -13,9 +13,11 @@ import UIKit
 class Icon {
     var image : UIImage
     var hotspot : CGPoint
-    init(image : UIImage, hotspot : CGPoint) {
+    var labelColor : UIColor
+    init(image : UIImage, hotspot : CGPoint, labelColor: UIColor) {
         self.image = image
         self.hotspot = hotspot
+        self.labelColor = labelColor
     }
     
     func toView(at : CGPoint) {
@@ -28,7 +30,7 @@ class Icon {
         // We scale by ratio the hotspot.
         let matrix = CGAffineTransformMakeScale(size.width/image.size.width, size.height/image.size.height)
         let hp = CGPointApplyAffineTransform(hotspot, matrix)
-        return Icon(image: scaleImageTo(image, target_width: size.width, target_height: size.height), hotspot: hp)
+        return Icon(image: scaleImageTo(image, target_width: size.width, target_height: size.height), hotspot: hp, labelColor: labelColor)
     }
     
     func scaleImageTo(image: UIImage, target_width : CGFloat, target_height: CGFloat) -> UIImage {
@@ -68,10 +70,53 @@ class Icon {
     func scaleBy(scale: Double) -> Icon {
         return scaleTo(CGSize(width: image.size.width * CGFloat(scale), height: image.size.height * CGFloat(scale)))
     }
+    
+    func scaleWithText(scale : Double, text: String, color: UIColor, fontSize: CGFloat) -> Icon {
+        let shadow = NSShadow()
+        shadow.shadowBlurRadius = 1
+        shadow.shadowColor = UIColor.lightGrayColor()
+        shadow.shadowOffset = CGSize(width: 3, height: -2)
+        let attributedText = NSAttributedString(string: text, attributes: [
+            NSForegroundColorAttributeName:color,
+            NSBackgroundColorAttributeName:UIColor.whiteColor().colorWithAlphaComponent(0.6),
+            NSShadowAttributeName:shadow,
+            NSFontAttributeName:UIFont.systemFontOfSize(fontSize)])
+        let textSize = attributedText.size()
+        
+        let scaledIcon   = self.scaleBy(scale)
+        let width        = scaledIcon.image.size.width
+        let height       = scaledIcon.image.size.height
+        let imageRect = CGRect(x: 0, y: 0, width: width, height: height)
+        let textRect = CGRect(x:0, y: imageRect.size.height + 5, width: textSize.width, height:textSize.height)
+        let rect = CGRectUnion(imageRect, textRect)
+        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
+        let ctx = UIGraphicsGetCurrentContext()
+        image.drawInRect(imageRect)
+        CGContextTranslateCTM(ctx, 0, textRect.origin.y + textSize.height)
+        CGContextScaleCTM(ctx, 1.0, -1.0)
+        attributedText.drawAtPoint(CGPoint(x: 0, y: 0))
+
+        scaledIcon.image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        scaledIcon.hotspot.y += textSize.height + 5
+        return scaledIcon
+    }
 }
 
 struct Locators {
     static var icons = [String:Locator]()
+    static func color(name : String) -> UIColor {
+        switch(name) {
+        case "red":
+            return UIColor.redColor()
+        case "blue":
+            return UIColor(red: 0.0, green: 0, blue: 1.0, alpha: 1.0)
+        case "green":
+            return UIColor.greenColor()
+        default:
+            return UIColor.blackColor()
+        }
+    }
     
     static func getArrow(name : String, reported : Bool ) -> Locator {
         let idxname = "\(name):\(reported):Arrow"
@@ -81,7 +126,7 @@ struct Locators {
             let imageSize = image!.size
             let arrowSize = arrow!.size
             let hotspot = CGPoint(x: 22, y: 30)
-            let icon = Locator(baseImage: image!, arrowImage: arrow!, hotspot: hotspot)
+            let icon = Locator(baseImage: image!, arrowImage: arrow!, hotspot: hotspot, labelColor: color(name))
             Locators.icons[idxname] = icon
         }
         return Locators.icons[idxname]!
@@ -93,7 +138,7 @@ struct Locators {
             let image = UIImage(named: "\(name)_button.png")
             let arrow = UIImage(named: "\(name)_dot.png")
             let hotspot = CGPoint(x: 22, y: 30)
-            let icon = Locator(baseImage: image!, arrowImage: arrow!, hotspot: hotspot)
+            let icon = Locator(baseImage: image!, arrowImage: arrow!, hotspot: hotspot, labelColor: color(name))
             Locators.icons[idxname] = icon
         }
         return Locators.icons[idxname]!
@@ -104,7 +149,7 @@ struct Locators {
         if Locators.icons[idxname] == nil {
             let image = UIImage(named: "\(name)_icon.png")
             let hotspot = CGPoint(x: 22, y: 30)
-            let icon = Locator(baseImage: image!, arrowImage: nil, hotspot: hotspot)
+            let icon = Locator(baseImage: image!, arrowImage: nil, hotspot: hotspot, labelColor: color(name))
             Locators.icons[idxname] = icon
         }
         return Locators.icons[idxname]!
@@ -115,7 +160,7 @@ struct Locators {
         if Locators.icons[idxname] == nil {
             let image = UIImage(named: "\(name)_circle_icon.png")
             let hotspot = CGPoint(x: 22, y: 30)
-            let icon = Locator(baseImage: image!, arrowImage: nil, hotspot: hotspot)
+            let icon = Locator(baseImage: image!, arrowImage: nil, hotspot: hotspot, labelColor: color(name))
             Locators.icons[idxname] = icon
         }
         return Locators.icons[idxname]!
@@ -127,11 +172,13 @@ class Locator {
     var baseImage : UIImage
     var arrowImage : UIImage?
     var hotspot : CGPoint
+    var labelColor : UIColor
     
-    init(baseImage : UIImage, arrowImage : UIImage?, hotspot : CGPoint) {
+    init(baseImage : UIImage, arrowImage : UIImage?, hotspot : CGPoint, labelColor : UIColor) {
         self.baseImage = baseImage
         self.arrowImage = arrowImage
         self.hotspot = hotspot
+        self.labelColor = labelColor
     }
     
     func getDirection(direction: Double) -> Icon {
@@ -143,22 +190,23 @@ class Locator {
             // Rotate around 0,0
             let matrix2 = CGAffineTransformMakeRotation(CGFloat(direction))
             let matrix3 = CGAffineTransformConcat(matrix1, matrix2)
+            
             // Slide origin to 0,0
             let matrix4 = CGAffineTransformMakeTranslation(image.size.width/2, image.size.height/2)
             let matrix5 = CGAffineTransformConcat(matrix3, matrix4)
             let hspot = CGPointApplyAffineTransform(hotspot, matrix5)
-            return Icon(image: image, hotspot: hspot)
+            return Icon(image: image, hotspot: hspot, labelColor : labelColor)
         } else {
-            return Icon(image: baseImage, hotspot: hotspot)
+            return Icon(image: baseImage, hotspot: hotspot, labelColor : labelColor)
         }
     }
     
     func getIcon() -> Icon {
-        return Icon(image: baseImage, hotspot: hotspot)
+        return Icon(image: baseImage, hotspot: hotspot, labelColor : labelColor)
     }
     
     func getStartingIcon(measure : Double) -> Icon {
-        return Icon(image: opacity(baseImage, alpha: measure), hotspot: hotspot)
+        return Icon(image: opacity(baseImage, alpha: measure), hotspot: hotspot, labelColor : labelColor)
     }
     
     func opacity(image: UIImage, alpha: Double) -> UIImage {

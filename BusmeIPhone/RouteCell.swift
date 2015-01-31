@@ -208,10 +208,11 @@ class RouteCell : UITableViewCell {
         self.contentConstraints = constraints
         contentView.addConstraints(constraints)
     
-        var times = UtilsTime.stringForTime(route.getStartTime())
+        var times = UtilsTime.hhmmaForTime(route.getStartTime())
         times += "\n"
-        times += UtilsTime.stringForTime(route.getEndTime())
+        times += UtilsTime.hhmmaForTime(route.getEndTime())
         let timesText = NSAttributedString(string: times, attributes: tinySize)
+        timesLabel.numberOfLines = 0
         timesLabel.attributedText = timesText
         timesLabel.frame.size = CGSize(width: 40, height: 60)
         timesLabel.sizeToFit()

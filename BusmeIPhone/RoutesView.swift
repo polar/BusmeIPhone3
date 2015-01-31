@@ -162,7 +162,7 @@ class RoutesView : UITableViewController, BuspassEventListener {
                 centerMap(jd)
             }
             break
-        case vstate.S_ROUTE:
+        case vstate.S_VEHICLE:
             highlight(jd)
             if jd.route.isRouteDefinition() {
                 centerMap(jd)
