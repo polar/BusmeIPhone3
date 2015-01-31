@@ -17,29 +17,54 @@ class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDelegate,
     let mapView : MKMapView!
     var api : DiscoverApiVersion1
     var mainController : MainController
+    var splashView : UIImageView?
     
     required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(mainController : MainController) {
+    init(mainController : MainController, splashScreen : SplashScreen?) {
         self.mainController = mainController
         self.api = mainController.discoverController.api
         super.init(nibName: nil, bundle: nil);
         
         self.mapView = MKMapView(frame: UIScreen.mainScreen().bounds)
-        self.view = mapView
+        //self.view = mapView
         self.mapView.delegate = self
-        
+        if splashScreen != nil {
+            self.splashView = UIImageView(frame: UIScreen.mainScreen().bounds)
+            self.splashView!.image = splashScreen!.image
+        }
         registerForEvents()
-        initializeTouches()
     }
     
-    // This doesn't get called.
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.addSubview(mapView)
+        
+        initializeTouches()
+        
         let eventData = DiscoverEventData()
         mainController.discoverController.api.bgEvents.postEvent("Search:init", data: eventData)
+        
+        if splashView != nil {
+            view.addSubview(splashView!)
+            view.bringSubviewToFront(splashView!)
+            navigationController?.navigationBarHidden = true
+
+            UIView.animateWithDuration(10.0,
+                animations: {
+                    self.splashView!.alpha = 0
+                    self.navigationController?.view.alpha = 1
+                },
+                completion: {(finished) in
+                    self.splashView!.removeFromSuperview()
+                    self.splashView = nil
+                    self.navigationController?.navigationBarHidden = false
+            })
+
+            
+        }
     }
     
     func registerForEvents() {
@@ -86,10 +111,10 @@ class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDelegate,
         var tapR = UITapGestureRecognizer(target: self, action: "onClick:")
         tapR.numberOfTapsRequired = 1
         tapR.numberOfTouchesRequired = 1
-        view.addGestureRecognizer(tapR)
+        mapView.addGestureRecognizer(tapR)
         
         var pressR = UILongPressGestureRecognizer(target: self, action: "onPress:")
-        view.addGestureRecognizer(pressR)
+        mapView.addGestureRecognizer(pressR)
     }
 
     

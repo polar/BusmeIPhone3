@@ -104,6 +104,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
     
     var discoverScreen : DiscoverScreen?
     var masterMapScreen : MasterMapScreen?
+    var splashScreen : SplashScreen?
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -121,7 +122,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
         registerForEvents()
         
         contactBusServer()
+        self.splashScreen = SplashScreen(imageName: "Default")
+        self.navigationController = UINavigationController(rootViewController: splashScreen!)
+        navigationController.navigationBarHidden = true
+        window!.rootViewController = navigationController
+
         return true
+    }
+    
+    func splashImage() -> String {
+        switch UIScreen.mainScreen().bounds.size.height {
+        case 568, 1136:
+            return "Default-586h@2x.png"
+        default:
+            if UIScreen.mainScreen().bounds.size.height < 800 {
+                return "Default@2x.png"
+            } else {
+                return "Default.png"
+            }
+        }
     }
     
     func contactBusServer() {
@@ -234,10 +253,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
         if eventData.oldDiscoverController != nil {
             eventsController.unregister(eventData.oldDiscoverController!.api)
         }
-        self.discoverScreen = DiscoverScreen(mainController: mainController!)
+        self.discoverScreen = DiscoverScreen(mainController: mainController!, splashScreen: splashScreen)
         navigationController?.popViewControllerAnimated(false)
         self.navigationController = UINavigationController(rootViewController: discoverScreen!)
         window!.rootViewController = navigationController
+        self.splashScreen = nil
     }
     
     // The Discover Screen has selected a master, maybe.
@@ -270,6 +290,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
         
         self.masterMapScreen = MasterMapScreen()
         masterMapScreen!.setMasterController(eventData.masterController!)
+        if splashScreen != nil {
+            masterMapScreen!.setSplashView(splashScreen!)
+        }
         
         navigationController?.popViewControllerAnimated(false)
         self.navigationController = UINavigationController(rootViewController: masterMapScreen!)
@@ -279,6 +302,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
         dialog.show()
         let evd = MasterEventData(dialog: dialog)
         masterController.api.bgEvents.postEvent("Master:init", data: evd)
+        self.splashScreen = nil
     }
     
     func onMasterInitReturn(eventData : MasterEventData) {

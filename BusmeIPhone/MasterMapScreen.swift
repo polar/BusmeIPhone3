@@ -48,6 +48,12 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate, CLLocationManagerDe
         }
     }
     
+    var splashView : UIImageView?
+    func setSplashView(splashScreen : SplashScreen) {
+        self.splashView = UIImageView(frame: UIScreen.mainScreen().bounds)
+        self.splashView!.image = splashScreen.image
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Map
@@ -73,6 +79,23 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate, CLLocationManagerDe
         mapView.addOverlay(masterOverlay)
         mapView.showsUserLocation = true
         initializeTouches()
+        
+        if splashView != nil {
+            view.addSubview(splashView!)
+            view.bringSubviewToFront(splashView!)
+            navigationController?.navigationBarHidden = true
+            UIView.animateWithDuration(10.0,
+                animations: {
+                    self.splashView!.alpha = 0
+                    self.navigationController?.view.alpha = 1
+                },
+                completion: {(finished) in
+                    self.splashView!.removeFromSuperview()
+                    self.splashView = nil
+                    self.navigationController?.navigationBarHidden = false
+            })
+        }
+
     }
 
     override func didReceiveMemoryWarning() {

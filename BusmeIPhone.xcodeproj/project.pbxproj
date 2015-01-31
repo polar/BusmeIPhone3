@@ -50,6 +50,7 @@
 		F3529ED91A701B4400036288 /* MarkerMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3529ED81A701B4400036288 /* MarkerMessageViewController.swift */; };
 		F3529EDB1A7020E200036288 /* WebScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3529EDA1A7020E200036288 /* WebScreen.swift */; };
 		F3529EDD1A70265800036288 /* FGMarkerPresentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3529EDC1A70265800036288 /* FGMarkerPresentController.swift */; };
+		F35B08231A7D6D370065E4F7 /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35B08221A7D6D370065E4F7 /* SplashScreen.swift */; };
 		F35E28E81A647CBA004DF0D7 /* MarkerRequestProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35E28E71A647CBA004DF0D7 /* MarkerRequestProcessor.swift */; };
 		F35E28EB1A647D2A004DF0D7 /* MasterMessageRequestProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35E28EA1A647D2A004DF0D7 /* MasterMessageRequestProcessor.swift */; };
 		F35E28ED1A647D94004DF0D7 /* JourneyCurrentLocationsRequestProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35E28EC1A647D94004DF0D7 /* JourneyCurrentLocationsRequestProcessor.swift */; };
@@ -100,9 +101,7 @@
 		F3C33CE31A663D9200EF8E24 /* MastersTableScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C33CE21A663D9200EF8E24 /* MastersTableScreen.swift */; };
 		F3C8FE521A5359B0009FF404 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C8FE511A5359B0009FF404 /* AppDelegate.swift */; };
 		F3C8FE5B1A5359B0009FF404 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F3C8FE5A1A5359B0009FF404 /* Images.xcassets */; };
-		F3C8FE5E1A5359B0009FF404 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F3C8FE5C1A5359B0009FF404 /* LaunchScreen.xib */; };
 		F3C8FE841A535B0D009FF404 /* ApiBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C8FE741A535B0D009FF404 /* ApiBase.swift */; };
-		F3C8FE851A535B0D009FF404 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F3C8FE761A535B0D009FF404 /* LaunchScreen.xib */; };
 		F3C8FE891A535B0D009FF404 /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C8FE7D1A535B0D009FF404 /* HttpClient.swift */; };
 		F3C8FE8A1A535B0D009FF404 /* HttpEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C8FE7E1A535B0D009FF404 /* HttpEntity.swift */; };
 		F3C8FE8B1A535B0D009FF404 /* HttpResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C8FE7F1A535B0D009FF404 /* HttpResponse.swift */; };
@@ -210,6 +209,7 @@
 		F3529ED81A701B4400036288 /* MarkerMessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerMessageViewController.swift; sourceTree = "<group>"; };
 		F3529EDA1A7020E200036288 /* WebScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebScreen.swift; sourceTree = "<group>"; };
 		F3529EDC1A70265800036288 /* FGMarkerPresentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FGMarkerPresentController.swift; sourceTree = "<group>"; };
+		F35B08221A7D6D370065E4F7 /* SplashScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashScreen.swift; sourceTree = "<group>"; };
 		F35E28E71A647CBA004DF0D7 /* MarkerRequestProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerRequestProcessor.swift; sourceTree = "<group>"; };
 		F35E28EA1A647D2A004DF0D7 /* MasterMessageRequestProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterMessageRequestProcessor.swift; sourceTree = "<group>"; };
 		F35E28EC1A647D94004DF0D7 /* JourneyCurrentLocationsRequestProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JourneyCurrentLocationsRequestProcessor.swift; sourceTree = "<group>"; };
@@ -262,11 +262,9 @@
 		F3C8FE501A5359B0009FF404 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F3C8FE511A5359B0009FF404 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F3C8FE5A1A5359B0009FF404 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		F3C8FE5D1A5359B0009FF404 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		F3C8FE681A5359B0009FF404 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F3C8FE691A5359B0009FF404 /* BusmeIPhoneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusmeIPhoneTests.swift; sourceTree = "<group>"; };
 		F3C8FE741A535B0D009FF404 /* ApiBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiBase.swift; sourceTree = "<group>"; };
-		F3C8FE771A535B0D009FF404 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		F3C8FE7D1A535B0D009FF404 /* HttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpClient.swift; sourceTree = "<group>"; };
 		F3C8FE7E1A535B0D009FF404 /* HttpEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpEntity.swift; sourceTree = "<group>"; };
 		F3C8FE7F1A535B0D009FF404 /* HttpResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpResponse.swift; sourceTree = "<group>"; };
@@ -428,7 +426,7 @@
 				F3C8FEBD1A535D78009FF404 /* BusmeIPhone-Bridging-Header.h */,
 				F3C8FE511A5359B0009FF404 /* AppDelegate.swift */,
 				F3C8FE5A1A5359B0009FF404 /* Images.xcassets */,
-				F3C8FE5C1A5359B0009FF404 /* LaunchScreen.xib */,
+				F35B08221A7D6D370065E4F7 /* SplashScreen.swift */,
 				F3C8FE4F1A5359B0009FF404 /* Supporting Files */,
 			);
 			path = BusmeIPhone;
@@ -465,7 +463,6 @@
 		F3C8FE751A535B0D009FF404 /* Base.lproj */ = {
 			isa = PBXGroup;
 			children = (
-				F3C8FE761A535B0D009FF404 /* LaunchScreen.xib */,
 			);
 			path = Base.lproj;
 			sourceTree = "<group>";
@@ -664,8 +661,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F3C8FE851A535B0D009FF404 /* LaunchScreen.xib in Resources */,
-				F3C8FE5E1A5359B0009FF404 /* LaunchScreen.xib in Resources */,
 				F3C8FE5B1A5359B0009FF404 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -734,6 +729,7 @@
 				F3140F581A618C840024A65D /* MasterController.swift in Sources */,
 				F3E8A95B1A69C2C90034F17E /* UpdateTimer.swift in Sources */,
 				F3E8A9591A69BE110034F17E /* BannerTimer.swift in Sources */,
+				F35B08231A7D6D370065E4F7 /* SplashScreen.swift in Sources */,
 				F36316A51A5D9F7A002CAE61 /* DiscoverApiVersion1.swift in Sources */,
 				F36316A91A5DFDA8002CAE61 /* LoginManager.swift in Sources */,
 				F3140F5C1A61AAC00024A65D /* Location.swift in Sources */,
@@ -833,25 +829,6 @@
 		};
 /* End PBXTargetDependency section */
 
-/* Begin PBXVariantGroup section */
-		F3C8FE5C1A5359B0009FF404 /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				F3C8FE5D1A5359B0009FF404 /* Base */,
-			);
-			name = LaunchScreen.xib;
-			sourceTree = "<group>";
-		};
-		F3C8FE761A535B0D009FF404 /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				F3C8FE771A535B0D009FF404 /* Base */,
-			);
-			name = LaunchScreen.xib;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
-
 /* Begin XCBuildConfiguration section */
 		F3C8FE6B1A5359B0009FF404 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -936,7 +913,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4D6944093EB05AC881FF119D /* Pods.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = BusmeIPhone/Info.plist;
@@ -952,7 +929,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 67BCDFAB8FCC113F4A9613FC /* Pods.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = BusmeIPhone/Info.plist;
