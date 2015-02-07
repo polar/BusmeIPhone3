@@ -9,14 +9,14 @@
 import Foundation
 import UIKit
 
-protocol MenuDelegate {
+protocol MenuDelegate : class {
     func menuItemSelected(menu_item : MenuItem) -> Bool
 }
 
 class MenuItem {
     var title : String
     var action : String?
-    var target : MenuDelegate?
+    weak var target : MenuDelegate?
     var checked : Bool?
     var submenu : [MenuItem]?
     init(title : String, action: String, target : MenuDelegate) {

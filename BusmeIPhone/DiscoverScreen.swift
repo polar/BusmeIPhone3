@@ -15,9 +15,16 @@ let PLATFORM_NAME = "iOS"
 
 class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDelegate, BuspassEventListener {
     let mapView : MKMapView!
-    var api : DiscoverApiVersion1
+    var discoverApi : DiscoverApiVersion1
     var mainController : MainController
+    var activityView : UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+    var activityBarButton : UIBarButtonItem!
+    var titleView : UIBarButtonItem!
+    var menuButton : UIBarButtonItem!
+
+    var discoverMenuScreen : DiscoverMenu?
     var splashView : UIImageView?
+    var directionLabelView : UILabel?
     
     required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -25,9 +32,23 @@ class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDelegate,
     
     init(mainController : MainController, splashScreen : SplashScreen?) {
         self.mainController = mainController
-        self.api = mainController.discoverController.api
+        self.discoverApi = mainController.discoverController.api
         super.init(nibName: nil, bundle: nil);
         
+        // Navbar
+        activityView.hidesWhenStopped = true
+        self.activityBarButton = UIBarButtonItem(customView: activityView)
+        self.navigationItem.rightBarButtonItem = activityBarButton
+        
+        self.menuButton = UIBarButtonItem(title: "Menu", style: UIBarButtonItemStyle.Plain, target: self, action: "openMenu")
+        self.navigationItem.leftBarButtonItem = menuButton
+        if mainController.api.operationMode == OPM_TEST {
+            self.navigationItem.title = "Test Platforms"
+        } else {
+            self.navigationItem.title = "Busme!"
+        }
+        
+
         self.mapView = MKMapView(frame: UIScreen.mainScreen().bounds)
         //self.view = mapView
         self.mapView.delegate = self
@@ -35,17 +56,42 @@ class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDelegate,
             self.splashView = UIImageView(frame: UIScreen.mainScreen().bounds)
             self.splashView!.image = splashScreen!.image
         }
+        
+        directionLabelView = UILabel(frame: CGRect())
+        var style : NSMutableParagraphStyle = NSParagraphStyle.defaultParagraphStyle().mutableCopy() as NSMutableParagraphStyle
+        style.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        style.alignment = NSTextAlignment.Center
+        
+        let shadow = NSShadow()
+        shadow.shadowBlurRadius = 1
+        shadow.shadowColor = UIColor.lightGrayColor()
+        shadow.shadowOffset = CGSize(width: 1, height: 1)
+
+        let attributes = [NSParagraphStyleAttributeName: style, NSForegroundColorAttributeName: UIColor.whiteColor(),
+            NSShadowAttributeName: shadow ]
+        directionLabelView?.attributedText = NSAttributedString(string: "Scroll, Zoom, and Long Press to discover Busme Transit Sytems in that area.\nThen single tap to select. Tapping where there are none will lead you to a selection page of the ones that appeared.", attributes: attributes)
+        directionLabelView?.numberOfLines = 0
+        directionLabelView?.backgroundColor = UIColor(red: 0.5, green: 0, blue: 0.2, alpha: 0.6)
+        directionLabelView?.lineBreakMode = NSLineBreakMode.ByWordWrapping
         registerForEvents()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(mapView)
-        
+        view.addSubview(directionLabelView!)
+        directionLabelView!.userInteractionEnabled = false
+            
+        var direct = CGRect(origin: UIScreen.mainScreen().bounds.origin, size: UIScreen.mainScreen().bounds.size)
+        direct.size.height = direct.height * 0.30
+        direct.offset(dx: 0, dy: navigationController!.navigationBar.frame.origin.y + navigationController!.navigationBar.frame.size.height)
+        direct.inset(dx: direct.width * 0.05, dy: 10)
+        directionLabelView!.frame = direct
+            
         initializeTouches()
         
         let eventData = DiscoverEventData()
-        mainController.discoverController.api.bgEvents.postEvent("Search:init", data: eventData)
+        discoverApi.bgEvents.postEvent("Search:init", data: eventData)
         
         if splashView != nil {
             view.addSubview(splashView!)
@@ -68,9 +114,15 @@ class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDelegate,
     }
     
     func registerForEvents() {
-        mainController.discoverController.api.uiEvents.registerForEvent("Search:Init:return", listener: self)
-        mainController.discoverController.api.uiEvents.registerForEvent("Search:Discover:return", listener: self)
-        mainController.discoverController.api.uiEvents.registerForEvent("Search:Find:return", listener: self)
+        discoverApi.uiEvents.registerForEvent("Search:Init:return", listener: self)
+        discoverApi.uiEvents.registerForEvent("Search:Discover:return", listener: self)
+        discoverApi.uiEvents.registerForEvent("Search:Find:return", listener: self)
+    }
+    
+    func unregisterForEvents() {
+        discoverApi.uiEvents.unregisterForEvent("Search:Init:return", listener: self)
+        discoverApi.uiEvents.unregisterForEvent("Search:Discover:return", listener: self)
+        discoverApi.uiEvents.unregisterForEvent("Search:Find:return", listener: self)
     }
     
     func onBuspassEvent(event: BuspassEvent) {
@@ -126,6 +178,11 @@ class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDelegate,
         performDiscover(gestureRecognizer)
     }
     
+    func openMenu() {
+        let menuScreen = DiscoverMenu().initWithDiscoverScreen(self, mainController: mainController)
+        navigationController?.pushViewController(menuScreen, animated: true)
+    }
+    
     // Dialogs
     
     func searchDialog(title : String, message : String) -> UIAlertView {
@@ -170,7 +227,7 @@ class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDelegate,
         }
         
         let eventData = DiscoverEventData(loc: loc, buf: buf, dialog: dialog)
-        mainController.discoverController.api.bgEvents.postEvent("Search:discover", data: eventData)
+        discoverApi.bgEvents.postEvent("Search:discover", data: eventData)
     }
     
     // Find
@@ -187,7 +244,7 @@ class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDelegate,
     
     func performFindFromLoc(loc : CLLocationCoordinate2D) {
         let eventData = DiscoverEventData(loc: loc, dialog: nil)
-        mainController.discoverController.api.bgEvents.postEvent("Search:find", data: eventData)
+        discoverApi.bgEvents.postEvent("Search:find", data: eventData)
     }
     
     func onFindReturn(eventData : DiscoverEventData) {
@@ -226,7 +283,10 @@ class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDelegate,
         return nil
     }
     
+    deinit {
+            if BLog.DEBUG { BLog.logger.debug("Dealloc") }
+            discoverMenuScreen = nil
+    }
 }
-
 
 

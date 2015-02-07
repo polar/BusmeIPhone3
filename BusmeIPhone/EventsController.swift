@@ -65,5 +65,18 @@ class EventsController {
     func unregister(api : EventsApi) {
         api.uiEvents.postEventListener = nil
         api.bgEvents.postEventListener = nil
+        if BLog.DEBUG && api.uiEvents.eventNotifiers.count > 0 {
+            BLog.logger.debug("\(api.uiEvents.name) \(api.uiEvents.eventNotifiers.count) is greater than zero")
+            for (key, notifier) in api.uiEvents.eventNotifiers {
+                BLog.logger.debug("\(notifier.eventName) \(notifier.eventListeners.count)")
+            }
+        }
+        if BLog.DEBUG && api.bgEvents.eventNotifiers.count > 0 {
+            BLog.logger.debug("\(api.bgEvents.name) \(api.bgEvents.eventNotifiers.count) is greater than zero")
+            for (key, notifier) in api.bgEvents.eventNotifiers {
+                BLog.logger.debug("\(notifier.eventName) \(notifier.eventListeners.count)")
+            }
+
+        }
     }
 }

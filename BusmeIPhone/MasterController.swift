@@ -271,4 +271,8 @@ class MasterController : BuspassEventListener {
         self.journeyVisibilityController = JourneyVisibilityController(api: api, controller: journeyDisplayController)
         self.journeyDisplaySelectionController = JourneyDisplaySelectionController(api : api, journeyDisplayController: journeyDisplayController)
     }
+    
+    deinit {
+        if BLog.DEBUG { BLog.logger.debug("Dealloc") }
+    }
 }

@@ -8,16 +8,39 @@
 
 import Foundation
 
+let OPM_TEST = "test"
+let OPM_NORMAL = "normal"
+
+let NORMAL_URL = "https://busme-apis.herokuapp.com/apis/d1/get"
+let TEST_URL = "https://busme-apis.herokuapp.com/apis/td1/get"
+
 class MainApi : ApiBase, EventsApi {
     var uiEvents : BuspassEventDistributor
     var bgEvents : BuspassEventDistributor
     var initialUrl : String
+    var operationMode : String
     
-    init(httpClient : HttpClient, initialUrl : String) {
+    init(httpClient : HttpClient, mode: String) {
         self.uiEvents = BuspassEventDistributor(name: "UIEvents(Main)")
         self.bgEvents = BuspassEventDistributor(name: "BGEvents(Main)")
-        self.initialUrl = initialUrl
+        self.initialUrl = ""
+        self.operationMode = mode
         super.init(httpClient: httpClient)
+        switchMode(mode)
+    }
+    
+    func switchMode(mode : String) {
+        switch(mode) {
+        case OPM_TEST:
+            initialUrl = TEST_URL
+            break
+        case OPM_NORMAL:
+            initialUrl = NORMAL_URL
+            break
+        default:
+            initialUrl = NORMAL_URL
+        }
+        self.operationMode = mode
     }
     
     func get() -> (HttpStatusLine, DiscoverApiVersion1?) {

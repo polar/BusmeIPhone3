@@ -116,7 +116,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
         var httpQ : dispatch_queue_t = dispatch_queue_create("http", DISPATCH_QUEUE_SERIAL);
     
         self.httpClient = HttpClient(queue: httpQ)
-        self.api = MainApi(httpClient: httpClient!, initialUrl: INITIAL_URL)
+        self.api = MainApi(httpClient: httpClient!, mode: OPM_NORMAL)
         self.mainController = MainController(configurator: configurator, api: api)
         
         registerForEvents()
@@ -250,6 +250,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
             eventData.dialog!.dismissWithClickedButtonIndex(0, animated: true)
             eventData.dialog = nil
         }
+        if discoverScreen != nil {
+            // TODO take care of this.
+            discoverScreen!.unregisterForEvents()
+            discoverScreen!.discoverMenuScreen = nil
+            discoverScreen = nil
+        }
         if eventData.oldDiscoverController != nil {
             eventsController.unregister(eventData.oldDiscoverController!.api)
         }
@@ -280,6 +286,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
             eventData.dialog = nil
         }
         if eventData.oldMasterController != nil {
+            unregisterForMasterEvents(eventData.oldMasterController!.api)
             stopTimers()
             eventsController.unregister(eventData.oldMasterController!.api)
         }

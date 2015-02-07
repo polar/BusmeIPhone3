@@ -199,4 +199,8 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate, CLLocationManagerDe
         if BLog.DEBUG { BLog.logger.debug("userLocation\(newLocation.coordinate)") }
         
     }
+    
+    deinit {
+        if BLog.DEBUG { BLog.logger.debug("Dealloc") }
+    }
 }

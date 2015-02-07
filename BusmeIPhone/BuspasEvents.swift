@@ -36,8 +36,23 @@ class BuspassEventNotifier {
     }
     
     func unregister(listener : BuspassEventListener) {
-        self.eventListeners =
-            self.eventListeners.filter({(x : BuspassEventListener) in listener !== x});
+        // We got big problems if this doesn't get rid of references.
+        //self.eventListeners = self.eventListeners.filter({(x : BuspassEventListener) in listener !== x});
+        var found = false
+        do {
+            found = false
+            var index = 0
+            for lis in eventListeners {
+                if lis === listener {
+                    if BLog.DEBUG { BLog.logger.debug("removing \(lis) from \(eventName)") }
+                    eventListeners.removeAtIndex(index)
+                    found = true
+                    break
+                }
+                index += 1
+            }
+            
+        } while found;
     }
     
     func reset() {
@@ -81,6 +96,9 @@ class BuspassEventDistributor {
         var notifier = eventNotifiers[eventName]
         if notifier != nil {
             notifier!.unregister(listener)
+            if notifier!.eventListeners.count == 0 {
+                eventNotifiers[eventName] = nil
+            }
         }
     }
     
