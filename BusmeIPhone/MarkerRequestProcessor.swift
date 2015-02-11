@@ -9,7 +9,7 @@
 import Foundation
 
 class MarkerRequestProcessor : ArgumentPreparer, ResponseProcessor {
-    var markerBasket : MarkerBasket
+    unowned var markerBasket : MarkerBasket
     
     init(markerBasket : MarkerBasket) {
         self.markerBasket = markerBasket
@@ -56,5 +56,9 @@ class MarkerRequestProcessor : ArgumentPreparer, ResponseProcessor {
                 markerBasket.addMarker(marker!)
             }
         }
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
 }

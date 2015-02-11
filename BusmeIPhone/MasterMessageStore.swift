@@ -66,4 +66,8 @@ class MasterMessageStore : Storage {
             masterMessages[id] = nil
         }
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 }

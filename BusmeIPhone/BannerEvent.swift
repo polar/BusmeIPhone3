@@ -129,7 +129,11 @@ class BannerForeground : BuspassEventListener {
     }
     
     func onDone(eventData : BannerEventData) {
-        if BLog.DEBUG { BLog.logger.debug("BannerEvent DONE \(eventData.bannerInfo.title)") }
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("BannerEvent DONE \(eventData.bannerInfo.title)") }
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
 }
 
@@ -189,5 +193,9 @@ class BannerBackground : BuspassEventListener {
     }
     
     func onDone(eventData : BannerEventData) {
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
 }

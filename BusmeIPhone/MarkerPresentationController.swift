@@ -10,8 +10,8 @@
 import Foundation
 
 class MarkerPresentationController {
-    var api : BuspassApi
-    var markerBasket : MarkerBasket
+    unowned var api : BuspassApi
+    unowned var markerBasket : MarkerBasket
     var currentMarkers : [MarkerInfo] = [MarkerInfo]()
     var removeMarkers : [MarkerInfo] = [MarkerInfo]()
     var markerQ : PriorityQueue<MarkerInfo>!
@@ -170,5 +170,9 @@ class MarkerPresentationController {
                 }
             }
         }
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
 }

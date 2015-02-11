@@ -30,8 +30,8 @@ class VisualState {
 }
 
 class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJourneyDisplayAddedListener {
-    var api : BuspassApi
-    var journeyDisplayController : JourneyDisplayController
+    unowned var api : BuspassApi
+    unowned var journeyDisplayController : JourneyDisplayController
     
     var nearByDistance : Int = 500
     var currentLocation : GeoPoint?
@@ -480,6 +480,10 @@ class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJourneyDi
         }
         var changed = pathVisible != display.isPathVisible() || nameVisible != display.isNameVisible()
         return changed
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
 
 

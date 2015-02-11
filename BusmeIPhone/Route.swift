@@ -11,7 +11,9 @@ import CoreLocation
 import MapKit
 
 class Route : Storage {
-    var busAPI : BuspassApi?
+    weak var busAPI : BuspassApi?
+    weak var journeyStore : JourneyStore?
+    
     var name : String?
     var type : String?
     var id : String?
@@ -46,15 +48,33 @@ class Route : Storage {
     var timeZone : String?
     var reported : Bool = false
     var reporting : Bool = false
+    var broken = false
     
 
 
+    func breakit() {
+        BLog.logger.debug("Breaking Route \(name!) \(id)")
+        busAPI = nil
+        journeyStore = nil
+        timeZone = nil
+        patternid = nil
+        patternids = nil
+        routeid = nil
+        name = nil
+        type = nil
+        id = nil
+        code = nil
+        _journeyPatterns = []
+        _projectedPaths = []
+        _paths = []
+        broken = true
+    }
+    
     init(tag : Tag) {
         super.init()
         loadParsedXML(tag)
     }
     
-    var journeyStore : JourneyStore?
     
     override init(coder : NSCoder) {
         super.init()
@@ -196,12 +216,19 @@ class Route : Storage {
         }
     }
     func getJourneyPattern(id : String) -> JourneyPattern? {
+        if broken {
+            let breakme = self.id!
+        }
         return journeyStore!.getPattern(id)
     }
     
     private var _journeyPatterns : [JourneyPattern] = [JourneyPattern]()
     
     func getJourneyPatterns() -> [JourneyPattern] {
+        if broken {
+            let breakme = self.id!
+        }
+
         if self._journeyPatterns.count == 0 {
             var pids : [String] = patternids != nil ? patternids! : [String]()
             pids += patternid != nil ? [patternid!] : [String]()
@@ -224,6 +251,10 @@ class Route : Storage {
     private var _paths : [[GeoPoint]] = [[GeoPoint]]()
     
     func getPaths() -> [[GeoPoint]] {
+        if broken {
+            let breakme = self.id!
+        }
+
         if (_paths.count == 0) {
             var paths = [[GeoPoint]]()
             for pat in getJourneyPatterns() {
@@ -239,6 +270,10 @@ class Route : Storage {
     private var _projectedPaths : [[Point]] = [[Point]]()
     
     func getProjectedPaths() -> [[Point]] {
+        if broken {
+            let breakme = self.id!
+        }
+
         if (_projectedPaths.count == 0) {
             var paths = [[Point]]()
             for pat in getJourneyPatterns() {
@@ -252,6 +287,10 @@ class Route : Storage {
     }
     
     func getStartingPoint() -> GeoPoint? {
+        if broken {
+            let breakme = self.id!
+        }
+
         if isJourney() {
             getJourneyPatterns()
             let path = getPaths().first
@@ -263,6 +302,10 @@ class Route : Storage {
     }
     
     func isStartingJourney() -> Bool {
+        if broken {
+            let breakme = self.id!
+        }
+
         if (busAPI != nil) {
             return isStartingJourney(busAPI!.activeStartDisplayThreshold, time: UtilsTime.current())
         } else {
@@ -270,6 +313,10 @@ class Route : Storage {
         }
     }
     func isStartingJourney(threshold : Double) -> Bool {
+        if broken {
+            let breakme = self.id!
+        }
+
         if (busAPI != nil) {
             return isStartingJourney(threshold, time: UtilsTime.current())
         } else {
@@ -514,5 +561,9 @@ class Route : Storage {
             s += "vid=\(vid) wvid=\(workingVid) st=\(getStartTime()) et=\(getEndTime())"
         }
         return s
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC Route \(self.name)") }
     }
 }

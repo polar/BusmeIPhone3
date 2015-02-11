@@ -81,4 +81,8 @@ class JourneyEventController : BuspassEventListener {
     func onOnRouteDone(eventData : JourneyEventData) {
         
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 }

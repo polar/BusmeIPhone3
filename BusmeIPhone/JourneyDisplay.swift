@@ -19,7 +19,7 @@ struct JourneyIcon {
     static let RED_ARROW_ICON = 8
 }
 
-protocol OnVisibilityListener {
+protocol OnVisibilityListener : class {
     func onChange(which : String, value : Bool)
 }
 
@@ -32,8 +32,8 @@ class JourneyDisplay {
     private var pathHighlighted : Bool = false
     private var tracking : Bool = false
     
-    private var onVisibilityListener : OnVisibilityListener?
-    private var journeyDisplayController : JourneyDisplayController
+    private weak var onVisibilityListener : OnVisibilityListener?
+    private unowned var journeyDisplayController : JourneyDisplayController
     
     init(journeyDisplayController : JourneyDisplayController, route : Route) {
         self.journeyDisplayController = journeyDisplayController
@@ -168,6 +168,8 @@ class JourneyDisplay {
         return false
     }
     
+    // This should never be a circular definition.
+    
     private var myRouteDefinition : JourneyDisplay?
     func getRouteDefinition() -> JourneyDisplay? {
         if doesInclude(journeyDisplayController.getJourneyDisplays(), elem: myRouteDefinition) {
@@ -232,6 +234,10 @@ class JourneyDisplay {
                 return 1
             }
         }
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
     
     

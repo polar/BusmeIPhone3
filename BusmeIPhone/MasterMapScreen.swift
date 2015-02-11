@@ -189,10 +189,15 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate, CLLocationManagerDe
         return nil
     }
     
+    private var masterOverlayView : MasterOverlayView?
     func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {
-        let overlayView =  MasterOverlayView(overlay: overlay as MasterOverlay, mapView: mapView, masterController: masterController)
-        overlayView.setCenterAndZoom()
-        return overlayView
+        // TODO: Why are their two?
+        if masterOverlayView != nil {
+            masterOverlayView!.unregisterForEvents()
+        }
+        masterOverlayView =  MasterOverlayView(overlay: overlay as MasterOverlay, mapView: mapView, masterController: masterController)
+        masterOverlayView!.setCenterAndZoom()
+        return masterOverlayView
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateToLocation newLocation: CLLocation!, fromLocation oldLocation: CLLocation!) {
@@ -200,7 +205,17 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate, CLLocationManagerDe
         
     }
     
+    func unregisterForEvents() {
+        fgBannerPresentationController.unregisterForEvents()
+        fgMarkerPresentationController.unregisterForEvents()
+        fgMasterMessagePresentationController.unregisterForEvents()
+        syncProgressDialogController.unregisterForEvents()
+        routesView?.unregisterForEvents()
+        masterOverlayView?.unregisterForEvents()
+    }
+    
     deinit {
-        if BLog.DEBUG { BLog.logger.debug("Dealloc") }
+        
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("Dealloc") }
     }
 }

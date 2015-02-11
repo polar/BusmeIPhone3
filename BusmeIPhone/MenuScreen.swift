@@ -85,4 +85,8 @@ class MenuScreen : UITableViewController {
             menu_item.target?.menuItemSelected(menu_item)
         }
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 }

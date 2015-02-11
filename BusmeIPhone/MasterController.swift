@@ -25,7 +25,7 @@ class MasterEventData {
 class MasterController : BuspassEventListener {
     var api : BuspassApi
     var master : Master
-    var mainController : MainController?
+    weak var mainController : MainController?
     
     var directory : String?
     var bannerBasket : BannerBasket
@@ -104,7 +104,8 @@ class MasterController : BuspassEventListener {
         self.masterMessageBackground = MasterMessageBackground(api: api)
         
         let js = storageSerializedController.retrieveStorage("\(master.slug!)-Journeys.dat", api: api) as? JourneyStore
-        self.journeyStore = js != nil ? js! : JourneyStore()
+        self.journeyStore = js != nil ? js! : JourneyStore(name: master.slug!)
+        journeyStore.name = master.slug!
         self.journeyBasket = JourneyBasket(api: api, journeyStore: journeyStore)
         self.journeyDisplayController = JourneyDisplayController(api: api, basket: journeyBasket)
         self.journeyVisibilityController = JourneyVisibilityController(api: api, controller: journeyDisplayController)
@@ -160,6 +161,7 @@ class MasterController : BuspassEventListener {
         
         loginForeground.unregisterForEvents()
         loginBackground.unregisterForEvents()
+
     }
     
     func onBuspassEvent(event: BuspassEvent) {
@@ -265,7 +267,8 @@ class MasterController : BuspassEventListener {
     func replaceJourneyStore() {
         
         let js = storageSerializedController.retrieveStorage("\(master.slug!)-Journeys.dat", api: api) as? JourneyStore
-        self.journeyStore = js != nil ? js! : JourneyStore()
+        self.journeyStore = js != nil ? js! : JourneyStore(name: master.slug!)
+        self.journeyStore.name = master.slug!
         self.journeyBasket = JourneyBasket(api: api, journeyStore: journeyStore)
         self.journeyDisplayController = JourneyDisplayController(api: api, basket: journeyBasket)
         self.journeyVisibilityController = JourneyVisibilityController(api: api, controller: journeyDisplayController)
@@ -273,6 +276,6 @@ class MasterController : BuspassEventListener {
     }
     
     deinit {
-        if BLog.DEBUG { BLog.logger.debug("Dealloc") }
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC Master(\(master.slug!)") }
     }
 }

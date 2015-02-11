@@ -30,4 +30,9 @@ class MasterOverlay : NSObject, MKOverlay {
         super.init()
 
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
+
 }

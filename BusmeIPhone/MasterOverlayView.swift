@@ -32,11 +32,17 @@ class PatternView {
         default:
             self.color = UIColor(red: 0.2, green: 1, blue: 1, alpha: 0.5)
         }
+        args.journeyPattern = nil
     }
 
     func getBoundingMapRect() -> MKMapRect {
         return journeyPattern.getGeoRect().toMapRect()
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
+
 }
 
 class LocatorView {
@@ -47,58 +53,63 @@ class LocatorView {
     }
     
     var icon : Icon?
-    func getIcon() -> Icon {
+    func getIcon() -> Icon? {
         if icon != nil {
             return icon!
         }
         if params.isReporting {
-            icon = Locators.getReporting("passenger").getIcon()
+            icon = Locators.getReporting("passenger")?.getIcon()
             return icon!
         }
         switch params.iconType {
         case IconType.NORMAL:
             switch params.disposition {
             case Disposition.HIGHLIGHT:
-                icon = Locators.getArrow("red", reported: params.isReported).getDirection(params.currentDirection)
+                icon = Locators.getArrow("red", reported: params.isReported)?.getDirection(params.currentDirection)
                 break
             case Disposition.TRACK:
-                icon = Locators.getArrow("green", reported: params.isReported).getDirection(params.currentDirection)
+                icon = Locators.getArrow("green", reported: params.isReported)?.getDirection(params.currentDirection)
                 break
             case Disposition.NORMAL:
-                icon = Locators.getArrow("blue", reported: params.isReported).getDirection(params.currentDirection)
+                icon = Locators.getArrow("blue", reported: params.isReported)?.getDirection(params.currentDirection)
                 break
             default:
-                icon = Locators.getArrow("blue", reported: params.isReported).getDirection(params.currentDirection)
+                icon = Locators.getArrow("blue", reported: params.isReported)?.getDirection(params.currentDirection)
             }
-            return icon!
+            return icon
         case IconType.START:
             switch params.disposition {
             case Disposition.HIGHLIGHT:
-                icon = Locators.getStarting("red").getStartingIcon(params.startMeasure)
+                icon = Locators.getStarting("red")?.getStartingIcon(params.startMeasure)
                 break
             case Disposition.TRACK:
-                icon = Locators.getStarting("green").getStartingIcon(params.startMeasure)
+                icon = Locators.getStarting("green")?.getStartingIcon(params.startMeasure)
                 break
             case Disposition.NORMAL:
-                icon = Locators.getStarting("purple").getStartingIcon(params.startMeasure)
+                icon = Locators.getStarting("purple")?.getStartingIcon(params.startMeasure)
                 break
             default:
-                icon = Locators.getStarting("purple").getStartingIcon(params.startMeasure)
+                icon = Locators.getStarting("purple")?.getStartingIcon(params.startMeasure)
             }
-            return icon!
+            return icon
         case IconType.TOO_EARLY:
-            icon = Locators.getTooEarly("blue").getIcon()
-            return icon!
+            icon = Locators.getTooEarly("blue")?.getIcon()
+            return icon
         default:
             if BLog.ERROR { BLog.logger.error("Unknown IconType \(params.iconType)") }
-            icon = Locators.getTooEarly("blue").getIcon()
-            return icon!
+            icon = Locators.getTooEarly("blue")?.getIcon()
+            return icon
         }
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
+
 }
 
 class MasterOverlayView : MKOverlayRenderer, BuspassEventListener {
-    var masterController : MasterController
+    unowned var masterController : MasterController
     var mapView : MKMapView
     var mapLayer : RouteAndLocationsMapLayer
     
@@ -354,14 +365,17 @@ class MasterOverlayView : MKOverlayRenderer, BuspassEventListener {
     }
     
     func drawLocator(locatorView: LocatorView, projection : MKMapProjection, context: CGContextRef) {
-        let loc = locatorView.params.currentLocation
-        let coord = CLLocationCoordinate2D(latitude: loc.getLatitude(), longitude: loc.getLongitude())
-        let mapPoint = MKMapPointForCoordinate(coord)
-        let cgPoint = pointForMapPoint(mapPoint)
-        let jd = locatorView.params.journeyDisplay
-        let imageRect = drawLocatorIcon(cgPoint, icon: locatorView.getIcon(), label: jd.route.code!, projection: projection, context: context)
-        let mapRect = mapRectForRect(imageRect)
-        recordLocatorMapRect(jd, mapRect: mapRect)
+        let icon = locatorView.getIcon()
+        if icon != nil {
+            let loc = locatorView.params.currentLocation
+            let coord = CLLocationCoordinate2D(latitude: loc.getLatitude(), longitude: loc.getLongitude())
+            let mapPoint = MKMapPointForCoordinate(coord)
+            let cgPoint = pointForMapPoint(mapPoint)
+            let jd = locatorView.params.journeyDisplay
+            let imageRect = drawLocatorIcon(cgPoint, icon: icon!, label: jd.route.code!, projection: projection, context: context)
+            let mapRect = mapRectForRect(imageRect)
+            recordLocatorMapRect(jd, mapRect: mapRect)
+        }
     }
     
     func drawLocatorIcon(point : CGPoint, icon: Icon, label: String, projection : MKMapProjection, context: CGContextRef) -> CGRect {
@@ -386,4 +400,9 @@ class MasterOverlayView : MKOverlayRenderer, BuspassEventListener {
     func recordLocatorMapRect(journeyDisplay : JourneyDisplay, mapRect : MKMapRect) {
         previousLocators[journeyDisplay.route.id!] = mapRect
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
+
 }

@@ -10,12 +10,16 @@ import Foundation
 
 
 class JourneyDisplaySelectionController {
-    var api : BuspassApi
-    var journeyDisplayController : JourneyDisplayController
+    unowned var api : BuspassApi
+    unowned var journeyDisplayController : JourneyDisplayController
     
     init(api : BuspassApi, journeyDisplayController : JourneyDisplayController) {
         self.api = api
         self.journeyDisplayController = journeyDisplayController
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
     
 }

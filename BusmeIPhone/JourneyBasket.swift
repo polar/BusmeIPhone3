@@ -16,22 +16,22 @@ protocol ProgressListener {
     func onDone()
 }
 
-protocol OnIOErrorListener {
+protocol OnIOErrorListener : class {
     func onIOError(journeyBasket : JourneyBasket, statusLine : HttpStatusLine)
 }
-protocol OnJourneyAddedListener {
+protocol OnJourneyAddedListener : class{
     func onJourneyAdded(journeyBasket : JourneyBasket, journey : Route)
 }
-protocol OnJourneyRemovedListener {
+protocol OnJourneyRemovedListener :  class {
     func onJourneyRemoved(journeyBasket : JourneyBasket, journey : Route)
 }
-protocol OnBasketUpdateListener {
+protocol OnBasketUpdateListener :  class {
     func onBasketUpdate(journeyBasket : JourneyBasket)
 }
 
 class JourneyBasket {
-    var api : BuspassApi
-    var journeyStore : JourneyStore
+    unowned var api : BuspassApi
+    unowned var journeyStore : JourneyStore
     var journeys : [Route] = [Route]()
     var patterns : [JourneyPattern] = [JourneyPattern]()
     var journeyMap : [String:Route] = [String:Route]()
@@ -187,33 +187,60 @@ class JourneyBasket {
         return api.getJourneyPattern(id)
     }
     
-    private var onJourneyAddedListeners : [OnJourneyAddedListener] = [OnJourneyAddedListener]()
+    class WeakOnJourneyAddedListenerHelper {
+        weak var onJourneyAddedListener : OnJourneyAddedListener?
+        init(onJourneyAddedListener : OnJourneyAddedListener) {
+            self.onJourneyAddedListener = onJourneyAddedListener
+        }
+    }
+    private var onJourneyAddedListeners : [WeakOnJourneyAddedListenerHelper] = [WeakOnJourneyAddedListenerHelper]()
     func addOnJourneyAddedListeners(listener : OnJourneyAddedListener) {
-        onJourneyAddedListeners.append(listener)
+        let eatme = WeakOnJourneyAddedListenerHelper(onJourneyAddedListener: listener)
+        self.onJourneyAddedListeners.append(eatme)
     }
     func notifyOnJourneyAddedListeners(route : Route) {
         for listener in onJourneyAddedListeners {
-            listener.onJourneyAdded(self, journey: route)
+            listener.onJourneyAddedListener?.onJourneyAdded(self, journey: route)
         }
     }
     
-    private var onJourneyRemmovedListeners : [OnJourneyRemovedListener] = [OnJourneyRemovedListener]()
+    
+    class WeakOnJourneyRemovedListenerHelper {
+        weak var onJourneyRemovedListener : OnJourneyRemovedListener?
+        init(onJourneyRemovedListener : OnJourneyRemovedListener) {
+            self.onJourneyRemovedListener = onJourneyRemovedListener
+        }
+
+    }
+
+    private var onJourneyRemmovedListeners : [WeakOnJourneyRemovedListenerHelper] = [WeakOnJourneyRemovedListenerHelper]()
     func addOnJourneyRemovedListeners(listener : OnJourneyRemovedListener) {
-        onJourneyRemmovedListeners.append(listener)
+        onJourneyRemmovedListeners.append(WeakOnJourneyRemovedListenerHelper(onJourneyRemovedListener: listener))
     }
     func notifyOnJourneyRemovedListeners(route : Route) {
         for listener in onJourneyRemmovedListeners {
-            listener.onJourneyRemoved(self, journey: route)
+            listener.onJourneyRemovedListener?.onJourneyRemoved(self, journey: route)
         }
     }
-    private var onBasketUpdateListeners : [OnBasketUpdateListener] = [OnBasketUpdateListener]()
+    class WeakOnBasketUpdateListenerHelper {
+        weak var onBasketUpdateListener : OnBasketUpdateListener?
+        init(onBasketUpdateListener : OnBasketUpdateListener) {
+            self.onBasketUpdateListener = onBasketUpdateListener
+        }
+
+    }
+    private var onBasketUpdateListeners : [WeakOnBasketUpdateListenerHelper] = [WeakOnBasketUpdateListenerHelper]()
     func aedBasketUpdateListeners(listener : OnBasketUpdateListener) {
-        onBasketUpdateListeners.append(listener)
+        onBasketUpdateListeners.append(WeakOnBasketUpdateListenerHelper(onBasketUpdateListener: listener))
     }
 
     func notifyOnBasketUpdateListeners() {
         for listener in onBasketUpdateListeners {
-            listener.onBasketUpdate(self)
+            listener.onBasketUpdateListener?.onBasketUpdate(self)
         }
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
 }

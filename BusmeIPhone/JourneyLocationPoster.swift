@@ -275,4 +275,8 @@ class JourneyLocationPoster : BuspassEventListener {
         }
         reset()
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 }

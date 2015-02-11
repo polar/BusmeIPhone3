@@ -72,9 +72,11 @@ protocol BuspassPostListener : class {
 
 class BuspassEventDistributor {
     var name : String
+    // This cannot be weak.
     var postEventListener : BuspassPostListener?
     var eventNotifiers : [String:BuspassEventNotifier] = [String:BuspassEventNotifier]();
     var eventQ : [BuspassEvent] = [BuspassEvent]();
+    var enabled = true
 
     var writeLock : dispatch_semaphore_t
     
@@ -84,12 +86,16 @@ class BuspassEventDistributor {
     }
     
     func registerForEvent(eventName : String, listener : BuspassEventListener) {
-        var notifier = eventNotifiers[eventName]
-        if notifier == nil {
-            notifier = BuspassEventNotifier(name: eventName)
-            eventNotifiers[eventName] = notifier
+        if enabled {
+            var notifier = eventNotifiers[eventName]
+            if notifier == nil {
+                notifier = BuspassEventNotifier(name: eventName)
+                eventNotifiers[eventName] = notifier
+            }
+            notifier!.register(listener)
+        } else {
+            if BLog.DEBUG { BLog.logger.debug("disabled") }
         }
-        notifier!.register(listener)
     }
     
     func unregisterForEvent(eventName : String, listener : BuspassEventListener) {
@@ -104,15 +110,20 @@ class BuspassEventDistributor {
     
     func postBuspassEvent(event : BuspassEvent) {
         dispatch_semaphore_wait(writeLock, DISPATCH_TIME_FOREVER)
-        
-        if (BLog.DEBUG) { BLog.logger.debug("\(name):post \(event.eventName)") }
+        if enabled {
+            
+            if (BLog.DEBUG) { BLog.logger.debug("\(name):post \(event.eventName)") }
 
-        eventQ.insert(event, atIndex: 0);
-        
-        dispatch_semaphore_signal(writeLock)
-        
-        if (postEventListener != nil) {
-            postEventListener!.onPostEvent(event);
+            eventQ.insert(event, atIndex: 0);
+            
+            dispatch_semaphore_signal(writeLock)
+            
+            if (postEventListener != nil) {
+                postEventListener!.onPostEvent(event);
+            }
+        } else {
+            if (BLog.DEBUG) { BLog.logger.debug("\(name): disabled") }
+            dispatch_semaphore_signal(writeLock)
         }
     }
     
@@ -157,5 +168,17 @@ class BuspassEventDistributor {
         while (event != nil) {
             event = roll()
         }
+    }
+    
+    func disable() {
+        dispatch_semaphore_signal(writeLock)
+        enabled = false
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("\(name): disable \(eventQ.count) events will be deallocated") }
+        eventQ = [BuspassEvent]()
+        dispatch_semaphore_signal(writeLock)
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC \(name)") }
     }
 }

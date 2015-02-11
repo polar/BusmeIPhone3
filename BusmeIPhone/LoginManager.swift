@@ -11,7 +11,7 @@ import Foundation
 class LoginManager {
     let LOGIN_TRY_LIMIT = 3
     
-    var api : BuspassApi
+    unowned var api : BuspassApi
     var login : Login
     var authToken : String?
     var roleIntent : String = "passenger"
@@ -257,6 +257,10 @@ class LoginManager {
     
     func performLogout() {
         
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
 
 

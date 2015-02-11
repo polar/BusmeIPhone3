@@ -22,5 +22,9 @@ class MasterMessage : MessageBase {
     func postSerialize(api : ApiBase, time : TimeValue64) {
         
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 
 }

@@ -9,7 +9,7 @@
 import Foundation
 
 class MasterMessageRequestProcessor : ArgumentPreparer, ResponseProcessor {
-    var masterMessageBasket : MasterMessageBasket
+    unowned var masterMessageBasket : MasterMessageBasket
     
     init(masterMessageBasket : MasterMessageBasket) {
         self.masterMessageBasket = masterMessageBasket
@@ -56,5 +56,9 @@ class MasterMessageRequestProcessor : ArgumentPreparer, ResponseProcessor {
                 masterMessageBasket.addMasterMessage(masterMessage!)
             }
         }
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
 }

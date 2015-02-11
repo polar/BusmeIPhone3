@@ -34,18 +34,25 @@ struct LocatorArgs {
     let iconType : Int
 }
 
-struct PatternArgs {
-    let journeyPattern : JourneyPattern
+class PatternArgs {
+    var journeyPattern : JourneyPattern!
     let disposition : Int
+    init (journeyPattern: JourneyPattern, disposition : Int) {
+        self.journeyPattern = journeyPattern
+        self.disposition = disposition
+    }
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 }
 
 
 class RouteAndLocationsMapLayer {
     
-    var api : BuspassApi
-    var journeyDisplayController : JourneyDisplayController
-    var journeyLocationPoster : JourneyLocationPoster
-    var journeyVisibilityController : JourneyVisibilityController
+    unowned var api : BuspassApi
+    unowned var journeyDisplayController : JourneyDisplayController
+    unowned var journeyLocationPoster : JourneyLocationPoster
+    unowned var journeyVisibilityController : JourneyVisibilityController
     
     init(api : BuspassApi, journeyVisibilityController: JourneyVisibilityController, journeyDisplayController : JourneyDisplayController, journeyLocationPoster : JourneyLocationPoster ) {
         self.api = api
@@ -235,6 +242,10 @@ class RouteAndLocationsMapLayer {
             args.append(PatternArgs(journeyPattern: p, disposition: Disposition.HIGHLIGHT))
         }
         return args
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
 
 }

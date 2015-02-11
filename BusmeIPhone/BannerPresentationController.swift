@@ -9,8 +9,8 @@
 import Foundation
 
 class BannerPresentationController {
-    var api : BuspassApi
-    var bannerBasket : BannerBasket
+    unowned var api : BuspassApi
+    unowned var bannerBasket : BannerBasket
     var currentBanner : BannerInfo?
     var bannerQ : PriorityQueue<BannerInfo>!
     
@@ -115,5 +115,9 @@ class BannerPresentationController {
         } else {
             return time
         }
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
 }

@@ -63,6 +63,10 @@ class DiscoverApiVersion1 : DiscoverApi {
             return (status, nil)
         }
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 
     
 }

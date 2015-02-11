@@ -9,8 +9,8 @@
 import Foundation
 
 class JourneySyncRequestProcessor : ArgumentPreparer, ResponseProcessor {
-    var journeyBasket : JourneyBasket
-    var progressListener : JourneySyncProgressListener?
+    unowned var journeyBasket : JourneyBasket
+    weak var progressListener : JourneySyncProgressListener?
     
     init(journeyBasket : JourneyBasket) {
         self.journeyBasket = journeyBasket
@@ -46,6 +46,10 @@ class JourneySyncRequestProcessor : ArgumentPreparer, ResponseProcessor {
         }
         progressListener?.onSyncEnd(nameids.count)
         journeyBasket.sync(nameids, progress: progressListener, ioError: progressListener)
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
     
 }

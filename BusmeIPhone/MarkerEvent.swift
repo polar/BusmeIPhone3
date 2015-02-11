@@ -141,6 +141,10 @@ class MarkerForeground : BuspassEventListener {
         markerPresentationController?.onDismiss(false, markerInfo: markerInfo, time: time)
 
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 }
 
 class MarkerBackground : BuspassEventListener {
@@ -203,5 +207,9 @@ class MarkerBackground : BuspassEventListener {
     
     func onDone(eventData : MarkerEventData) {
         if BLog.DEBUG { BLog.logger.debug("MasterMessageEvent Background DONE \(eventData.markerInfo.title)") }
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
 }

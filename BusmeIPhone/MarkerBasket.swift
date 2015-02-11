@@ -9,8 +9,8 @@
 import Foundation
 
 class MarkerBasket {
-    var markerStore : MarkerStore
-    var markerController : MarkerPresentationController?
+    unowned var markerStore : MarkerStore
+    weak var markerController : MarkerPresentationController?
 
     init(markerStore : MarkerStore) {
         self.markerStore = markerStore
@@ -60,5 +60,9 @@ class MarkerBasket {
         }
     }
     
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
     
 }

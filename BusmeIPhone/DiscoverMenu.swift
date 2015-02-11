@@ -101,6 +101,6 @@ class DiscoverMenu : MenuScreen, MenuDelegate {
     }
     
     deinit {
-        if BLog.DEBUG { BLog.logger.debug("Dealloc") }
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("Dealloc") }
     }
 }

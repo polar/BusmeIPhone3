@@ -118,52 +118,60 @@ struct Locators {
         }
     }
     
-    static func getArrow(name : String, reported : Bool ) -> Locator {
+    static func getArrow(name : String, reported : Bool ) -> Locator? {
         let idxname = "\(name):\(reported):Arrow"
         if Locators.icons[idxname] == nil {
             let image = reported ? UIImage(named: "\(name)_yellow_button.png") : UIImage(named: "\(name)_button.png")
             let arrow = UIImage(named: "\(name)_arrow.png")
-            let imageSize = image!.size
-            let arrowSize = arrow!.size
-            let hotspot = CGPoint(x: 22, y: 30)
-            let icon = Locator(baseImage: image!, arrowImage: arrow!, hotspot: hotspot, labelColor: color(name))
-            Locators.icons[idxname] = icon
+            if image != nil && arrow != nil {
+                let imageSize = image!.size
+                let arrowSize = arrow!.size
+                let hotspot = CGPoint(x: 22, y: 30)
+                let icon = Locator(baseImage: image!, arrowImage: arrow!, hotspot: hotspot, labelColor: color(name))
+                Locators.icons[idxname] = icon
+            }
         }
-        return Locators.icons[idxname]!
+        return Locators.icons[idxname]
     }
     
-    static func getStarting(name: String) -> Locator {
+    static func getStarting(name: String) -> Locator? {
         let idxname = "\(name):Starting"
         if Locators.icons[idxname] == nil {
             let image = UIImage(named: "\(name)_button.png")
             let arrow = UIImage(named: "\(name)_dot.png")
-            let hotspot = CGPoint(x: 22, y: 30)
-            let icon = Locator(baseImage: image!, arrowImage: arrow!, hotspot: hotspot, labelColor: color(name))
-            Locators.icons[idxname] = icon
+            if image != nil && arrow != nil {
+                let hotspot = CGPoint(x: 22, y: 30)
+                let icon = Locator(baseImage: image!, arrowImage: arrow!, hotspot: hotspot, labelColor: color(name))
+                Locators.icons[idxname] = icon
+            }
         }
-        return Locators.icons[idxname]!
+        return Locators.icons[idxname]
     }
     
-    static func getReporting(name: String) -> Locator {
+    static func getReporting(name: String) -> Locator? {
         let idxname = "\(name):Reporting"
         if Locators.icons[idxname] == nil {
             let image = UIImage(named: "\(name)_icon.png")
-            let hotspot = CGPoint(x: 22, y: 30)
-            let icon = Locator(baseImage: image!, arrowImage: nil, hotspot: hotspot, labelColor: color(name))
-            Locators.icons[idxname] = icon
+            if image != nil {
+                let hotspot = CGPoint(x: 22, y: 30)
+                let icon = Locator(baseImage: image!, arrowImage: nil, hotspot: hotspot, labelColor: color(name))
+                Locators.icons[idxname] = icon
+            }
         }
-        return Locators.icons[idxname]!
+        return Locators.icons[idxname]
     }
     
-    static func getTooEarly(name: String) -> Locator {
+    static func getTooEarly(name: String) -> Locator? {
         let idxname = "\(name):TooEarly"
         if Locators.icons[idxname] == nil {
             let image = UIImage(named: "\(name)_circle_icon.png")
-            let hotspot = CGPoint(x: 22, y: 30)
-            let icon = Locator(baseImage: image!, arrowImage: nil, hotspot: hotspot, labelColor: color(name))
-            Locators.icons[idxname] = icon
+            if image != nil {
+                let hotspot = CGPoint(x: 22, y: 30)
+                let icon = Locator(baseImage: image!, arrowImage: nil, hotspot: hotspot, labelColor: color(name))
+                Locators.icons[idxname] = icon
+            }
         }
-        return Locators.icons[idxname]!
+        return Locators.icons[idxname]
     }
 
 }

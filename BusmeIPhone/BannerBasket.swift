@@ -10,7 +10,7 @@ import Foundation
 import CoreLocation
 
 class BannerBasket {
-    var bannerStore : BannerStore
+    unowned var bannerStore : BannerStore
     weak var bannerController : BannerPresentationController?
         
     init(bannerStore : BannerStore) {
@@ -52,5 +52,9 @@ class BannerBasket {
         for banner in getBanners() {
             removeBanner(banner)
         }
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
 }

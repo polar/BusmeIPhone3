@@ -9,8 +9,8 @@
 import Foundation
 
 class PostEventListener : BuspassPostListener {
-    var dispatchQ : dispatch_queue_t?
-    var eventQ : BuspassEventDistributor?
+    weak var dispatchQ : dispatch_queue_t?
+    weak var eventQ : BuspassEventDistributor?
     var queueTime : TimeValue64
     var queueCount : Int
     var queueSize : Int
@@ -43,6 +43,10 @@ class PostEventListener : BuspassPostListener {
             })
         }
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 }
 
 class EventsController {
@@ -65,18 +69,37 @@ class EventsController {
     func unregister(api : EventsApi) {
         api.uiEvents.postEventListener = nil
         api.bgEvents.postEventListener = nil
+        api.uiEvents.disable()
+        api.bgEvents.disable()
         if BLog.DEBUG && api.uiEvents.eventNotifiers.count > 0 {
             BLog.logger.debug("\(api.uiEvents.name) \(api.uiEvents.eventNotifiers.count) is greater than zero")
             for (key, notifier) in api.uiEvents.eventNotifiers {
-                BLog.logger.debug("\(notifier.eventName) \(notifier.eventListeners.count)")
+                var s = ""
+                for lis in notifier.eventListeners {
+                    s += ", \(lis)"
+                }
+                BLog.logger.debug("\(notifier.eventName) \(notifier.eventListeners.count): \(s)")
             }
+        } else {
+            if BLog.DEALLOC { BLog.logger.debug("\(api.uiEvents.name) has no listeners! UNREGISTERED") }
         }
         if BLog.DEBUG && api.bgEvents.eventNotifiers.count > 0 {
             BLog.logger.debug("\(api.bgEvents.name) \(api.bgEvents.eventNotifiers.count) is greater than zero")
             for (key, notifier) in api.bgEvents.eventNotifiers {
-                BLog.logger.debug("\(notifier.eventName) \(notifier.eventListeners.count)")
+                var s = ""
+                for lis in notifier.eventListeners {
+                    s += ", \(lis)"
+                }
+                BLog.logger.debug("\(notifier.eventName) \(notifier.eventListeners.count): \(s)")
             }
 
+        } else {
+            if BLog.DEALLOC { BLog.logger.debug("\(api.bgEvents.name) has no listeners! UNREGISTERED") }
         }
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
+
 }

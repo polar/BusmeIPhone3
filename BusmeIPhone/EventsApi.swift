@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol EventsApi {
+protocol EventsApi : class{
     var uiEvents : BuspassEventDistributor { get }
     var bgEvents : BuspassEventDistributor { get }
 }

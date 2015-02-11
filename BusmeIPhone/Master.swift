@@ -91,5 +91,9 @@ class Master : NSObject {
         return "<Master slug=\(slug) lon=\(lon) lat=\(lat) name=\(name) url=\(apiUrl)>"
     }
     
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
+    
     
 }

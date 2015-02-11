@@ -284,7 +284,7 @@ class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDelegate,
     }
     
     deinit {
-            if BLog.DEBUG { BLog.logger.debug("Dealloc") }
+            if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("Dealloc") }
             discoverMenuScreen = nil
     }
 }

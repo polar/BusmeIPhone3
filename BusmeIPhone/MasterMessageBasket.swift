@@ -9,7 +9,7 @@
 import Foundation
 
 class MasterMessageBasket {
-    var masterMessageStore : MasterMessageStore
+    unowned var masterMessageStore : MasterMessageStore
     weak var masterMessageController : MasterMessagePresentationController?
     
     init(masterMessageStore : MasterMessageStore) {
@@ -58,6 +58,10 @@ class MasterMessageBasket {
             masterMessageStore.removeMasterMessage(m!.id)
             masterMessageController?.removeMasterMessage(m!)
         }
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
     
     

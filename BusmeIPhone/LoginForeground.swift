@@ -104,6 +104,10 @@ class LoginForeground : BuspassEventListener {
         eventData.loginManager.exitProtocol()
         api.uiEvents.postEvent("LoginEvent", data: eventData)
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 }
 
 class LoginBackground : BuspassEventListener {
@@ -126,5 +130,9 @@ class LoginBackground : BuspassEventListener {
             loginManager.enterProtocol(newLogin: login)
             api.uiEvents.postEvent("LoginEvent", data: eventData!)
         }
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
 }

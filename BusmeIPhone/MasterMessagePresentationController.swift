@@ -9,8 +9,8 @@
 import Foundation
 
 class MasterMessagePresentationController {
-    var api : BuspassApi
-    var masterMessageBasket : MasterMessageBasket
+    unowned var api : BuspassApi
+    unowned var masterMessageBasket : MasterMessageBasket
     var currentMasterMessage : MasterMessage?
     var masterMessageQ : PriorityQueue<MasterMessage>!
     
@@ -107,5 +107,9 @@ class MasterMessagePresentationController {
         } else {
             return time
         }
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
 }

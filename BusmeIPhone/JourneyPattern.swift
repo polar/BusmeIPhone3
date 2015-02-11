@@ -17,15 +17,29 @@ class JourneyPattern : Storage {
     var distance : Double?
     var geoRect : GeoRect?
     var nameid : NameId?
+    var broken = false
     
     init(id : String) {
         super.init()
         self.id = id
+        Eatme.jpAdd(self)
     }
     
     init(tag : Tag) {
         super.init()
         loadParsedXML(tag)
+        Eatme.jpAdd(self)
+    }
+    
+    func breakit() {
+        BLog.logger.debug("Trying to break \(id)")
+        id = "fuckme"
+        path = nil
+        projectedPath = nil
+        distance = nil
+        geoRect = nil
+        nameid = nil
+        broken = true
     }
     
     override init(coder: NSCoder) {
@@ -38,6 +52,7 @@ class JourneyPattern : Storage {
             self.path = toCoordinates(ps!)
         }
         self.geoRect  = coder.decodeObjectForKey("rect") as? GeoRect
+        Eatme.jpAdd(self)
     }
     
     private func toCoordinates(path : [GeoPointImpl]) -> [GeoPoint] {
@@ -80,15 +95,18 @@ class JourneyPattern : Storage {
         return projectedPath!;
     }
     
-    func getPatternNameId() {
-        self.nameid = NameId(args: [id, id, "P", "1"])
-    }
-    
     func isReady() -> Bool {
+        if broken {
+            let eatme = path!
+        }
         return self.path != nil
     }
     
     func getDistance() -> Double {
+        if broken {
+            let eatme = path!
+        }
+
         if (distance == nil) {
             self.distance = GeoPathUtils.getDistance(self.path!)
         }
@@ -96,6 +114,10 @@ class JourneyPattern : Storage {
     }
     
     func getEndPoint() -> GeoPoint? {
+        if broken {
+            let eatme = path!
+        }
+
         if (isReady() && path!.count > 0) {
             return path!.last! as GeoPoint
         } else {
@@ -104,6 +126,10 @@ class JourneyPattern : Storage {
     }
     
     func getGeoRect() -> GeoRect {
+        if broken {
+            let eatme = path!
+        }
+
         if (geoRect == nil) {
             self.geoRect = GeoPathUtils.rectForPath(path!);
         }
@@ -133,5 +159,10 @@ class JourneyPattern : Storage {
             path.append(gp)
         }
         return path
+    }
+    
+    deinit {
+        Eatme.jpDel(self)
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC JourneyPattern broken \(broken)") }
     }
 }

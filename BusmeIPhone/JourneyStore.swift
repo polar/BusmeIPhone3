@@ -9,14 +9,22 @@
 import Foundation
 
 class JourneyStore : Storage {
+    var name: String
     
     var journeys : [String:Route] = [String:Route]()
     var patterns : [String:JourneyPattern] = [String:JourneyPattern]()
     
-    override init() {
+    init(name: String) {
+        self.name = name
         super.init()
     }
     override init( coder : NSCoder) {
+        let name = coder.decodeObjectForKey("name") as? String
+        if name == nil {
+            self.name = "unknown"
+        } else{
+            self.name = name!
+        }
         super.init()
         let journeys = coder.decodeObjectForKey("journeys") as? [String:Route]
         if journeys != nil {
@@ -33,6 +41,7 @@ class JourneyStore : Storage {
     }
     
     func encodeWithCoder( coder : NSCoder ) {
+        coder.encodeObject(name, forKey: "name")
         coder.encodeObject(journeys, forKey: "journeys")
         coder.encodeObject(patterns, forKey: "patterns")
     }
@@ -98,5 +107,19 @@ class JourneyStore : Storage {
     
     func removePattern(id : String) {
         patterns[id] = nil
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC JourneyStore(\(name)) deallocated with \(patterns.count) patterns \(journeys.count) journeys") }
+        autoreleasepool {
+            for p in self.patterns.values.array {
+                p.breakit()
+            }
+            
+            for p in self.journeys.values.array {
+                p.breakit()
+            }
+            self.empty()
+        }
     }
 }

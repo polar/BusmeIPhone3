@@ -155,4 +155,8 @@ class UpdateRemoteInvocation : RemoteInvocation {
         return false
     }
     
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
+    
 }

@@ -17,7 +17,7 @@ class BannerTimerEventData  {
 }
 
 class BannerTimer : UIResponder, BuspassEventListener {
-    var masterController : MasterController
+    weak var masterController : MasterController?
     var pleaseStop : Bool = false
     var interval : Int
     
@@ -29,16 +29,16 @@ class BannerTimer : UIResponder, BuspassEventListener {
     }
     
     func unregisterForEvents() {
-        masterController.api.bgEvents.unregisterForEvent("Banner:roll", listener: self)
+        masterController?.api.bgEvents.unregisterForEvent("Banner:roll", listener: self)
     }
     
     func onBuspassEvent(event: BuspassEvent) {
         let eventName = event.eventName
         if eventName == "Banner:roll" {
             let now = UtilsTime.current()
-            masterController.bannerPresentationController.roll(false, now: now)
-            masterController.markerPresentationController.roll(now: now)
-            masterController.masterMessagePresentationController.roll(false, now: now)
+            masterController?.bannerPresentationController.roll(false, now: now)
+            masterController?.markerPresentationController.roll(now: now)
+            masterController?.masterMessagePresentationController.roll(false, now: now)
         }
     }
     
@@ -52,7 +52,7 @@ class BannerTimer : UIResponder, BuspassEventListener {
     }
     
     func doBannerUpdate(forced: Bool) {
-        masterController.api.bgEvents.postEvent("Banner:roll", data: BannerTimerEventData(forced: forced))
+        masterController?.api.bgEvents.postEvent("Banner:roll", data: BannerTimerEventData(forced: forced))
         
         NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(self.interval),
             target: self,
@@ -65,6 +65,10 @@ class BannerTimer : UIResponder, BuspassEventListener {
         if !pleaseStop {
             doBannerUpdate(false)
         }
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
     
 }

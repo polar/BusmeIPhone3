@@ -9,7 +9,7 @@
 import Foundation
 
 class JourneySyncTimer : NSObject, BuspassEventListener {
-    var masterController : MasterController
+    weak var masterController : MasterController?
     var pleaseStop : Bool = false
     
     init(masterController : MasterController) {
@@ -19,7 +19,7 @@ class JourneySyncTimer : NSObject, BuspassEventListener {
     }
     
     func unregisterForEvents() {
-        masterController.api.uiEvents.unregisterForEvent("JourneySyncProgress", listener: self)
+        masterController?.api.uiEvents.unregisterForEvent("JourneySyncProgress", listener: self)
     }
     
     func onBuspassEvent(event: BuspassEvent) {
@@ -28,7 +28,7 @@ class JourneySyncTimer : NSObject, BuspassEventListener {
             let eventData = event.eventData as JourneySyncProgressEventData
             if eventData.action == JourneySyncProgressEvent.P_DONE {
                 if !pleaseStop {
-                    scheduleUpdate(masterController.api.syncRate/1000)
+                    scheduleUpdate(masterController!.api.syncRate/1000)
                 }
             }
         }
@@ -45,7 +45,7 @@ class JourneySyncTimer : NSObject, BuspassEventListener {
     
     func postUpdate(isForced : Bool) {
         let evd = JourneySyncEventData(isForced: isForced)
-        masterController.api.bgEvents.postEvent("JourneySync", data: evd)
+        masterController?.api.bgEvents.postEvent("JourneySync", data: evd)
     }
     
     func scheduleUpdate(interval : Int) {
@@ -60,6 +60,10 @@ class JourneySyncTimer : NSObject, BuspassEventListener {
         if !pleaseStop {
             postUpdate(false)
         }
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
 
 }

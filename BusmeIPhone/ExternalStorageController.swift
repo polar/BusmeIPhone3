@@ -50,4 +50,8 @@ class ExternalStorageController {
         let typedResult = result as? Storage
         return typedResult
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 }

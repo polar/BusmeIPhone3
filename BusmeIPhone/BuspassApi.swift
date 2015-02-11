@@ -488,4 +488,8 @@ class BuspassApi : ApiBase, EventsApi {
         return nil
     }
     
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
+    
 }

@@ -9,7 +9,7 @@
 import Foundation
 
 class JourneyCurrentLocationRequestProcessor : ArgumentPreparer, ResponseProcessor {
-    var journeyDisplayController : JourneyDisplayController
+    unowned var journeyDisplayController : JourneyDisplayController
     
     init(controller : JourneyDisplayController) {
         self.journeyDisplayController = controller
@@ -58,5 +58,9 @@ class JourneyCurrentLocationRequestProcessor : ArgumentPreparer, ResponseProcess
                 }
             }
         }
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
 }

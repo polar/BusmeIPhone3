@@ -286,9 +286,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
             eventData.dialog = nil
         }
         if eventData.oldMasterController != nil {
-            unregisterForMasterEvents(eventData.oldMasterController!.api)
-            stopTimers()
-            eventsController.unregister(eventData.oldMasterController!.api)
+            self.masterMapScreen?.unregisterForEvents()
+            self.stopTimers()
+            self.takedownTimers()
+            self.unregisterForMasterEvents(eventData.oldMasterController!.api)
+            self.eventsController.unregister(eventData.oldMasterController!.api)
+            eventData.oldMasterController = nil
+            autoreleasepool {
+                if BLog.DEBUG { BLog.logger.debug("AUTORELEASE POOL") }
+            }
         }
         
         let masterController = eventData.masterController!
@@ -333,9 +339,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
                 eventData.dialog!.dismissWithClickedButtonIndex(0, animated: true)
                 eventData.dialog = nil
             }        // Set up timers.
-            self.bannerTimer = BannerTimer(masterController: mainController!.masterController!, interval: 10)
-            self.updateTimer = UpdateTimer(masterController: mainController!.masterController!)
-            self.syncTimer = JourneySyncTimer(masterController: mainController!.masterController!)
+            buildTimers(mainController!.masterController!)
             startTimers()
 
             // Testing
@@ -349,6 +353,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
     var updateTimer : UpdateTimer?
     var syncTimer : JourneySyncTimer?
     var timersRunning : Bool = false
+    
+    func takedownTimers() {
+        bannerTimer?.unregisterForEvents()
+        updateTimer?.unregisterForEvents()
+        syncTimer?.unregisterForEvents()
+        bannerTimer = nil
+        updateTimer = nil
+        syncTimer = nil
+    }
+    
+    func buildTimers(masterController: MasterController) {
+        self.bannerTimer = BannerTimer(masterController: masterController, interval: 10)
+        self.updateTimer = UpdateTimer(masterController: masterController)
+        self.syncTimer = JourneySyncTimer(masterController: masterController)
+    }
+    
     func startTimers() {
         if !timersRunning {
             timersRunning = true

@@ -8,11 +8,11 @@
 
 import Foundation
 
-protocol OnJourneyDisplayAddedListener {
+protocol OnJourneyDisplayAddedListener : class {
     func onJourneyDisplayAdded(journey : JourneyDisplay)
 }
 
-protocol OnJourneyDisplayRemovedListener {
+protocol OnJourneyDisplayRemovedListener : class {
     func onJourneyDisplayRemoved(journey : JourneyDisplay)
 }
 
@@ -32,11 +32,11 @@ class JourneyDisplayEventData {
 }
 
 class JourneyDisplayController : OnJourneyAddedListener, OnJourneyRemovedListener {
-    var api : BuspassApi
-    var journeyBasket : JourneyBasket
+    unowned var api : BuspassApi
+    unowned var journeyBasket : JourneyBasket
     
-    var onJourneyDisplayAddedListener : OnJourneyDisplayAddedListener?
-    var onJourneyDisplayRemovedListener : OnJourneyDisplayRemovedListener?
+    weak var onJourneyDisplayAddedListener : OnJourneyDisplayAddedListener?
+    weak var onJourneyDisplayRemovedListener : OnJourneyDisplayRemovedListener?
     var journeyDisplays = [JourneyDisplay]()
     var journeyDisplayMap = [String:JourneyDisplay]()
     var writeLock = dispatch_semaphore_create(1)
@@ -113,5 +113,9 @@ class JourneyDisplayController : OnJourneyAddedListener, OnJourneyRemovedListene
     func abandonJourneyDisplay(jd : JourneyDisplay) {
         let evd = JourneyDisplayEventData(journeyDisplay: jd)
         api.uiEvents.postEvent("JourneyRemoved", data: evd)
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
 }

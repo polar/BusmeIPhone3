@@ -66,7 +66,7 @@ class Projection {
 }
 
 class MKMapProjection : Projection {
-    var renderer : MKOverlayRenderer
+    unowned var renderer : MKOverlayRenderer
     var zoomScale : MKZoomScale
     var lineWidth : CGFloat
     var mapRect : MKMapRect
@@ -131,11 +131,16 @@ class MKMapProjection : Projection {
         }
         return cgPath!
     }
+    
+    deinit {
+        if BLog.DEALLOC { BLog.logger.debug("DEALLOC \(reflect(self).summary)") }
+    }
+
 }
 
 class MKMapControlledProjection : MKMapProjection {
     let name : String!
-    var projectionController : ProjectionController
+    unowned var projectionController : ProjectionController
     var upperLeft : MKMapControlledProjection?
     var upperRight : MKMapControlledProjection?
     var lowerLeft : MKMapControlledProjection?
@@ -233,6 +238,11 @@ class MKMapControlledProjection : MKMapProjection {
             return path
         }
         return cgPath!
+    }
+
+    deinit {
+        if BLog.DEALLOC { BLog.logger.debug("DEALLOC \(reflect(self).summary)  cgPaths \(projectionController.cgPaths.count)") }
+        projectionController.cgPaths = [:]
     }
 
 }

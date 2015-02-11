@@ -136,6 +136,7 @@ class MainController : BuspassEventListener {
         if oldMasterController != nil {
             // TODO Posible Error
             oldMasterController!.storeMaster()
+            // TODO: We have to deserialize again to get rid of memory cycles with the Journey/Api.
         }
         self.masterController = MasterController(api: eventData.masterApi!, master: eventData.master!, mainController: self)
         if oldMasterController != nil {

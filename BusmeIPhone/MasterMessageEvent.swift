@@ -133,6 +133,10 @@ class MasterMessageForeground : BuspassEventListener {
     func onDone(eventData : MasterMessageEventData) {
         if BLog.DEBUG { BLog.logger.debug("MasterMessageEvent DONE \(eventData.masterMessage.title)") }
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 }
 
 class MasterMessageBackground : BuspassEventListener {
@@ -196,5 +200,9 @@ class MasterMessageBackground : BuspassEventListener {
     func onDone(eventData : MasterMessageEventData) {
         if BLog.DEBUG { BLog.logger.debug("MasterMessageEvent Background DONE \(eventData.masterMessage.title)") }
         
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
 }

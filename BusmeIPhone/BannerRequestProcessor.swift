@@ -9,7 +9,7 @@
 import Foundation
 
 class BannerRequestProcessor : ArgumentPreparer, ResponseProcessor {
-    var bannerBasket : BannerBasket
+    unowned var bannerBasket : BannerBasket
     
     init(bannerBasket : BannerBasket) {
         self.bannerBasket = bannerBasket
@@ -56,5 +56,9 @@ class BannerRequestProcessor : ArgumentPreparer, ResponseProcessor {
                 bannerBasket.addBanner(banner!)
             }
         }
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
 }

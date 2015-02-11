@@ -82,4 +82,8 @@ class JourneySyncRemoteInvocation : RemoteInvocation {
         invoke(journeySyncUpdateProgressListener, isForced: isForced)
     }
     
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
+    
 }

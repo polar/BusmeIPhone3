@@ -14,7 +14,7 @@ import MapKit
 // next zoomlevel and create the next ones in the backgrond.
 
 class ProjectionController {
-    var renderer : MKOverlayRenderer
+    unowned var renderer : MKOverlayRenderer
     var bgQueue : dispatch_queue_t
     var mapInset : MKMapSize
     
@@ -75,5 +75,9 @@ class ProjectionController {
                 if BLog.DEBUG_PATTERN { BLog.logger.debug("finished journeyPattern \(journeyPattern.id) for \(Rect(mapRect: projection.mapRect).toString()) \(timeEnd - timeStart) secs") }
             })
         }
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
 }

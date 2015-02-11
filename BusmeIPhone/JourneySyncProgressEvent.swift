@@ -103,4 +103,8 @@ class JourneySyncProgressListener : ProgressListener, OnIOErrorListener {
         eventData.endTime = UtilsTime.current()
         api.uiEvents.postEvent("JourneySyncProgress", data: eventData.dup())
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 }

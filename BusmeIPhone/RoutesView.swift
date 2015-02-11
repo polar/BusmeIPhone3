@@ -335,4 +335,8 @@ class RoutesView : UITableViewController, BuspassEventListener {
         hit(cell.journeyDisplay!)
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 }

@@ -65,4 +65,8 @@ class MarkerStore : Storage {
             markers[id] = nil
         }
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 }
