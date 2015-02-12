@@ -81,4 +81,8 @@ class UIMarker : UIButton {
         self.frame.size = pointed.size
     }
     
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
+    
 }

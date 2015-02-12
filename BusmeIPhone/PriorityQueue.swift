@@ -8,12 +8,16 @@
 
 import Foundation
 
+protocol Comparator : class {
+    func compare(lhs : AnyObject, rhs: AnyObject) -> Int
+}
+
 class PriorityQueue<T : AnyObject> {
     var elems : [T] = [T]()
     
-    let compare : (lhs : T,rhs : T) -> Int
-    init(compare : (lhs : T,rhs : T) -> Int) {
-        self.compare = compare
+    let comparator : Comparator
+    init(compare : Comparator) {
+        self.comparator = compare
     }
     
     func getElements() -> [T] {
@@ -35,7 +39,7 @@ class PriorityQueue<T : AnyObject> {
         if upper > -1 {
             while upper >= lower {
                 let idx = lower + (upper - lower)/2
-                let comp = compare(lhs: elem, rhs: elems[idx])
+                let comp = comparator.compare(elem, rhs: elems[idx])
                 if (comp == 0) {
                     elems.insert(elem, atIndex: idx)
                     return elem
@@ -66,7 +70,7 @@ class PriorityQueue<T : AnyObject> {
     
     func delete(elem : T) -> T? {
         for( var i = 0; i < elems.count; i++) {
-            if (compare(lhs: elem, rhs: elems[i]) == 0) {
+            if (comparator.compare(elem, rhs: elems[i]) == 0) {
                 return elems.removeAtIndex(i)
             }
         }

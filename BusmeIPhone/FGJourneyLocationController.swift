@@ -73,4 +73,8 @@ class FGJourneyLocationPresentController : BuspassEventListener {
            // masterMapScreen.removeJourneyLocationAnnotation(annotation!)
         }
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 }

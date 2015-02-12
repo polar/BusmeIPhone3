@@ -265,5 +265,9 @@ class RequestController {
     func onAckFinish(requestState : RequestStateEventData) {
         
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 
 }

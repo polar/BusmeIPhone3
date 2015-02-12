@@ -242,7 +242,6 @@ class MKMapControlledProjection : MKMapProjection {
 
     deinit {
         if BLog.DEALLOC { BLog.logger.debug("DEALLOC \(reflect(self).summary)  cgPaths \(projectionController.cgPaths.count)") }
-        projectionController.cgPaths = [:]
     }
 
 }

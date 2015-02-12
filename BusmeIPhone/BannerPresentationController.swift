@@ -7,6 +7,25 @@
 //
 
 import Foundation
+class BannerInfoComparator : Comparator {
+    func compare(lhs: AnyObject, rhs: AnyObject) -> Int {
+        return compare(lhs as BannerInfo, b2: rhs as BannerInfo)
+    }
+    
+    func compare(b1 : BannerInfo, b2: BannerInfo) -> Int {
+        let now = UtilsTime.current()
+        let time = cmp(b1.nextTime(now), b2.nextTime(now))
+        if time == 0 {
+            return cmp(b1.priority, b2.priority)
+        } else {
+            return time
+        }
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
+}
 
 class BannerPresentationController {
     unowned var api : BuspassApi
@@ -17,7 +36,7 @@ class BannerPresentationController {
     init(api : BuspassApi, basket: BannerBasket) {
         self.api = api
         self.bannerBasket = basket
-        self.bannerQ = PriorityQueue<BannerInfo>(compare: self.compare)
+        self.bannerQ = PriorityQueue<BannerInfo>(compare: BannerInfoComparator())
         bannerBasket.bannerController = self
     }
     

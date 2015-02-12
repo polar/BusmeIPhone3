@@ -96,4 +96,8 @@ class FGMarkerPresentController : BuspassEventListener {
             currentMarkerMessageController?.displayWebPage(eventData.thruUrl)
         }
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 }

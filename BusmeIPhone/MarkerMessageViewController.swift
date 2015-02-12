@@ -114,4 +114,8 @@ class MarkerMessageViewController : UIViewController, UIAlertViewDelegate {
         alertView?.dismissWithClickedButtonIndex(0, animated: true)
     }
     
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
+    
 }

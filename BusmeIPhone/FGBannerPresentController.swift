@@ -103,4 +103,8 @@ class FGBannerPresentController : BuspassEventListener {
             }
         }
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 }

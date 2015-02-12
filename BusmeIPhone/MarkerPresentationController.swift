@@ -9,6 +9,26 @@
 
 import Foundation
 
+class MarkerComparator : Comparator {
+    func compare(lhs: AnyObject, rhs: AnyObject) -> Int {
+        return compare(lhs as MarkerInfo, m2: rhs as MarkerInfo)
+    }
+    
+    func compare(m1 : MarkerInfo, m2 : MarkerInfo) -> Int {
+        let now = UtilsTime.current()
+        let priority = cmp(m1.priority, m2.priority)
+        if priority == 0 {
+            return cmp(m1.nextTime(now), m2.nextTime(now))
+        }
+        return priority
+    }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
+    
+}
+
 class MarkerPresentationController {
     unowned var api : BuspassApi
     unowned var markerBasket : MarkerBasket
@@ -21,7 +41,7 @@ class MarkerPresentationController {
         self.api = api
         self.markerBasket = markerBasket
         markerBasket.markerController = self
-        self.markerQ = PriorityQueue<MarkerInfo>(compare: { (m1, m2) in self.compare(m1, m2: m2) })
+        self.markerQ = PriorityQueue<MarkerInfo>(compare: MarkerComparator())
     }
     
     func removeFromCurrentMarkers(marker : MarkerInfo) {
@@ -129,15 +149,6 @@ class MarkerPresentationController {
         for m in backOnQueue {
             markerQ.push(m)
         }
-    }
-    
-    func compare(m1 : MarkerInfo, m2 : MarkerInfo) -> Int {
-        let now = UtilsTime.current()
-        let priority = cmp(m1.priority, m2.priority)
-        if priority == 0 {
-            return cmp(m1.nextTime(now), m2.nextTime(now))
-        }
-        return priority
     }
     
     func presentMarker(marker : MarkerInfo) {

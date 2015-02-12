@@ -92,7 +92,7 @@ class Master : NSObject {
     }
     
     deinit {
-        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC Master \(slug!)") }
     }
     
     

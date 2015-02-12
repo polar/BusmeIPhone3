@@ -139,4 +139,8 @@ class MastersTableScreen : UITableViewController, UITableViewDelegate,UISearchDi
         searchBar.autoresizingMask = UIViewAutoresizing.FlexibleWidth
         return searchBar
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 }

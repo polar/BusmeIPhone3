@@ -124,4 +124,8 @@ class UIBanner : UIViewController {
             masterMapScreen?.navigationController?.pushViewController(webScreen, animated: true)
         }
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 }

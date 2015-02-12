@@ -79,6 +79,9 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate, CLLocationManagerDe
         mapView.addOverlay(masterOverlay)
         mapView.showsUserLocation = true
         initializeTouches()
+        if masterOverlayView != nil {
+            masterOverlayView!.setCenterAndZoom()
+        }
         
         if splashView != nil {
             view.addSubview(splashView!)
@@ -191,18 +194,12 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate, CLLocationManagerDe
     
     private var masterOverlayView : MasterOverlayView?
     func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {
-        // TODO: Why are their two?
-        if masterOverlayView != nil {
-            masterOverlayView!.unregisterForEvents()
-        }
         masterOverlayView =  MasterOverlayView(overlay: overlay as MasterOverlay, mapView: mapView, masterController: masterController)
-        masterOverlayView!.setCenterAndZoom()
         return masterOverlayView
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateToLocation newLocation: CLLocation!, fromLocation oldLocation: CLLocation!) {
         if BLog.DEBUG { BLog.logger.debug("userLocation\(newLocation.coordinate)") }
-        
     }
     
     func unregisterForEvents() {
@@ -215,7 +212,8 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate, CLLocationManagerDe
     }
     
     deinit {
-        
-        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("Dealloc") }
+        // Flying fuck! When this screen is deallocated why isn't the mapView deallocated and the fucking overlay with it! Took me a week to find this.
+        mapView.removeOverlay(masterOverlay)
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC MasterMapScreen \(master.slug!)") }
     }
 }

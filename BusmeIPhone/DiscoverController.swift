@@ -99,4 +99,8 @@ class DiscoverController : BuspassEventListener {
         eventData.master = selectedMaster
         api.uiEvents.postEvent("Search:Find:return", data: eventData)
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 }

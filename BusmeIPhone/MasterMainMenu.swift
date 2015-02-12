@@ -255,4 +255,8 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
             Toast(title: "Reset Seen Markers", message: "The messages you have marked as seen will now reappear if and when scheduled and not expired.", duration: 2).show()
         }
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 }

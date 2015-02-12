@@ -79,4 +79,8 @@ class FGMasterMessagePresentController : BuspassEventListener {
             api.uiEvents.postEvent("MasterMessageEvent", data: eventData)
         }
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 }

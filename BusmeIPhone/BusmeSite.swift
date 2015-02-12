@@ -60,4 +60,8 @@ class BusmeSiteImpl : NSObject, MKOverlay, BusmeSite {
     func intersectsWithRect(mapRect : MKMapRect) -> Bool {
         return MKMapRectIntersectsRect(boundingMapRect, mapRect)
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 }

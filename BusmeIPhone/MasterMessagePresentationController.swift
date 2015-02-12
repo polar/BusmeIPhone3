@@ -8,6 +8,22 @@
 
 import Foundation
 
+class MasterMessageComparator : Comparator {
+    func compare(lhs: AnyObject, rhs: AnyObject) -> Int {
+        return compare(lhs as MasterMessage, b2: rhs as MasterMessage)
+    }
+    
+    func compare(b1 : MasterMessage, b2: MasterMessage) -> Int {
+        let now = UtilsTime.current()
+        let time = cmp(b1.nextTime(now), b2.nextTime(now))
+        if time == 0 {
+            return cmp(b1.priority, b2.priority)
+        } else {
+            return time
+        }
+    }
+}
+
 class MasterMessagePresentationController {
     unowned var api : BuspassApi
     unowned var masterMessageBasket : MasterMessageBasket
@@ -17,7 +33,7 @@ class MasterMessagePresentationController {
     init(api : BuspassApi, basket: MasterMessageBasket) {
         self.api = api
         self.masterMessageBasket = basket
-        self.masterMessageQ = PriorityQueue<MasterMessage>(compare: self.compare)
+        self.masterMessageQ = PriorityQueue<MasterMessage>(compare: MasterMessageComparator())
     }
     
     func addMasterMessage(masterMessage: MasterMessage) {
@@ -96,16 +112,6 @@ class MasterMessagePresentationController {
                         masterMessageQ.push(masterMessage)
                     }
             }
-        }
-    }
-    
-    func compare(b1 : MasterMessage, b2: MasterMessage) -> Int {
-        let now = UtilsTime.current()
-        let time = cmp(b1.nextTime(now), b2.nextTime(now))
-        if time == 0 {
-            return cmp(b1.priority, b2.priority)
-        } else {
-            return time
         }
     }
     

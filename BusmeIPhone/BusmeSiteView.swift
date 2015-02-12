@@ -50,5 +50,9 @@ class BusmeSiteView : MKOverlayRenderer {
         }
         CGContextRestoreGState(context)
     }
+    
+    deinit {
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+    }
 
 }

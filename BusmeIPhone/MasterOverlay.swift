@@ -11,7 +11,7 @@ import CoreLocation
 import MapKit
 
 class MasterOverlay : NSObject, MKOverlay {
-    weak var masterController : MasterController?
+    unowned var masterController : MasterController
     var master : Master
     var coordinate : CLLocationCoordinate2D
     var boundingMapRect : MKMapRect
@@ -32,7 +32,7 @@ class MasterOverlay : NSObject, MKOverlay {
     }
     
     deinit {
-        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC MasterOverlay \(master.slug!)") }
     }
 
 }
