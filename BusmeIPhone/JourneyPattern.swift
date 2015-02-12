@@ -17,7 +17,6 @@ class JourneyPattern : Storage {
     var distance : Double?
     var geoRect : GeoRect?
     var nameid : NameId?
-    var broken = false
     
     init(id : String) {
         super.init()
@@ -29,17 +28,6 @@ class JourneyPattern : Storage {
         super.init()
         loadParsedXML(tag)
         Eatme.jpAdd(self)
-    }
-    
-    func breakit() {
-        BLog.logger.debug("Trying to break \(id)")
-        id = "fuckme"
-        path = nil
-        projectedPath = nil
-        distance = nil
-        geoRect = nil
-        nameid = nil
-        broken = true
     }
     
     override init(coder: NSCoder) {
@@ -96,16 +84,10 @@ class JourneyPattern : Storage {
     }
     
     func isReady() -> Bool {
-        if broken {
-            let eatme = path!
-        }
         return self.path != nil
     }
     
     func getDistance() -> Double {
-        if broken {
-            let eatme = path!
-        }
 
         if (distance == nil) {
             self.distance = GeoPathUtils.getDistance(self.path!)
@@ -114,9 +96,6 @@ class JourneyPattern : Storage {
     }
     
     func getEndPoint() -> GeoPoint? {
-        if broken {
-            let eatme = path!
-        }
 
         if (isReady() && path!.count > 0) {
             return path!.last! as GeoPoint
@@ -126,9 +105,6 @@ class JourneyPattern : Storage {
     }
     
     func getGeoRect() -> GeoRect {
-        if broken {
-            let eatme = path!
-        }
 
         if (geoRect == nil) {
             self.geoRect = GeoPathUtils.rectForPath(path!);
@@ -163,6 +139,6 @@ class JourneyPattern : Storage {
     
     deinit {
         Eatme.jpDel(self)
-        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC JourneyPattern broken \(broken)") }
+        if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC JourneyPattern \(id)") }
     }
 }

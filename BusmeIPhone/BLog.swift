@@ -86,7 +86,7 @@ class Logger {
 }
 
 struct BLog {
-    static let DEALLOC = true
+    static let DEALLOC = false
     static let DEBUG = true
     static let ERROR = true
     static let WARN = true

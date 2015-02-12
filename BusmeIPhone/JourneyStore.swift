@@ -111,15 +111,5 @@ class JourneyStore : Storage {
     
     deinit {
         if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC JourneyStore(\(name)) deallocated with \(patterns.count) patterns \(journeys.count) journeys") }
-        autoreleasepool {
-            for p in self.patterns.values.array {
-                p.breakit()
-            }
-            
-            for p in self.journeys.values.array {
-                p.breakit()
-            }
-            self.empty()
-        }
     }
 }

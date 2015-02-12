@@ -14,22 +14,28 @@ struct Eatme {
     static var jpalloc = 0
     static var jpfreed = 0
     static func add(obj : AnyObject) {
-        BLog.logger.debug("Dealloc \(reflect(obj).summary)")
-        released.append(reflect(obj).summary)
+        if BLog.DEALLOC {
+            BLog.logger.debug("Dealloc \(reflect(obj).summary)")
+            released.append(reflect(obj).summary)
+        }
     }
     static var jpids = [String]()
     static func jpAdd(jp: JourneyPattern) {
-        jpids.append(jp.id)
-        jpalloc++
-        BLog.logger.debug("JP \(jp.id) allocated alloc \(jpalloc) freed \(jpfreed)")
+        if BLog.DEALLOC {
+            jpids.append(jp.id)
+            jpalloc++
+            BLog.logger.debug("JP \(jp.id) allocated alloc \(jpalloc) freed \(jpfreed)")
+        }
     }
     static func jpDel(jp: JourneyPattern) {
-        for (var i = 0; i < jpids.count; i++) {
-            if jpids[i] == jp.id {
-                jpids.removeAtIndex(i)
-                jpfreed++
-                BLog.logger.debug("JP \(jp.id) deallocated alloc \(jpalloc) freed \(jpfreed)")
-                return
+        if BLog.DEALLOC {
+            for (var i = 0; i < jpids.count; i++) {
+                if jpids[i] == jp.id {
+                    jpids.removeAtIndex(i)
+                    jpfreed++
+                    BLog.logger.debug("JP \(jp.id) deallocated alloc \(jpalloc) freed \(jpfreed)")
+                    return
+                }
             }
         }
     }
