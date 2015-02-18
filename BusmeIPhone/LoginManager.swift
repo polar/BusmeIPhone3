@@ -117,7 +117,7 @@ class LoginManager {
     }
     
     func passwordLogin() {
-        let (response, tag) = api.passwordRegistration(login)
+        let (response, tag) = api.passwordLogin(login)
         if tag != nil {
             login.status = tag!.attributes["status"]
             if "OK" == login.status {

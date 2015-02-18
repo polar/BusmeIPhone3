@@ -19,6 +19,7 @@ class MenuItem {
     weak var target : MenuDelegate?
     var checked : Bool?
     var submenu : [MenuItem]?
+    weak var navigationController : UINavigationController?
     init(title : String, action: String, target : MenuDelegate) {
         self.title = title
         self.action = action
@@ -46,6 +47,7 @@ class MenuScreen : UITableViewController {
     }
     
     override func viewDidLoad() {
+        super.viewDidLoad()
         navigationController!.navigationItem.title = title
     }
     
@@ -81,8 +83,10 @@ class MenuScreen : UITableViewController {
             let menuScreen = MenuScreen().initWithMenuData(menu_item.title, menu_data: menu_item.submenu!)
             navigationController?.pushViewController(menuScreen, animated: true)
         } else {
-            navigationController?.popToRootViewControllerAnimated(true)
+            menu_item.navigationController = navigationController
+            //navigationController?.popToRootViewControllerAnimated(true)
             menu_item.target?.menuItemSelected(menu_item)
+            menu_item.navigationController = nil
         }
     }
     

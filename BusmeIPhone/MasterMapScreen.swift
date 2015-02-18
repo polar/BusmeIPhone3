@@ -30,6 +30,7 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate, CLLocationManagerDe
     var fgBannerPresentationController : FGBannerPresentController!
     var fgMarkerPresentationController : FGMarkerPresentController!
     var fgMasterMessagePresentationController : FGMasterMessagePresentController!
+    var fgLoginPresentController : FGLoginPresentController!
     var masterOverlay : MasterOverlay!
     var locationManager : CLLocationManager!
     
@@ -42,6 +43,7 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate, CLLocationManagerDe
         self.fgMarkerPresentationController = FGMarkerPresentController(masterMapScreen: self)
         self.fgMasterMessagePresentationController = FGMasterMessagePresentController(masterMapScreen: self)
         self.masterOverlay = MasterOverlay(master: masterController.master, masterController: masterController)
+        self.fgLoginPresentController = FGLoginPresentController(api: api)
         self.locationManager = CLLocationManager()
         if locationManager.respondsToSelector("requestWhenInUseAuthorization") {
             locationManager.requestWhenInUseAuthorization()
@@ -206,6 +208,7 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate, CLLocationManagerDe
         fgBannerPresentationController.unregisterForEvents()
         fgMarkerPresentationController.unregisterForEvents()
         fgMasterMessagePresentationController.unregisterForEvents()
+        fgLoginPresentController.unregisterForEvents()
         syncProgressDialogController.unregisterForEvents()
         routesView?.unregisterForEvents()
         masterOverlayView?.unregisterForEvents()

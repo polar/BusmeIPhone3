@@ -83,6 +83,7 @@ class LoginForeground : BuspassEventListener {
         
     }
     func presentError(eventData : LoginEventData) {
+        api.uiEvents.postEvent("LoginError", data: eventData)
         onContinue(eventData)
     }
     

@@ -93,7 +93,7 @@ class DiscoverMenu : MenuScreen, MenuDelegate {
     }
     
     func about(menuItem: MenuItem) {
-        
+        AboutDialog().show()
     }
     
     func help(menuItem: MenuItem) {

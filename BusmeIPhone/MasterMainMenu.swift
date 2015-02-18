@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 class MasterMainMenu : MenuScreen, MenuDelegate {
     weak var masterController : MasterController?
@@ -51,6 +52,7 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
             MenuItem(title: "Stop", action: "report", target: self),
             MenuItem(title: "Login", action: "report", target: self),
             MenuItem(title: "Logout", action: "report", target: self),
+            MenuItem(title: "Register", action: "report", target: self),
             
         ]
         return MenuItem(title: "Reporting", submenu: submenu)
@@ -70,36 +72,56 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
             startLogin(menuItem)
         } else if title == "Logout" {
             startLogout(menuItem)
+        } else if title == "Register" {
+            startRegister(menuItem)
+        }
+    }
+    
+    func startRegister(menuItem : MenuItem) {
+        if masterController!.api.isLoggedIn() {
+            let login = masterController!.api.loginCredentials!
+            UIAlertView(title: "Already Logged In", message: "You are already logged in as \(login.roleIntent). Please log out before trying to create a new user", delegate: nil, cancelButtonTitle: "OK").show()
+        } else {
+            register(menuItem)
         }
     }
     
     func startLogin(menuItem : MenuItem) {
         if !masterController!.api.isLoggedIn() {
-            login(menuItem.title.lowercaseString)
+            login(menuItem)
         } else {
             let login = masterController!.api.loginCredentials!
             Toast(title: "Already Logged In", message: "You are already logged in as \(login.roleIntent)", duration : 2).show()
         }
     }
     
-    func login(roleIntent : String) {
+    func login(menuItem: MenuItem) {
+        let roleIntent = menuItem.title.lowercaseString
         let login = Login()
         login.roleIntent = roleIntent
         login.quiet = false
         login.loginTries = 0
         let loginManager = LoginManager(api: masterController!.api)
-        let evd = LoginEventData(loginManager: loginManager)
-        masterController!.api.bgEvents.postEvent("LoginEvent", data: evd)
+        var loginControllr = LoginFormController(loginManager: loginManager)
+        menuItem.navigationController?.pushViewController(loginControllr, animated: true)
+    }
+    
+    func register(menuItem: MenuItem) {
+        let login = Login()
+        login.quiet = false
+        let loginManager = LoginManager(api: masterController!.api)
+        var loginController = RegisterFormController(loginManager: loginManager)
+        menuItem.navigationController?.pushViewController(loginController, animated: true)
     }
     
     func startReporting(menuItem : MenuItem) {
         // TODO
         if true { // masterController!.locationController.getLastKnownLocation() != nil
             if !masterController!.api.isLoggedIn() {
-                login(menuItem.title.lowercaseString)
+                login(menuItem)
             } else {
-                if (title == "Driver" && !masterController!.api.loginCredentials!.hasRole("driver")) {
-                    Toast(title: "Not Authorized", message: "You are not logged in as driver", duration: 5).show()
+                if (menuItem.title == "Driver" && !masterController!.api.loginCredentials!.hasRole("driver")) {
+                    Toast(title: "Not Authorized", message: "You are authorized as a driver", duration: 5).show()
                 } else {
                     showSelections(menuItem)
                 }
@@ -110,7 +132,13 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
     }
     
     func showSelections(menuItem : MenuItem) {
-        Toast(title: "No Selections", message: "There are no journeys within your location", duration: 3).show()
+        var jds = masterController!.journeyVisibilityController.getSortedJourneyDisplays()
+        if jds.count > 0 {
+            var viewController = JourneyPostingSelectionView(journeyDisplays: jds)
+            menuItem.navigationController?.pushViewController(viewController, animated: true)
+        } else {
+            Toast(title: "No Selections", message: "There are no journeys within your location", duration: 3).show()
+        }
     }
     
     func stopReporting(menuItem : MenuItem) {

@@ -187,10 +187,10 @@ class BuspassApi : ApiBase, EventsApi {
     func authTokenLogin(login : Login) -> (HttpStatusLine, Tag?) {
         if isReady() {
             login.url = buspass!.authUrl!
-            var params = [String:[String]]()
-            params["access_token"] = [ "\(login.authToken!)" ]
-            params["role_intent"] = [ login.roleIntent ]
-            params["app_version"] = [ busmeAppVersionString ]
+            var params = [String:AnyObject]()
+            params["access_token"] = login.authToken!
+            params["role_intent"] = login.roleIntent
+            params["app_version"] = busmeAppVersionString
             let response = postURLResponse(login.url!, parameters: params)
             let status = response.getStatusLine()
             if status.statusCode == 200 {
@@ -219,16 +219,20 @@ class BuspassApi : ApiBase, EventsApi {
         }
     }
     
+    func s(str : String?) -> String {
+        return (str == nil) ? "" : str!
+    }
+    
     func passwordRegistration(login : Login) -> (HttpStatusLine, Tag?) {
         if isReady() {
             login.url = buspass!.registerUrl!
-            var params = [String:[String]]()
-            params["email"] = [ "\(login.email)" ]
-            params["password"] = [ "\(login.password)" ]
-            params["password_confirmation"] = [ "\(login.passwordConfirmation)" ]
-            params["auth_code"] = [ "\(login.driverAuthCode)" ]
-            params["role_intent"] = [ login.roleIntent ]
-            params["app_version"] = [ busmeAppVersionString ]
+            var params = [String:AnyObject]()
+            params["email"] = s(login.email)
+            params["password"] = s(login.password)
+            params["password_confirmation"] = s(login.passwordConfirmation)
+            params["auth_code"] = s(login.driverAuthCode)
+            params["role_intent"] = login.roleIntent
+            params["app_version"] = busmeAppVersionString
             let response = postURLResponse(login.url!, parameters: params)
             let status = response.getStatusLine()
             if status.statusCode == 200 {
@@ -262,12 +266,12 @@ class BuspassApi : ApiBase, EventsApi {
     func passwordLogin(login : Login) -> (HttpStatusLine, Tag?) {
         if isReady() {
             login.url = buspass!.loginUrl!
-            var params = [String:[String]]()
-            params["email"] = [ "\(login.email)" ]
-            params["password"] = [ "\(login.password)" ]
-            params["auth_code"] = [ "\(login.driverAuthCode)" ]
-            params["role_intent"] = [ login.roleIntent ]
-            params["app_version"] = [ busmeAppVersionString ]
+            var params = [String:AnyObject]()
+            params["email"] = s(login.email)
+            params["password"] = s(login.password)
+            params["auth_code"] = s(login.driverAuthCode)
+            params["role_intent"] = login.roleIntent
+            params["app_version"] = busmeAppVersionString
             let response = postURLResponse(login.url!, parameters: params)
             let status = response.getStatusLine()
             if status.statusCode == 200 {
@@ -303,17 +307,17 @@ class BuspassApi : ApiBase, EventsApi {
             if postJourneyLocationUrl != nil {
                 let query = getDefaultQuery()
                 let url = postJourneyLocationUrl! + query.toString()
-                var params = [String:[String]]()
-                params["lon"] = ["\(ploc.location.longitude)"]
-                params["lat"] = ["\(ploc.location.latitude)"]
-                params["id"]  = ["\(ploc.journey.id)"]
-                params["dir"] = ["\(ploc.location.bearing)"]
+                var params = [String:AnyObject]()
+                params["lon"] = "\(ploc.location.longitude)"
+                params["lat"] = "\(ploc.location.latitude)"
+                params["id"]  = ploc.journey.id
+                params["dir"] = "\(ploc.location.bearing)"
                 
-                params["reported_time"] = ["\(ploc.location.time)"]
+                params["reported_time"] = "\(ploc.location.time)"
                 
-                params["speed"] = ["\(ploc.location.speed)"]
+                params["speed"] = "\(ploc.location.speed)"
                 if role == "driver" {
-                    params["driver"] = ["1"]
+                    params["driver"] = "1"
                 }
                 let response = postURLResponse(url, parameters: params)
                 let status = response.getStatusLine()

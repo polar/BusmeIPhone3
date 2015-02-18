@@ -55,7 +55,7 @@ class MasterController : BuspassEventListener {
     var masterMessageForeground : MasterMessageForeground
     var masterMessageBackground : MasterMessageBackground
     
-    var loginForeground : LoginForeground
+    //var loginForeground : LoginForeground
     var loginBackground : LoginBackground
     
     var journeyLocationPoster : JourneyLocationPoster
@@ -120,7 +120,7 @@ class MasterController : BuspassEventListener {
         self.journeyEventController = JourneyEventController(api: api)
         self.journeyPostingController = JourneyPostingController(api: api)
         
-        self.loginForeground = LoginForeground(api: api)
+        //self.loginForeground = LoginForeground(api: api)
         self.loginBackground = LoginBackground(api: api)
         registerForEvents()
     }
@@ -159,7 +159,7 @@ class MasterController : BuspassEventListener {
         journeyLocationPoster.unregisterForEvents()
         journeyEventController.unregisterForEvents()
         
-        loginForeground.unregisterForEvents()
+        //loginForeground.unregisterForEvents()
         loginBackground.unregisterForEvents()
 
     }

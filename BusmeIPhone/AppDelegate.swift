@@ -232,6 +232,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
     }
     
     func doDiscoverInit(discoverApi : DiscoverApiVersion1) {
+        // We are going to a discover screen, so stop any Master based timers
+        
+        self.stopTimers()
+        self.takedownTimers()
+
         let evd = MainEventData(discoverApi: discoverApi)
         eventsController.register(discoverApi)
         api.bgEvents.postEvent("Main:Discover:init", data: evd)
@@ -287,8 +292,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
         }
         if eventData.oldMasterController != nil {
             self.masterMapScreen?.unregisterForEvents()
-            self.stopTimers()
-            self.takedownTimers()
+            //self.stopTimers()
+            //self.takedownTimers()
             self.unregisterForMasterEvents(eventData.oldMasterController!.api)
             self.eventsController.unregister(eventData.oldMasterController!.api)
             eventData.oldMasterController = nil

@@ -7,3 +7,4 @@
 //
 
 #include "RXMLElement.h"
+#include "FXForms.h"

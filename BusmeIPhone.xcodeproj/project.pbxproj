@@ -34,6 +34,7 @@
 		F3140F681A644EE20024A65D /* BannerRequestProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3140F671A644EE20024A65D /* BannerRequestProcessor.swift */; };
 		F320FF3C1A714D1100924F8D /* FGMasterMessagePresentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F320FF3B1A714D1100924F8D /* FGMasterMessagePresentController.swift */; };
 		F320FF3F1A7151A900924F8D /* MasterMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F320FF3E1A7151A900924F8D /* MasterMessageViewController.swift */; };
+		F3263BCC1A950BA6001D22A1 /* FGLoginPresentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3263BCB1A950BA6001D22A1 /* FGLoginPresentController.swift */; };
 		F326F1051A5EAFC000CBCE28 /* BLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F326F1041A5EAFC000CBCE28 /* BLog.swift */; };
 		F33B69B41A5B022C004C7742 /* GeoPathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33B69B31A5B022C004C7742 /* GeoPathUtils.swift */; };
 		F33B69BA1A5B43D2004C7742 /* IPUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33B69B91A5B43D2004C7742 /* IPUtils.swift */; };
@@ -95,6 +96,9 @@
 		F39802081A5A08A400D6C2B0 /* BuspasEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39802071A5A08A400D6C2B0 /* BuspasEvents.swift */; };
 		F398020A1A5A40FF00D6C2B0 /* MessageSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39802091A5A40FF00D6C2B0 /* MessageSpec.swift */; };
 		F398020C1A5A424200D6C2B0 /* MarkerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F398020B1A5A424200D6C2B0 /* MarkerInfo.swift */; };
+		F3B3B2D61A93D1B60058B356 /* AboutDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B3B2D51A93D1B60058B356 /* AboutDialog.swift */; };
+		F3B3B2D81A93E0830058B356 /* JourneyPostingSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B3B2D71A93E0830058B356 /* JourneyPostingSelectionView.swift */; };
+		F3B3B2DB1A9426900058B356 /* FormController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B3B2DA1A9426900058B356 /* FormController.swift */; };
 		F3C250381A68135B003B642C /* EventsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C250371A68135B003B642C /* EventsController.swift */; };
 		F3C2503A1A6816AD003B642C /* EventsApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C250391A6816AD003B642C /* EventsApi.swift */; };
 		F3C33CDE1A6627E600EF8E24 /* DiscoverEventData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C33CDD1A6627E600EF8E24 /* DiscoverEventData.swift */; };
@@ -195,6 +199,7 @@
 		F31E4BC91A58760E00E2F0A2 /* HttpClientTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpClientTest.swift; sourceTree = "<group>"; };
 		F320FF3B1A714D1100924F8D /* FGMasterMessagePresentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FGMasterMessagePresentController.swift; sourceTree = "<group>"; };
 		F320FF3E1A7151A900924F8D /* MasterMessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MasterMessageViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		F3263BCB1A950BA6001D22A1 /* FGLoginPresentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FGLoginPresentController.swift; sourceTree = "<group>"; };
 		F326F1041A5EAFC000CBCE28 /* BLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BLog.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F33B69B31A5B022C004C7742 /* GeoPathUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeoPathUtils.swift; sourceTree = "<group>"; };
 		F33B69B91A5B43D2004C7742 /* IPUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPUtils.swift; sourceTree = "<group>"; };
@@ -256,6 +261,9 @@
 		F39802071A5A08A400D6C2B0 /* BuspasEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BuspasEvents.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F39802091A5A40FF00D6C2B0 /* MessageSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSpec.swift; sourceTree = "<group>"; };
 		F398020B1A5A424200D6C2B0 /* MarkerInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MarkerInfo.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		F3B3B2D51A93D1B60058B356 /* AboutDialog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutDialog.swift; sourceTree = "<group>"; };
+		F3B3B2D71A93E0830058B356 /* JourneyPostingSelectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JourneyPostingSelectionView.swift; sourceTree = "<group>"; };
+		F3B3B2DA1A9426900058B356 /* FormController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormController.swift; sourceTree = "<group>"; };
 		F3C250371A68135B003B642C /* EventsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = EventsController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F3C250391A6816AD003B642C /* EventsApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventsApi.swift; sourceTree = "<group>"; };
 		F3C33CDD1A6627E600EF8E24 /* DiscoverEventData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverEventData.swift; sourceTree = "<group>"; };
@@ -337,6 +345,7 @@
 				F3E8A95A1A69C2C90034F17E /* UpdateTimer.swift */,
 				F3E8A95C1A69DA490034F17E /* JourneySyncTimer.swift */,
 				F3E8A95E1A6C2D7F0034F17E /* RouteCell.swift */,
+				F3B3B2D71A93E0830058B356 /* JourneyPostingSelectionView.swift */,
 				F3E8A9601A6C555D0034F17E /* RoutesView.swift */,
 				F3E8A9621A6C62340034F17E /* TabButton.swift */,
 				F3529ECC1A6F102200036288 /* SyncProgressDialog.swift */,
@@ -353,6 +362,7 @@
 				F37602131A76C89E002976B7 /* MasterOverlayView.swift */,
 				F37602151A76D2ED002976B7 /* Locator.swift */,
 				F33EBFEC1A795D4700B2A694 /* ProjectionController.swift */,
+				F3263BCB1A950BA6001D22A1 /* FGLoginPresentController.swift */,
 			);
 			name = MasterMapScreen;
 			sourceTree = "<group>";
@@ -365,6 +375,7 @@
 				F37FCE5D1A6781FB009DB82B /* BusmeSite.swift */,
 				F37FCE5F1A678876009DB82B /* BusmeSiteView.swift */,
 				F35B08241A82D53C0065E4F7 /* DiscoverMenu.swift */,
+				F3B3B2D51A93D1B60058B356 /* AboutDialog.swift */,
 			);
 			name = Discover;
 			sourceTree = "<group>";
@@ -372,6 +383,7 @@
 		F35E28FA1A6572D1004DF0D7 /* UserInteraction */ = {
 			isa = PBXGroup;
 			children = (
+				F3B3B2D91A94267E0058B356 /* Logins */,
 				F3406A541A661D9F000C04F4 /* Discover */,
 				F35E28FB1A65731F004DF0D7 /* RequestController.swift */,
 				F3406A4D1A65E5C9000C04F4 /* MasterMapScreen */,
@@ -402,6 +414,14 @@
 				F3140F531A61878B0024A65D /* Extensions.swift */,
 			);
 			name = utils;
+			sourceTree = "<group>";
+		};
+		F3B3B2D91A94267E0058B356 /* Logins */ = {
+			isa = PBXGroup;
+			children = (
+				F3B3B2DA1A9426900058B356 /* FormController.swift */,
+			);
+			name = Logins;
 			sourceTree = "<group>";
 		};
 		F3C8FE431A5359B0009FF404 = {
@@ -716,6 +736,7 @@
 				F3529EDD1A70265800036288 /* FGMarkerPresentController.swift in Sources */,
 				F3F87A3B1A5F067C00EB1EC1 /* MarkerBasket.swift in Sources */,
 				F385E5971A7ABF7B00358A47 /* MainApi.swift in Sources */,
+				F3B3B2D61A93D1B60058B356 /* AboutDialog.swift in Sources */,
 				F35E28F31A649BDB004DF0D7 /* ExternalStorageController.swift in Sources */,
 				F3140F501A6058B30024A65D /* ScreenPathUtils.swift in Sources */,
 				F37FCE601A678876009DB82B /* BusmeSiteView.swift in Sources */,
@@ -777,6 +798,7 @@
 				F37602161A76D2ED002976B7 /* Locator.swift in Sources */,
 				F376020F1A734EC4002976B7 /* MasterOverlay.swift in Sources */,
 				F3E8A9561A696EFC0034F17E /* MasterMainMenu.swift in Sources */,
+				F3B3B2DB1A9426900058B356 /* FormController.swift in Sources */,
 				F3406A561A661DC5000C04F4 /* DiscoverScreen.swift in Sources */,
 				F363169F1A5D823C002CAE61 /* Master.swift in Sources */,
 				F35E28F51A64D896004DF0D7 /* JourneySyncRequestProcessor.swift in Sources */,
@@ -810,9 +832,11 @@
 				F363169A1A5CF904002CAE61 /* JourneyLocation.swift in Sources */,
 				F398020A1A5A40FF00D6C2B0 /* MessageSpec.swift in Sources */,
 				F3140F431A5F9D860024A65D /* JourneyVisibilityController.swift in Sources */,
+				F3B3B2D81A93E0830058B356 /* JourneyPostingSelectionView.swift in Sources */,
 				F3529ECD1A6F102200036288 /* SyncProgressDialog.swift in Sources */,
 				F3C33CE11A663CAD00EF8E24 /* DiscoverController.swift in Sources */,
 				F3705E6E1A6962F80070884F /* MenuScreen.swift in Sources */,
+				F3263BCC1A950BA6001D22A1 /* FGLoginPresentController.swift in Sources */,
 				F37633AB1A5AC549005AFB8F /* MasterMessage.swift in Sources */,
 				F363169D1A5D80E8002CAE61 /* DiscoverApi.swift in Sources */,
 				F3F87A391A5EF7A800EB1EC1 /* PriorityQueue.swift in Sources */,
