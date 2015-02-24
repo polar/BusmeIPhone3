@@ -117,19 +117,24 @@ class LoginBackground : BuspassEventListener {
     init(api : BuspassApi) {
         self.api = api
         api.bgEvents.registerForEvent("LoginEvent", listener: self)
+        api.bgEvents.registerForEvent("Logout", listener: self)
     }
     
     func unregisterForEvents() {
         api.bgEvents.unregisterForEvent("LoginEvent", listener: self)
+        api.bgEvents.unregisterForEvent("Logout", listener: self)
     }
     
     func onBuspassEvent(event: BuspassEvent) {
         let eventData = event.eventData as? LoginEventData
-        if (eventData != nil) {
+        if (event.eventName == "LoginEvent" && eventData != nil) {
             let loginManager = eventData!.loginManager
             let login = loginManager.login
             loginManager.enterProtocol(newLogin: login)
             api.uiEvents.postEvent("LoginEvent", data: eventData!)
+        } else if (event.eventName == "Logout") {
+            let loginManager = eventData!.loginManager
+            loginManager.performLogout()
         }
     }
     

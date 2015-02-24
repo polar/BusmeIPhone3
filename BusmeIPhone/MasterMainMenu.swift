@@ -149,11 +149,22 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
     }
     
     func stopReporting(menuItem : MenuItem) {
-        Toast(title: "Stop Reporting", message: "Stop Reporting is not implemented", duration: 3).show()
+        let evd = JourneyEventData(reason: JourneyEvent.R_FORCED)
+        masterController?.api.bgEvents.postEvent("JourneyStopPosting", data: evd)
+        navigationController?.popToRootViewControllerAnimated(true)
     }
     
     func startLogout(menuItem : MenuItem) {
-        Toast(title: "Logout", message: "Logout is not implemented", duration: 3).show()
+        let evd = JourneyEventData(reason: JourneyEvent.R_FORCED)
+        masterController?.api.bgEvents.postEvent("JourneyStopPosting", data: evd)
+        navigationController?.popToRootViewControllerAnimated(true)
+        if (masterController?.api.isLoggedIn() != nil) {
+            let evd1 = LoginEventData(loginManager: masterController!.api.loginManager!)
+            masterController?.api.bgEvents.postEvent("Logout", data: evd1)
+            Toast(title: "Logout", message: "Logging out", duration: 3).show()
+        } else {
+            Toast(title: "Logout", message: "Not logged in", duration: 3).show()
+        }
     }
     
     func busmeTransitMenu() -> MenuItem {

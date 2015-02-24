@@ -27,8 +27,8 @@ struct JourneyEvent {
 }
 
 class JourneyEventData {
-    var route : Route
-    var role : String
+    var route : Route!
+    var role : String!
     var action : Int = 0
     var reason : Int = 0
     var location : PostLocation?
@@ -43,7 +43,9 @@ class JourneyEventData {
         self.role = role
         self.reason = reason
     }
-
+    init(reason: Int) {
+        self.reason = reason
+    }
 }
 
 class JourneyLocationPoster : BuspassEventListener {

@@ -256,7 +256,9 @@ class LoginManager {
     }
     
     func performLogout() {
-        
+        let (response, tag) = api.postLogout(login)
+        login.loginState = LoginState.LS_LOGGED_OUT
+        api.loginCredentials = nil
     }
     
     deinit {
