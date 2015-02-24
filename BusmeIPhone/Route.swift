@@ -77,8 +77,8 @@ class Route : Storage {
         self.duration = coder.decodeDoubleForKey("duration")
         self.startTime = coder.decodeDoubleForKey("startTime")
         self.endTime = coder.decodeDoubleForKey("endTime")
-        self.schedStartTime = coder.decodeInt64ForKey("schedStartTime")
-        self.actualStartTime = coder.decodeInt64ForKey("actualStartTime")
+        //self.schedStartTime = coder.decodeInt64ForKey("schedStartTime")
+        //self.actualStartTime = coder.decodeInt64ForKey("actualStartTime")
         self.routeid = coder.decodeObjectForKey("routeid") as? String
         self.patternid = coder.decodeObjectForKey("patternid") as? String
         self.patternids = coder.decodeObjectForKey("patternids") as? [String]
@@ -113,8 +113,8 @@ class Route : Storage {
         if (duration != nil) { coder.encodeDouble(duration!, forKey: "duration") }
         if (startTime != nil) { coder.encodeDouble(startTime!, forKey: "startTime") }
         if (endTime != nil) { coder.encodeDouble(endTime!, forKey: "endTime") }
-        if (schedStartTime != nil) { coder.encodeInt64(schedStartTime!, forKey: "schedStartTime") }
-        if (actualStartTime != nil) { coder.encodeInt64(actualStartTime!, forKey: "actualStartTime") }
+        //if (schedStartTime != nil) { coder.encodeInt64(schedStartTime!, forKey: "schedStartTime") }
+        //if (actualStartTime != nil) { coder.encodeInt64(actualStartTime!, forKey: "actualStartTime") }
         if (routeid != nil) { coder.encodeObject(routeid!, forKey: "routeid") }
         if (patternid != nil) { coder.encodeObject(patternid!, forKey: "patternid") }
         if (patternids != nil) { coder.encodeObject(patternids!, forKey: "patternids") }
@@ -482,6 +482,11 @@ class Route : Storage {
     }
 
     func pushCurrentLocation(loc : JourneyLocation) -> (GeoPoint, GeoPoint?) {
+//        if isReporting() {
+//            // We are reporting on this, so the lastKnownLocation and stuff
+//            // should already be set.
+//            return (lastKnownLocation!, lastKnownLocation!)
+//        }
         let gp = GeoPointImpl(lat: loc.lat, lon: loc.lon)
         let lastLocation = lastKnownLocation
         self.lastKnownLocation = gp
@@ -491,6 +496,15 @@ class Route : Storage {
         self.lastKnownTime = UtilsTime.stringForTime(loc.reported_time)
         self.onRoute = loc.onroute
         self.reported = loc.reported
+        if lastLocation != nil {
+            let distance = GeoCalc.getGeoDistance(lastLocation!, c2: lastKnownLocation!)
+            if BLog.DEBUG {
+                BLog.logger.debug("\(name): pushLocation(\(loc)\(gp.getLatitude()), \(gp.getLongitude()) distance between locs \(distance) \(lastLocation!.getLatitude()), \(lastLocation!.getLongitude())")
+                if distance > 1000 {
+                    BLog.logger.debug("HERE!!!")
+                }
+            }
+        }
         return (lastKnownLocation!, lastLocation)
     }
     

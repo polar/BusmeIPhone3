@@ -64,10 +64,10 @@ class NameId : Storage {
         } else if ("V" == type && args.count > 4) {
             self.route_id = args[3].stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
 
-            self.version = Int64((args[3] as NSString).integerValue) as TimeValue64
+            self.version = Int64((args[4] as NSString).integerValue) as TimeValue64
             if (args.count > 5) {
-                self.sched_time_start = Int64((args[5] as NSString).integerValue) as TimeValue64
-                self.time_start = Int64((args[6] as NSString).integerValue) as TimeValue64
+                self.sched_time_start = Int64((args[5] as NSString).integerValue) * 1000 as TimeValue64
+                self.time_start = Int64((args[6] as NSString).integerValue) * 1000 as TimeValue64
             }
         }
     }

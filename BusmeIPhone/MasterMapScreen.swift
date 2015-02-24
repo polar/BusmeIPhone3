@@ -34,6 +34,9 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate, CLLocationManagerDe
     var masterOverlay : MasterOverlay!
     var locationManager : CLLocationManager!
     
+    var testPostingController : TestPostingController?
+    var fgJourneyPostingController : FGJourneyPostingController?
+    
     func setMasterController(masterController : MasterController) {
         self.masterController = masterController
         self.api = masterController.api
@@ -48,6 +51,10 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate, CLLocationManagerDe
         if locationManager.respondsToSelector("requestWhenInUseAuthorization") {
             locationManager.requestWhenInUseAuthorization()
         }
+        if BLog.DEBUG {
+            testPostingController = TestPostingController(api: api)
+        }
+        fgJourneyPostingController = FGJourneyPostingController(api: api)
     }
     
     var splashView : UIImageView?
@@ -212,6 +219,8 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate, CLLocationManagerDe
         syncProgressDialogController.unregisterForEvents()
         routesView?.unregisterForEvents()
         masterOverlayView?.unregisterForEvents()
+        testPostingController?.unregisterForEvents()
+        fgJourneyPostingController?.unregisterForEvents()
     }
     
     deinit {

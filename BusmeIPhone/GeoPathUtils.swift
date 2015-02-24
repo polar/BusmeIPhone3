@@ -356,6 +356,21 @@ struct GeoCalc {
         return bearing_normalized
     }
     
+    // Distance in feet
+    static func getGeoPointByBearingAndDistance(point : GeoPoint, bearing : Double, distance: Double) -> DGeoPoint {
+        let lat1 = GeoCalc.to_radians(point.getLatitude())
+        let lon1 = GeoCalc.to_radians(point.getLongitude())
+        let brad = GeoCalc.to_radians(bearing)
+
+        let angularDistance = distance / GeoCalc.EARTH_RADIUS_FEET
+        let lat2 = asin( sin(lat1)*cos(angularDistance) + cos(lat1)*sin(angularDistance)*cos(brad))
+        let lon2 = lon1 + atan2(sin(brad)*sin(angularDistance)*cos(lat1), cos(angularDistance) - sin(lat1)*sin(lat2))
+        let lat2d = GeoCalc.to_degrees(lat2)
+        let lon2d = GeoCalc.to_degrees(lon2)
+        let dpoint = DGeoPoint(point: GeoPointImpl(lat: lat2d, lon: lon2d), b: bearing, d: distance)
+        return dpoint
+    }
+    
     static func rotate(point : GeoPoint, pivot : GeoPoint, theta : Double, reuse : GeoPointMutable) -> GeoPoint {
         
         let lat : Double = cos(theta) * (point.getLatitude() - pivot.getLatitude()) - sin(theta) * (point.getLongitude() - pivot.getLongitude()) + pivot.getLatitude()
@@ -555,28 +570,31 @@ struct GeoPathUtils {
     }
     
     static func offPath(path : [GeoPoint], point : GeoPoint) -> Double {
-        var max = GeoCalc.EARTH_RADIUS_FEET * GeoCalc.EARTH_RADIUS_FEET * M_PI
+        var min = GeoCalc.EARTH_RADIUS_FEET * GeoCalc.EARTH_RADIUS_FEET * M_PI
         var last : GeoPoint? = nil
         if (path.count > 0) {
             last = path[0]
         }
-        for p in path {
+        for(var i = 1; i < path.count-1; i++) {
+            var p = path[i]
             let off =  GeoCalc.offLine(last!, c2: p, c3: point)
-            if (off < max) {
-                max = off
+            if (off < min) {
+                min = off
             }
             last = p
         }
-        return max
+        return min
     }
     
     static func whereOnPath(path : [GeoPoint], buffer : Double, c3 : GeoPoint) -> [DGeoPoint] {
         var results = [DGeoPoint]()
         var distance = 0.0
         var p1 = path[0]
-        var i = 1
-        for(var p2 = path[i]; i < path.count-1; i++) {
-            if isOnLine(p1, c2: p2, buffer: buffer, c3: c3) {
+        for(var i = 1; i < path.count-1; i++) {
+            var p2 = path[i]
+            //if isOnLine(p1, c2: p2, buffer: buffer, c3: c3) {
+            let offPath = GeoCalc.offLine(p1, c2: p2, c3: c3)
+            if offPath < buffer {
                 let dist = GeoCalc.getGeoDistance(p1, c2: c3)
                 let bearing = GeoCalc.getBearing(c3, gp2: p2)
                 results.append(DGeoPoint(point: c3, b: distance + dist, d: bearing))
@@ -585,7 +603,6 @@ struct GeoPathUtils {
                 distance += GeoCalc.getGeoDistance(p1, c2: p2)
             }
             p1 = p2
-            i += 1
         }
         return results
     }
@@ -594,8 +611,8 @@ struct GeoPathUtils {
         var results = [DGeoPoint]()
         var distance = 0.0
         var p1 = path[0]
-        var i = 1
-        for(var p2 = path[i]; i < path.count-1; i++) {
+        for(var i = 1; i < path.count-1; i++) {
+            var p2 = path[i]
             if isOnLine(p1, c2: p2, buffer: buffer, c3: c3) {
                 let dist = GeoCalc.getGeoDistance(p1, c2: c3)
                 let bearing = GeoCalc.getBearing(c3, gp2: p2)
@@ -605,11 +622,27 @@ struct GeoPathUtils {
                 distance += GeoCalc.getGeoDistance(p1, c2: p2)
             }
             p1 = p2
-            i += 1
         }
         return results
     }
     
+    static func whereOnPathByDistance(path : [GeoPoint], distance: Double) -> DGeoPoint? {
+        var p1 = path[0]
+        var currentDistance = 0.0
+        for(var i = 1; i < path.count-1; i++) {
+            var p2 = path[i]
+            let dist = currentDistance + GeoCalc.getGeoDistance(p1, c2: p2)
+            if currentDistance <= distance && distance < currentDistance + dist {
+                let bearing = GeoCalc.getBearing(p1, gp2: p2)
+                let dpoint = GeoCalc.getGeoPointByBearingAndDistance(p1, bearing: bearing, distance: distance - currentDistance)
+                dpoint.distance += currentDistance
+                return dpoint
+            }
+            currentDistance += dist
+            p1 = p2
+        }
+        return nil
+    }
     
     static func rectForPath(path : [GeoPoint]) -> GeoRect {
         var left = path[0].getLongitude()

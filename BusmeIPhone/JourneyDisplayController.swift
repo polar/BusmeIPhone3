@@ -31,7 +31,7 @@ class JourneyDisplayEventData {
     }
 }
 
-class JourneyDisplayController : OnJourneyAddedListener, OnJourneyRemovedListener {
+class JourneyDisplayController : OnJourneyAddedListener, OnJourneyRemovedListener, BuspassEventListener {
     unowned var api : BuspassApi
     unowned var journeyBasket : JourneyBasket
     
@@ -46,6 +46,21 @@ class JourneyDisplayController : OnJourneyAddedListener, OnJourneyRemovedListene
         self.journeyBasket = basket
         basket.addOnJourneyAddedListeners(self)
         basket.addOnJourneyRemovedListeners(self)
+        registerForEvents()
+    }
+    
+    func registerForEvents() {
+        api.uiEvents.registerForEvent("LocationChanged", listener: self)
+    }
+    
+    func unregisterForEvents() {
+        api.uiEvents.unregisterForEvent("LocationChanged", listener: self)
+    }
+    
+    var currentLocation : GeoPoint?
+    func onBuspassEvent(event: BuspassEvent) {
+        let eventData = event.eventData as LocationEventData
+        currentLocation = GeoPointImpl(lat: eventData.location.latitude, lon: eventData.location.longitude)
     }
     
     func getJourneyDisplays() -> [JourneyDisplay] {

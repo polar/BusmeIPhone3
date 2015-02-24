@@ -15,6 +15,7 @@ class Location {
     var speed : Double
     var bearing : Double
     var time : TimeValue64
+    var source : String?
     
     init(name: String, lon : Double, lat : Double) {
         self.name = name
@@ -23,6 +24,7 @@ class Location {
         self.speed = 0
         self.bearing = 0
         self.time = UtilsTime.current()
+        self.source = "CLLocationManager"
     }
 }
 

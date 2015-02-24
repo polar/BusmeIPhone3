@@ -287,7 +287,7 @@ class RoutesView : UITableViewController, BuspassEventListener {
             let screenX = screenRect.origin.x
             let screenWidth = screenRect.size.width
             
-            let viewSize = CGSize(width: min(screenWidth * 0.8, 250), height: screenRect.size.height/4.0)
+            let viewSize = CGSize(width: min(screenWidth * 0.8, 350), height: screenRect.size.height/4.0)
             
             let outsideOrigin = CGPoint(x: screenX + screenWidth + 10, y: navBarEnd)
             let insideOrigin = CGPoint(x: screenX + screenWidth - viewSize.width, y: navBarEnd)
@@ -316,14 +316,26 @@ class RoutesView : UITableViewController, BuspassEventListener {
 
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier("RouteCell") as RouteCell?
-        if cell == nil {
-            cell = RouteCell(style: UITableViewCellStyle.Default)
-            cell!.autoresizingMask = UIViewAutoresizing.FlexibleWidth|UIViewAutoresizing.FlexibleLeftMargin|UIViewAutoresizing.FlexibleRightMargin
-            cell!.clipsToBounds = true // fix for changed default in 7.1
+        let journeyDisplay = journeyDisplays[indexPath.row]
+        if journeyDisplay.route.isJourney() {
+            var cell = tableView.dequeueReusableCellWithIdentifier("JourneyCell") as JourneyCell?
+            if cell == nil {
+                cell = JourneyCell(style: UITableViewCellStyle.Default)
+                cell!.autoresizingMask = UIViewAutoresizing.FlexibleWidth|UIViewAutoresizing.FlexibleLeftMargin|UIViewAutoresizing.FlexibleRightMargin
+                cell!.clipsToBounds = true // fix for changed default in 7.1
+            }
+            cell!.handleJourneyDisplay(journeyDisplay)
+            return cell!
+        } else {
+            var cell = tableView.dequeueReusableCellWithIdentifier("RouteCell") as RouteCell?
+            if cell == nil {
+                cell = RouteCell(style: UITableViewCellStyle.Default)
+                cell!.autoresizingMask = UIViewAutoresizing.FlexibleWidth|UIViewAutoresizing.FlexibleLeftMargin|UIViewAutoresizing.FlexibleRightMargin
+                cell!.clipsToBounds = true // fix for changed default in 7.1
+            }
+            cell!.handleJourneyDisplay(journeyDisplay)
+            return cell!
         }
-        cell!.handleJourneyDisplay(journeyDisplays[indexPath.row])
-        return cell!
     }
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -331,8 +343,14 @@ class RoutesView : UITableViewController, BuspassEventListener {
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let cell = tableView.cellForRowAtIndexPath(indexPath) as RouteCell
-        hit(cell.journeyDisplay!)
+        let cell = tableView.cellForRowAtIndexPath(indexPath)
+        if cell!.isKindOfClass(RouteCell) {
+            let routecell = cell as RouteCell
+            hit(routecell.journeyDisplay!)
+        } else {
+            let journeycell = cell as JourneyCell
+            hit(journeycell.journeyDisplay!)
+        }
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
     }
     

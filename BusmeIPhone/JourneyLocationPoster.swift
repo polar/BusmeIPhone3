@@ -84,6 +84,10 @@ class JourneyLocationPoster : BuspassEventListener {
         api.bgEvents.unregisterForEvent("JourneyRemoved", listener: self)
     }
     
+    func isPosting() -> Bool {
+        return postingRoute != nil
+    }
+    
     func onBuspassEvent(event: BuspassEvent) {
         let eventName = event.eventName
         // Foreground Thread
@@ -117,6 +121,9 @@ class JourneyLocationPoster : BuspassEventListener {
     }
     
     func reset() {
+        if postingRoute != nil {
+            postingRoute!.reporting = false
+        }
         self.postingRoute = nil
         self.alreadyPosting = false
         self.alreadyFinished = false
@@ -129,16 +136,18 @@ class JourneyLocationPoster : BuspassEventListener {
         self.postingPathPoints = route.getPaths().first!
         self.startPoint = self.postingPathPoints.first
         self.endPoint = self.postingPathPoints.last
+        postingRoute!.reporting = true
     }
     
     func endPosting(reason : Int = JourneyEvent.R_FORCED) {
         if postingRoute != nil {
             postingRoute!.reporting = false
             notifyOnRouteDone(reason)
+            self.postingRoute = nil
         }
     }
     
-    func processLocation( location : Location ) {
+    func processLocation(location : Location ) {
         if postingRoute != nil {
             if !alreadyPosting {
                 notifyOnRoutePosting(location)
@@ -165,7 +174,26 @@ class JourneyLocationPoster : BuspassEventListener {
     
     func postLocation( location : Location) {
         let postLocation = PostLocation(journey: postingRoute!, location: location)
+        postingRoute!.reporting = true
+        let lastLocation = postingRoute!.lastKnownLocation
+        //postingRoute!.lastKnownLocation = GeoCalc.toGeoPoint(location)
+        //postingRoute!.lastKnownTime = UtilsTime.current()
 
+        if BLog.DEBUG {
+            var distance = -1.0
+            var lastLat = 0.0
+            var lastLon = 0.0
+            if lastLocation != nil {
+                lastLat = lastLocation!.getLatitude()
+                lastLon = lastLocation!.getLongitude()
+                distance = GeoCalc.getGeoDistance(postingRoute!.lastKnownLocation!, c2: lastLocation!)
+            }
+            BLog.logger.debug("\(postingRoute!.name) postLocation(\(location.source) \(location.latitude), \(location.longitude) distance \(distance) \(lastLat), \(lastLon)")
+            if distance > 1000 {
+                BLog.logger.debug("HERE on 222222")
+            }
+        }
+        // Goes to the JourneyPostingController
         api.bgEvents.postEvent("JourneyLocationPost",
             data: JourneyEventData(route: postingRoute!, role: postingRole, location: postLocation))
     }
@@ -201,6 +229,23 @@ class JourneyLocationPoster : BuspassEventListener {
     
     
     func onLocationChanged(eventData : LocationEventData) {
+        let lastLocation = currentLocation
+        if BLog.DEBUG {
+            var distance = -1.0
+            var lastLat = 0.0
+            var lastLon = 0.0
+            if lastLocation != nil {
+                lastLat = lastLocation!.latitude
+                lastLon = lastLocation!.longitude
+                let geoP = GeoCalc.toGeoPoint(lastLocation!)
+                distance = GeoCalc.getGeoDistance(geoP, c2: GeoCalc.toGeoPoint(eventData.location))
+            
+                BLog.logger.debug("onLocationChanged(\(eventData.location.source) \(eventData.location.latitude), \(lastLocation!.longitude) distance \(distance) \(lastLat), \(lastLon)")
+                if distance > 1000 {
+                    BLog.logger.debug("HERE on #####")
+                }
+            }
+        }
         currentLocation = eventData.location
         processLocation(eventData.location)
     }

@@ -40,6 +40,58 @@ class JourneyDisplay {
         self.route = route
     }
     
+    func distanceFromRoute(point : GeoPoint) -> Double? {
+        let paths = route.getPaths()
+        var distance = 10000000000.00
+        if paths.count > 0 {
+            for path in paths {
+                let dist = GeoPathUtils.offPath(path, point: point)
+                distance = min(dist, distance)
+            }
+            return distance
+        } else {
+            return nil
+        }
+    }
+    
+    func currentDistanceFromRoute() -> (GeoPoint, Double)? {
+        let point = journeyDisplayController.currentLocation
+        if point != nil {
+            let dist = distanceFromRoute(point!)
+            return (point!, dist!)
+        } else {
+            return nil
+        }
+    }
+    
+    func distanceFromCurrentLocation() -> (GeoPoint, DGeoPoint)? {
+        let loc = route.lastKnownLocation
+        let time = route.lastKnownTime
+        let dist = route.lastKnownDistance
+        let point = journeyDisplayController.currentLocation
+        if point != nil {
+            var distance = route.lastKnownDistance
+            var selected : DGeoPoint?
+            if distanceFromRoute(point!) < 60 {
+                let dpoints = GeoPathUtils.whereOnPath(route.getPaths()[0], buffer: 60, c3: point!)
+                for dp in dpoints {
+                    if dp.distance > route.lastKnownDistance {
+                        if dp.distance <= distance {
+                            selected = dp
+                        }
+                    }
+                }
+            }
+            if selected != nil {
+                return (point!, selected!)
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
+    }
+    
     func isStartingJourney() -> Bool {
         return route.isStartingJourney()
     }

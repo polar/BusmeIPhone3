@@ -184,6 +184,12 @@ class BuspassApi : ApiBase, EventsApi {
         return q
     }
     
+    func getPlatformQuery() -> Query {
+        let q = Query()
+        q.add(getPlatformArgs())
+        return q
+    }
+    
     func authTokenLogin(login : Login) -> (HttpStatusLine, Tag?) {
         if isReady() {
             login.url = buspass!.authUrl!
@@ -305,7 +311,7 @@ class BuspassApi : ApiBase, EventsApi {
         if isReady() {
             let postJourneyLocationUrl = buspass!.postJourneyLocationUrl
             if postJourneyLocationUrl != nil {
-                let query = getDefaultQuery()
+                let query = getPlatformQuery()
                 let url = postJourneyLocationUrl! + query.toString()
                 var params = [String:AnyObject]()
                 params["lon"] = "\(ploc.location.longitude)"

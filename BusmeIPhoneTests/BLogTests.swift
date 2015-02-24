@@ -26,6 +26,6 @@ class BLogTests: XCTestCase {
     }
 
     func testBLog() {
-        BLog.logger.error("Eatme You Worm")
+        BLog.logger.error("This is an error statement")
     }
 }

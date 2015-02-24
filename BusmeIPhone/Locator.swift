@@ -121,9 +121,10 @@ struct Locators {
     static func getArrow(name : String, reported : Bool ) -> Locator? {
         let idxname = "\(name):\(reported):Arrow"
         if Locators.icons[idxname] == nil {
-            let image = reported ? UIImage(named: "\(name)_yellow_button.png") : UIImage(named: "\(name)_button.png")
+            let image2 = reported ? UIImage(named: "\(name)_yellow_button.png") : UIImage(named: "\(name)_button.png")
             let arrow = UIImage(named: "\(name)_arrow.png")
-            if image != nil && arrow != nil {
+            if image2 != nil && arrow != nil {
+                let image = UIImage(CGImage: image2!.CGImage, scale: image2!.scale, orientation: UIImageOrientation.DownMirrored)
                 let imageSize = image!.size
                 let arrowSize = arrow!.size
                 let hotspot = CGPoint(x: 22, y: 30)
@@ -140,8 +141,9 @@ struct Locators {
             let image = UIImage(named: "\(name)_button.png")
             let arrow = UIImage(named: "\(name)_dot.png")
             if image != nil && arrow != nil {
+                let flippedImage = UIImage(CGImage: image!.CGImage, scale: image!.scale, orientation: UIImageOrientation.DownMirrored)
                 let hotspot = CGPoint(x: 22, y: 30)
-                let icon = Locator(baseImage: image!, arrowImage: arrow!, hotspot: hotspot, labelColor: color(name))
+                let icon = Locator(baseImage: flippedImage!, arrowImage: arrow!, hotspot: hotspot, labelColor: color(name))
                 Locators.icons[idxname] = icon
             }
         }
@@ -153,11 +155,13 @@ struct Locators {
         if Locators.icons[idxname] == nil {
             let image = UIImage(named: "\(name)_icon.png")
             if image != nil {
+                // Uggg. The image comes in Flipped Horizontally WTF?
+                let flippedImage = UIImage(CGImage: image!.CGImage, scale: image!.scale * 0.5, orientation: UIImageOrientation.DownMirrored)
                 let hotspot = CGPoint(x: 22, y: 30)
-                let icon = Locator(baseImage: image!, arrowImage: nil, hotspot: hotspot, labelColor: color(name))
+                let icon = Locator(baseImage: flippedImage!, arrowImage: nil, hotspot: hotspot, labelColor: color(name))
                 Locators.icons[idxname] = icon
             }
-        }
+        } 
         return Locators.icons[idxname]
     }
     
@@ -166,8 +170,9 @@ struct Locators {
         if Locators.icons[idxname] == nil {
             let image = UIImage(named: "\(name)_circle_icon.png")
             if image != nil {
+                let flippedImage = UIImage(CGImage: image!.CGImage, scale: image!.scale * 0.5, orientation: UIImageOrientation.DownMirrored)
                 let hotspot = CGPoint(x: 22, y: 30)
-                let icon = Locator(baseImage: image!, arrowImage: nil, hotspot: hotspot, labelColor: color(name))
+                let icon = Locator(baseImage: flippedImage!, arrowImage: nil, hotspot: hotspot, labelColor: color(name))
                 Locators.icons[idxname] = icon
             }
         }

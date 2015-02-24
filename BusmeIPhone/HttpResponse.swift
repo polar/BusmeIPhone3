@@ -30,7 +30,12 @@ class HttpResponse {
     
     func getStatusLine() -> HttpStatusLine {
         if (error != nil) {
-            return HttpStatusLine(statusCode: error!.code, reasonPhrase: error!.description);
+            switch error!.code {
+            case -1005, -1009:
+                return HttpStatusLine(statusCode: error!.code, reasonPhrase: "Network Error. Please check your wireless/data setup.")
+            default:
+                return HttpStatusLine(statusCode: error!.code, reasonPhrase: error!.localizedDescription);
+            }
         } else {
             return HttpStatusLine(statusCode: 200, reasonPhrase: "Good");
         }

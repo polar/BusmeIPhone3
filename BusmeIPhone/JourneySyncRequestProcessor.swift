@@ -28,10 +28,10 @@ class JourneySyncRequestProcessor : ArgumentPreparer, ResponseProcessor {
         var versions = [String]()
         for route in journeyBasket.getAllRoutes() {
             routes.append(route.id!)
-            versions.append("\(route.version)")
+            versions.append("\(route.version!)")
         }
-        args["route_ids[]"] = routes
-        args["versions[]"] = versions
+        args["route_ids"] = routes
+        args["versions"] = versions
         return args
     }
     

@@ -59,7 +59,7 @@ class LocatorView {
         }
         if params.isReporting {
             icon = Locators.getReporting("passenger")?.getIcon()
-            return icon!
+            return icon
         }
         switch params.iconType {
         case IconType.NORMAL:

@@ -29,7 +29,7 @@ class VisualState {
     
 }
 
-class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJourneyDisplayAddedListener {
+class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJourneyDisplayAddedListener, BuspassEventListener {
     unowned var api : BuspassApi
     unowned var journeyDisplayController : JourneyDisplayController
     
@@ -44,6 +44,20 @@ class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJourneyDi
         controller.onJourneyDisplayAddedListener = self
         controller.onJourneyDisplayRemovedListener = self
         stateStack.append(VisualState())
+        registerForEvents()
+    }
+    
+    func registerForEvents() {
+        api.uiEvents.registerForEvent("LocationChanged", listener: self)
+    }
+    
+    func unregisterForEvents() {
+        api.uiEvents.unregisterForEvent("LocationChanged", listener: self)
+    }
+    
+    func onBuspassEvent(event: BuspassEvent) {
+        let eventData = event.eventData as LocationEventData
+        currentLocation = GeoPointImpl(lat: eventData.location.latitude, lon: eventData.location.longitude)
     }
     
     func getJourneyDisplays() -> [JourneyDisplay]{
@@ -179,6 +193,39 @@ class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJourneyDi
             }
         }
         return selected
+    }
+    
+    func hasCurrentLocation() -> Bool {
+        return currentLocation != nil
+    }
+    
+    func getJourneysAtCurrentLocation() -> [JourneyDisplay] {
+        if currentLocation != nil {
+            return getJourneysByLocation(currentLocation!, buffer: 200)
+        } else {
+            return [JourneyDisplay]()
+        }
+    }
+    
+    func getJourneysByLocation(geoPoint : GeoPoint, buffer : Double) -> [JourneyDisplay] {
+        var selected = [JourneyDisplay]()
+        for display in getJourneyDisplays() {
+            if display.route.isJourney() {
+                var isSelected = false
+                for path in display.route.getPaths() {
+                    let offPath = GeoPathUtils.offPath(path, point: geoPoint)
+                    if BLog.DEBUG { BLog.logger.debug("Path on Route \(display.route.code) is \(offPath) feet from route") }
+                    if offPath < buffer {
+                        isSelected = true
+                        break
+                    }
+                }
+                if isSelected {
+                    selected.append(display)
+                }
+            }
+        }
+        return selected.sorted{(x: JourneyDisplay,y: JourneyDisplay) in x.compareTo(y) < 0}
     }
     
     func onLocationSelected(geoPoint : GeoPoint, buffer : Double) -> Bool {

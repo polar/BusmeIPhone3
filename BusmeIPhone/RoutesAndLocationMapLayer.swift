@@ -86,36 +86,38 @@ class RouteAndLocationsMapLayer {
                 currentLocation = GeoCalc.toGeoPoint(loc!)
                 currentBearing = loc!.bearing
                 let points = GeoPathUtils.whereOnPath(journeyDisplay.route.getPaths()[0], buffer: 60.0, c3: currentLocation!)
-                var first : DGeoPoint? = nil
                 for gp in points {
+                    let offPath = GeoPathUtils.offPath(journeyDisplay.route.getPaths()[0], point: gp.geoPoint)
                     if gp.distance > 0 {
                         if journeyDisplay.route.lastKnownDistance != nil && gp.distance > journeyDisplay.route.lastKnownDistance! {
                             currentBearing = gp.bearing
                             currentDistance = gp.distance
+                            currentTimeDiff = 0
                             onRoute = true
                             break
+                        } else {
+                            currentBearing = gp.bearing
+                            currentDistance = gp.distance
+                            currentTimeDiff = 0
+                            onRoute = true
                         }
                     }
                 }
-                onRoute |= (first != nil)
-                if first != nil {
-                    if currentBearing == nil {
-                        currentBearing = first!.bearing
-                    }
-                    if currentDistance == nil {
-                        currentDistance = first!.distance
-                    }
-                }
+            }
+            if !onRoute {
+                currentLocation = nil
             }
         }
         if currentLocation == nil {
             let route = journeyDisplay.route
             isReported = route.isReported()
             currentLocation = route.lastKnownLocation
-            currentBearing = route.lastKnownDirection
-            currentDistance = route.lastKnownDistance
-            currentTimeDiff = route.lastKnownTimediff
-            onRoute = route.onRoute
+            if currentLocation != nil {
+                currentBearing = GeoCalc.to_degrees(route.lastKnownDirection!)
+                currentDistance = route.lastKnownDistance
+                currentTimeDiff = route.lastKnownTimediff
+                onRoute = route.onRoute
+            }
         }
         var iconType = IconType.NORMAL
         var startingMeasure = journeyDisplay.route.getStartingMeasure(api.activeStartDisplayThreshold, time: timeNow)
@@ -144,7 +146,7 @@ class RouteAndLocationsMapLayer {
             }
         }
         if currentLocation != nil {
-            let args = LocatorArgs(journeyDisplay: journeyDisplay, currentLocation: currentLocation!, currentDirection: currentBearing!, currentDistance: currentDistance!, currentTimeDiff: currentTimeDiff!, onRoute: onRoute, isReporting: isReporting, isReported: isReported, startMeasure: startingMeasure, disposition: disposition, iconType: iconType)
+            let args = LocatorArgs(journeyDisplay: journeyDisplay, currentLocation: currentLocation!, currentDirection: GeoCalc.to_radians(currentBearing!), currentDistance: currentDistance!, currentTimeDiff: currentTimeDiff!, onRoute: onRoute, isReporting: isReporting, isReported: isReported, startMeasure: startingMeasure, disposition: disposition, iconType: iconType)
             return args
         }
         return nil
@@ -247,5 +249,4 @@ class RouteAndLocationsMapLayer {
     deinit {
         if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC") }
     }
-
 }

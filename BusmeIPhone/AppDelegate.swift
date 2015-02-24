@@ -40,7 +40,7 @@ class Toast : UIResponder, UIAlertViewDelegate {
 
 class ErrorDialogRestartOnCancel : UIResponder, UIAlertViewDelegate {
     var dialog : UIAlertView
-    var duration : Int = 2
+    var duration : Int = 10
     var restartDelay : Int = 2
     
     init(dialog : UIAlertView, duration : Int) {
@@ -90,7 +90,7 @@ class ErrorDialogRestartOnCancel : UIResponder, UIAlertViewDelegate {
 }
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
+class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener, CLLocationManagerDelegate {
 
     var window: UIWindow?
     var configurator = Configurator()
@@ -105,6 +105,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
     var discoverScreen : DiscoverScreen?
     var masterMapScreen : MasterMapScreen?
     var splashScreen : SplashScreen?
+    var locationController : LocationController?
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -127,6 +128,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
         navigationController.navigationBarHidden = true
         window!.rootViewController = navigationController
 
+        locationController = LocationController(mainController: mainController!)
         return true
     }
     
@@ -208,7 +210,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
             delegate: self,
             cancelButtonTitle: "OK"
         )
-        let errorDialog = ErrorDialogRestartOnCancel(dialog: networkErrorDialog, duration: 2)
+        let errorDialog = ErrorDialogRestartOnCancel(dialog: networkErrorDialog, duration: 5)
         errorDialog.setOnCancel(10, completion)
         errorDialog.show()
     }
@@ -413,10 +415,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
         storeMaster()
+        if (mainController?.masterController != nil) {
+            if !mainController!.masterController!.journeyLocationPoster.isPosting() {
+                locationController?.stop()
+            }
+        }
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    
     }
 
     func applicationDidBecomeActive(application: UIApplication) {
@@ -424,6 +432,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener {
         if (mainController?.masterController != nil) {
              startTimers()
         }
+        locationController?.restart()
     }
 
     func applicationWillTerminate(application: UIApplication) {

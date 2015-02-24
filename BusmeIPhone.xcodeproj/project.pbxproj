@@ -35,11 +35,17 @@
 		F320FF3C1A714D1100924F8D /* FGMasterMessagePresentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F320FF3B1A714D1100924F8D /* FGMasterMessagePresentController.swift */; };
 		F320FF3F1A7151A900924F8D /* MasterMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F320FF3E1A7151A900924F8D /* MasterMessageViewController.swift */; };
 		F3263BCC1A950BA6001D22A1 /* FGLoginPresentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3263BCB1A950BA6001D22A1 /* FGLoginPresentController.swift */; };
+		F3263BCF1A956FFA001D22A1 /* LocationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3263BCE1A956FF9001D22A1 /* LocationController.swift */; };
+		F3263BDC1A963D77001D22A1 /* BusmeIPhone_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3263BDB1A963D77001D22A1 /* BusmeIPhone_Tests.swift */; };
+		F3263BE51A9651E7001D22A1 /* LocationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3263BE41A9651E7001D22A1 /* LocationTest.swift */; };
 		F326F1051A5EAFC000CBCE28 /* BLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F326F1041A5EAFC000CBCE28 /* BLog.swift */; };
+		F32A13AA1A96BCD400EB67E1 /* JourneyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32A13A91A96BCD400EB67E1 /* JourneyCell.swift */; };
+		F32A13AD1A97A11200EB67E1 /* TestPostingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32A13AC1A97A11200EB67E1 /* TestPostingController.swift */; };
 		F33B69B41A5B022C004C7742 /* GeoPathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33B69B31A5B022C004C7742 /* GeoPathUtils.swift */; };
 		F33B69BA1A5B43D2004C7742 /* IPUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33B69B91A5B43D2004C7742 /* IPUtils.swift */; };
 		F33B69BC1A5C3CD3004C7742 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33B69BB1A5C3CD3004C7742 /* Route.swift */; };
 		F33EBFED1A795D4700B2A694 /* ProjectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33EBFEC1A795D4700B2A694 /* ProjectionController.swift */; };
+		F33F2E351A97C9F6009F80B7 /* FGJourneyPostingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33F2E341A97C9F6009F80B7 /* FGJourneyPostingController.swift */; };
 		F3406A441A65B0AC000C04F4 /* FGBannerPresentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3406A431A65B0AC000C04F4 /* FGBannerPresentController.swift */; };
 		F3406A461A65B3D9000C04F4 /* UIBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3406A451A65B3D9000C04F4 /* UIBanner.swift */; };
 		F3406A4A1A65C8D8000C04F4 /* MasterMapScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3406A491A65C8D8000C04F4 /* MasterMapScreen.swift */; };
@@ -131,6 +137,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		F3263BDD1A963D77001D22A1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F3C8FE441A5359B0009FF404 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F3C8FE4B1A5359B0009FF404;
+			remoteInfo = BusmeIPhone;
+		};
 		F363168B1A5C60CC002CAE61 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F36316861A5C60CC002CAE61 /* Alamofire.xcodeproj */;
@@ -190,21 +203,30 @@
 		F3140F531A61878B0024A65D /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		F3140F551A618C330024A65D /* UpdateRemoteInvoation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = UpdateRemoteInvoation.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F3140F571A618C840024A65D /* MasterController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MasterController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		F3140F591A618E070024A65D /* LoginForeground.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = LoginForeground.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		F3140F591A618E070024A65D /* LoginForeground.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = LoginForeground.swift; sourceTree = "<group>"; };
 		F3140F5B1A61AAC00024A65D /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		F3140F5E1A61AC330024A65D /* JourneyLocationPoster.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = JourneyLocationPoster.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F3140F611A643DEC0024A65D /* JourneyEventController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = JourneyEventController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F3140F631A64445E0024A65D /* JourneyPostingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = JourneyPostingController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F3140F671A644EE20024A65D /* BannerRequestProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BannerRequestProcessor.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		F31E4BC91A58760E00E2F0A2 /* HttpClientTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpClientTest.swift; sourceTree = "<group>"; };
+		F31E4BC91A58760E00E2F0A2 /* HttpClientTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HttpClientTest.swift; path = ../BusmeIPhoneTests/HttpClientTest.swift; sourceTree = "<group>"; };
 		F320FF3B1A714D1100924F8D /* FGMasterMessagePresentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FGMasterMessagePresentController.swift; sourceTree = "<group>"; };
 		F320FF3E1A7151A900924F8D /* MasterMessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MasterMessageViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F3263BCB1A950BA6001D22A1 /* FGLoginPresentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FGLoginPresentController.swift; sourceTree = "<group>"; };
+		F3263BCE1A956FF9001D22A1 /* LocationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationController.swift; sourceTree = "<group>"; };
+		F3263BD21A963CD6001D22A1 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; };
+		F3263BD71A963D77001D22A1 /* BusmeIPhone Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BusmeIPhone Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F3263BDA1A963D77001D22A1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F3263BDB1A963D77001D22A1 /* BusmeIPhone_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusmeIPhone_Tests.swift; sourceTree = "<group>"; };
+		F3263BE41A9651E7001D22A1 /* LocationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationTest.swift; sourceTree = "<group>"; };
 		F326F1041A5EAFC000CBCE28 /* BLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BLog.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		F32A13A91A96BCD400EB67E1 /* JourneyCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JourneyCell.swift; sourceTree = "<group>"; };
+		F32A13AC1A97A11200EB67E1 /* TestPostingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestPostingController.swift; sourceTree = "<group>"; };
 		F33B69B31A5B022C004C7742 /* GeoPathUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeoPathUtils.swift; sourceTree = "<group>"; };
 		F33B69B91A5B43D2004C7742 /* IPUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPUtils.swift; sourceTree = "<group>"; };
 		F33B69BB1A5C3CD3004C7742 /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = Route.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F33EBFEC1A795D4700B2A694 /* ProjectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ProjectionController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		F33F2E341A97C9F6009F80B7 /* FGJourneyPostingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FGJourneyPostingController.swift; sourceTree = "<group>"; };
 		F3406A431A65B0AC000C04F4 /* FGBannerPresentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FGBannerPresentController.swift; sourceTree = "<group>"; };
 		F3406A451A65B3D9000C04F4 /* UIBanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIBanner.swift; sourceTree = "<group>"; };
 		F3406A491A65C8D8000C04F4 /* MasterMapScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MasterMapScreen.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -229,14 +251,14 @@
 		F35E28FB1A65731F004DF0D7 /* RequestController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestController.swift; sourceTree = "<group>"; };
 		F35F75421A59D93200283F1C /* BannerInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BannerInfo.swift; sourceTree = "<group>"; };
 		F36316861A5C60CC002CAE61 /* Alamofire.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Alamofire.xcodeproj; path = ../Alamofire/Alamofire.xcodeproj; sourceTree = "<group>"; };
-		F36316961A5C7082002CAE61 /* TimeTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeTest.swift; sourceTree = "<group>"; };
+		F36316961A5C7082002CAE61 /* TimeTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TimeTest.swift; path = ../BusmeIPhoneTests/TimeTest.swift; sourceTree = "<group>"; };
 		F36316991A5CF904002CAE61 /* JourneyLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JourneyLocation.swift; sourceTree = "<group>"; };
 		F363169C1A5D80E8002CAE61 /* DiscoverApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverApi.swift; sourceTree = "<group>"; };
 		F363169E1A5D823C002CAE61 /* Master.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = Master.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F36316A01A5D8DB0002CAE61 /* RemoteInvocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteInvocation.swift; sourceTree = "<group>"; };
 		F36316A41A5D9F7A002CAE61 /* DiscoverApiVersion1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DiscoverApiVersion1.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F36316A61A5DFBAD002CAE61 /* Login.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
-		F36316A81A5DFDA8002CAE61 /* LoginManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = LoginManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		F36316A81A5DFDA8002CAE61 /* LoginManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = LoginManager.swift; sourceTree = "<group>"; };
 		F3705E6D1A6962F80070884F /* MenuScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuScreen.swift; sourceTree = "<group>"; };
 		F376020E1A734EC4002976B7 /* MasterOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MasterOverlay.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F37602111A76A9A4002976B7 /* RoutesAndLocationMapLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RoutesAndLocationMapLayer.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -274,7 +296,7 @@
 		F3C8FE511A5359B0009FF404 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AppDelegate.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F3C8FE5A1A5359B0009FF404 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		F3C8FE681A5359B0009FF404 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F3C8FE691A5359B0009FF404 /* BusmeIPhoneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusmeIPhoneTests.swift; sourceTree = "<group>"; };
+		F3C8FE691A5359B0009FF404 /* BusmeIPhoneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BusmeIPhoneTests.swift; path = ../BusmeIPhoneTests/BusmeIPhoneTests.swift; sourceTree = "<group>"; };
 		F3C8FE741A535B0D009FF404 /* ApiBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiBase.swift; sourceTree = "<group>"; };
 		F3C8FE7D1A535B0D009FF404 /* HttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpClient.swift; sourceTree = "<group>"; };
 		F3C8FE7E1A535B0D009FF404 /* HttpEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpEntity.swift; sourceTree = "<group>"; };
@@ -291,7 +313,7 @@
 		F3E8A9621A6C62340034F17E /* TabButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabButton.swift; sourceTree = "<group>"; };
 		F3ED41A71A5F0E3500C6FFC9 /* MarkerPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MarkerPresentationController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F3F392E21A8A7D250050B89B /* Eatme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Eatme.swift; sourceTree = "<group>"; };
-		F3F87A2C1A5EBDEC00EB1EC1 /* BLogTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLogTests.swift; sourceTree = "<group>"; };
+		F3F87A2C1A5EBDEC00EB1EC1 /* BLogTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BLogTests.swift; path = ../BusmeIPhoneTests/BLogTests.swift; sourceTree = "<group>"; };
 		F3F87A2F1A5ED10600EB1EC1 /* BannerEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BannerEvent.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F3F87A321A5EEB1500EB1EC1 /* BannerBasket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BannerBasket.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F3F87A341A5EEB7800EB1EC1 /* BannerStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BannerStore.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -302,6 +324,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		F3263BD41A963D77001D22A1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F3C8FE491A5359B0009FF404 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -332,11 +361,35 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		F3263BD81A963D77001D22A1 /* BusmeIPhone Tests */ = {
+			isa = PBXGroup;
+			children = (
+				F3263BE41A9651E7001D22A1 /* LocationTest.swift */,
+				F3F87A2C1A5EBDEC00EB1EC1 /* BLogTests.swift */,
+				F36316961A5C7082002CAE61 /* TimeTest.swift */,
+				F3C8FE691A5359B0009FF404 /* BusmeIPhoneTests.swift */,
+				F31E4BC91A58760E00E2F0A2 /* HttpClientTest.swift */,
+				F3263BDB1A963D77001D22A1 /* BusmeIPhone_Tests.swift */,
+				F3263BD91A963D77001D22A1 /* Supporting Files */,
+			);
+			path = "BusmeIPhone Tests";
+			sourceTree = "<group>";
+		};
+		F3263BD91A963D77001D22A1 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F3263BDA1A963D77001D22A1 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		F3406A4D1A65E5C9000C04F4 /* MasterMapScreen */ = {
 			isa = PBXGroup;
 			children = (
 				F3406A491A65C8D8000C04F4 /* MasterMapScreen.swift */,
+				F32A13AC1A97A11200EB67E1 /* TestPostingController.swift */,
 				F3406A431A65B0AC000C04F4 /* FGBannerPresentController.swift */,
+				F33F2E341A97C9F6009F80B7 /* FGJourneyPostingController.swift */,
 				F3529EDC1A70265800036288 /* FGMarkerPresentController.swift */,
 				F385E59D1A7B4DD800358A47 /* FGJourneyLocationController.swift */,
 				F3406A451A65B3D9000C04F4 /* UIBanner.swift */,
@@ -345,6 +398,7 @@
 				F3E8A95A1A69C2C90034F17E /* UpdateTimer.swift */,
 				F3E8A95C1A69DA490034F17E /* JourneySyncTimer.swift */,
 				F3E8A95E1A6C2D7F0034F17E /* RouteCell.swift */,
+				F32A13A91A96BCD400EB67E1 /* JourneyCell.swift */,
 				F3B3B2D71A93E0830058B356 /* JourneyPostingSelectionView.swift */,
 				F3E8A9601A6C555D0034F17E /* RoutesView.swift */,
 				F3E8A9621A6C62340034F17E /* TabButton.swift */,
@@ -429,6 +483,7 @@
 			children = (
 				F3C8FE4E1A5359B0009FF404 /* BusmeIPhone */,
 				F3C8FE661A5359B0009FF404 /* BusmeIPhoneTests */,
+				F3263BD81A963D77001D22A1 /* BusmeIPhone Tests */,
 				F3C8FE4D1A5359B0009FF404 /* Products */,
 				D5C8335478AD9CF508F07ECD /* Pods */,
 				06482B5AED0455B91E1FA0D1 /* Frameworks */,
@@ -439,6 +494,7 @@
 			isa = PBXGroup;
 			children = (
 				F3C8FE4C1A5359B0009FF404 /* BusmeIPhone.app */,
+				F3263BD71A963D77001D22A1 /* BusmeIPhone Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -450,6 +506,7 @@
 				F3C8FE751A535B0D009FF404 /* Base.lproj */,
 				F3C8FEBD1A535D78009FF404 /* BusmeIPhone-Bridging-Header.h */,
 				F3C8FE511A5359B0009FF404 /* AppDelegate.swift */,
+				F3263BCE1A956FF9001D22A1 /* LocationController.swift */,
 				F3C8FE5A1A5359B0009FF404 /* Images.xcassets */,
 				F35B08221A7D6D370065E4F7 /* SplashScreen.swift */,
 				F3C8FE4F1A5359B0009FF404 /* Supporting Files */,
@@ -468,11 +525,8 @@
 		F3C8FE661A5359B0009FF404 /* BusmeIPhoneTests */ = {
 			isa = PBXGroup;
 			children = (
-				F3F87A2C1A5EBDEC00EB1EC1 /* BLogTests.swift */,
-				F36316961A5C7082002CAE61 /* TimeTest.swift */,
-				F3C8FE691A5359B0009FF404 /* BusmeIPhoneTests.swift */,
-				F31E4BC91A58760E00E2F0A2 /* HttpClientTest.swift */,
 				F3C8FE671A5359B0009FF404 /* Supporting Files */,
+				F3263BD21A963CD6001D22A1 /* MyPlayground.playground */,
 			);
 			path = BusmeIPhoneTests;
 			sourceTree = "<group>";
@@ -606,6 +660,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		F3263BD61A963D77001D22A1 /* BusmeIPhone Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F3263BDF1A963D77001D22A1 /* Build configuration list for PBXNativeTarget "BusmeIPhone Tests" */;
+			buildPhases = (
+				F3263BD31A963D77001D22A1 /* Sources */,
+				F3263BD41A963D77001D22A1 /* Frameworks */,
+				F3263BD51A963D77001D22A1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F3263BDE1A963D77001D22A1 /* PBXTargetDependency */,
+			);
+			name = "BusmeIPhone Tests";
+			productName = "BusmeIPhone Tests";
+			productReference = F3263BD71A963D77001D22A1 /* BusmeIPhone Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		F3C8FE4B1A5359B0009FF404 /* BusmeIPhone */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F3C8FE6D1A5359B0009FF404 /* Build configuration list for PBXNativeTarget "BusmeIPhone" */;
@@ -636,6 +708,10 @@
 				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = "Polar Humenn";
 				TargetAttributes = {
+					F3263BD61A963D77001D22A1 = {
+						CreatedOnToolsVersion = 6.1.1;
+						TestTargetID = F3C8FE4B1A5359B0009FF404;
+					};
 					F3C8FE4B1A5359B0009FF404 = {
 						CreatedOnToolsVersion = 6.1;
 					};
@@ -661,6 +737,7 @@
 			projectRoot = "";
 			targets = (
 				F3C8FE4B1A5359B0009FF404 /* BusmeIPhone */,
+				F3263BD61A963D77001D22A1 /* BusmeIPhone Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -683,6 +760,13 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
+		F3263BD51A963D77001D22A1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F3C8FE4A1A5359B0009FF404 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -727,6 +811,15 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		F3263BD31A963D77001D22A1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3263BE51A9651E7001D22A1 /* LocationTest.swift in Sources */,
+				F3263BDC1A963D77001D22A1 /* BusmeIPhone_Tests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F3C8FE481A5359B0009FF404 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -759,6 +852,7 @@
 				F35B08231A7D6D370065E4F7 /* SplashScreen.swift in Sources */,
 				F36316A51A5D9F7A002CAE61 /* DiscoverApiVersion1.swift in Sources */,
 				F36316A91A5DFDA8002CAE61 /* LoginManager.swift in Sources */,
+				F3263BCF1A956FFA001D22A1 /* LocationController.swift in Sources */,
 				F3140F5C1A61AAC00024A65D /* Location.swift in Sources */,
 				F35E28F81A64DE75004DF0D7 /* JourneySyncRemoteInvocation.swift in Sources */,
 				F398020C1A5A424200D6C2B0 /* MarkerInfo.swift in Sources */,
@@ -783,6 +877,7 @@
 				F35E28EB1A647D2A004DF0D7 /* MasterMessageRequestProcessor.swift in Sources */,
 				F385E59C1A7B489A00358A47 /* JourneyLocationAnnotationView.swift in Sources */,
 				F37633B51A5ADB7B005AFB8F /* NameId.swift in Sources */,
+				F32A13AA1A96BCD400EB67E1 /* JourneyCell.swift in Sources */,
 				F3140F521A6186E30024A65D /* PathUtils.swift in Sources */,
 				F37602121A76A9A4002976B7 /* RoutesAndLocationMapLayer.swift in Sources */,
 				F3140F3D1A5F3B2A0024A65D /* MasterMessageEvent.swift in Sources */,
@@ -822,6 +917,7 @@
 				F3140F681A644EE20024A65D /* BannerRequestProcessor.swift in Sources */,
 				F3529ED91A701B4400036288 /* MarkerMessageViewController.swift in Sources */,
 				F3406A4A1A65C8D8000C04F4 /* MasterMapScreen.swift in Sources */,
+				F33F2E351A97C9F6009F80B7 /* FGJourneyPostingController.swift in Sources */,
 				F3529ED71A6F659F00036288 /* UIMarker.swift in Sources */,
 				F3140F411A5F92D50024A65D /* JourneySyncProgressEvent.swift in Sources */,
 				F3C8FE8C1A535B0D009FF404 /* HttpStatusLine.swift in Sources */,
@@ -839,6 +935,7 @@
 				F3263BCC1A950BA6001D22A1 /* FGLoginPresentController.swift in Sources */,
 				F37633AB1A5AC549005AFB8F /* MasterMessage.swift in Sources */,
 				F363169D1A5D80E8002CAE61 /* DiscoverApi.swift in Sources */,
+				F32A13AD1A97A11200EB67E1 /* TestPostingController.swift in Sources */,
 				F3F87A391A5EF7A800EB1EC1 /* PriorityQueue.swift in Sources */,
 				F3C8FE8E1A535B0D009FF404 /* Tag.swift in Sources */,
 				F3140F4C1A6055630024A65D /* JourneyDisplayUtils.swift in Sources */,
@@ -854,6 +951,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		F3263BDE1A963D77001D22A1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F3C8FE4B1A5359B0009FF404 /* BusmeIPhone */;
+			targetProxy = F3263BDD1A963D77001D22A1 /* PBXContainerItemProxy */;
+		};
 		F36316941A5C63D2002CAE61 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Alamofire;
@@ -862,6 +964,40 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		F3263BE01A963D77001D22A1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "BusmeIPhone Tests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BusmeIPhone.app/BusmeIPhone";
+			};
+			name = Debug;
+		};
+		F3263BE11A963D77001D22A1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "BusmeIPhone Tests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BusmeIPhone.app/BusmeIPhone";
+			};
+			name = Release;
+		};
 		F3C8FE6B1A5359B0009FF404 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -896,10 +1032,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				INFOPLIST_FILE = "";
+				"INFOPLIST_FILE[sdk=*]" = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
+				SDKROOT = iphoneos8.1;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -933,9 +1071,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				INFOPLIST_FILE = "";
+				"INFOPLIST_FILE[sdk=*]" = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				SDKROOT = iphoneos;
+				SDKROOT = iphoneos8.1;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -975,6 +1115,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		F3263BDF1A963D77001D22A1 /* Build configuration list for PBXNativeTarget "BusmeIPhone Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F3263BE01A963D77001D22A1 /* Debug */,
+				F3263BE11A963D77001D22A1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		F3C8FE471A5359B0009FF404 /* Build configuration list for PBXProject "BusmeIPhone" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

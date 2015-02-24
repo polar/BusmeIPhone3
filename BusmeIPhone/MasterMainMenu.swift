@@ -132,12 +132,19 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
     }
     
     func showSelections(menuItem : MenuItem) {
-        var jds = masterController!.journeyVisibilityController.getSortedJourneyDisplays()
-        if jds.count > 0 {
-            var viewController = JourneyPostingSelectionView(journeyDisplays: jds)
-            menuItem.navigationController?.pushViewController(viewController, animated: true)
+        if (!masterController!.journeyVisibilityController.hasCurrentLocation()) {
+            Toast(title: "No Location", message: "We do not have a GPS location for your device. Please try later", duration: 4).show()
+            menuItem.navigationController?.popToRootViewControllerAnimated(true)
         } else {
-            Toast(title: "No Selections", message: "There are no journeys within your location", duration: 3).show()
+            let role = menuItem.title == "Driver" ? "driver" : "passenger"
+            var jds = masterController!.journeyVisibilityController.getJourneysAtCurrentLocation()
+            if jds.count > 0 {
+                var viewController = JourneyPostingSelectionView(api: masterController!.api, role: role, journeyDisplays: jds)
+                menuItem.navigationController?.pushViewController(viewController, animated: true)
+            } else {
+                Toast(title: "No Selections", message: "There are no journeys within your location", duration: 3).show()
+                menuItem.navigationController?.popToRootViewControllerAnimated(true)
+            }
         }
     }
     

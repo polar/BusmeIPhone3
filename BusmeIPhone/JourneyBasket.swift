@@ -151,6 +151,8 @@ class JourneyBasket {
                 if (pattern == nil) {
                     pattern = retrieveAndStoreJourneyPattern(route!.patternid!)
                 }
+                // Update the route with the scheduled and actual time start.
+                route!.updateStartTimes(nameid)
             } else if (route!.isRouteDefinition() && route!.patternids != nil) {
                 for pid in route!.patternids! {
                     var pattern = journeyStore.getPattern(pid)

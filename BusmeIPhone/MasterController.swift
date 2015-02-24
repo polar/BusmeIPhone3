@@ -156,6 +156,7 @@ class MasterController : BuspassEventListener {
         masterMessageForeground.unregisterForEvents()
         masterMessageBackground.unregisterForEvents()
     
+        journeyDisplayController.unregisterForEvents()
         journeyLocationPoster.unregisterForEvents()
         journeyEventController.unregisterForEvents()
         
