@@ -16,7 +16,7 @@ class HttpEntity {
     func getContent() -> String {
         return self.content
     }
-    func getContentLenght() -> Int {
+    func getContentLength() -> Int {
         return self.content.lengthOfBytesUsingEncoding(NSUTF16StringEncoding)
     }
 }

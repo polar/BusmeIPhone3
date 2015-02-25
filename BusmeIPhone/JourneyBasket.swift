@@ -80,6 +80,7 @@ class JourneyBasket {
     }
     
     func sync(journeyids : [NameId], progress : ProgressListener?, ioError : OnIOErrorListener? ) {
+        let now = UtilsTime.current()
         let copy_journeys = [Route](journeys)
         var addedJourneys = [Route]()
         var removedJourneys = [Route]()
@@ -111,13 +112,32 @@ class JourneyBasket {
             index += 1
         }
         for route in copy_journeys {
-            var removeJourney = false
+            var removeJourney = true
             for nameid in journeyids {
                 if (route.id == nameid.id) {
                     if (route.version != nameid.version) {
                         removeJourney = true
+                    } else {
+                        removeJourney = false
                     }
                     break
+                }
+            }
+            // Remove any journeys that are still around that shouldn't be.
+            if !removeJourney && route.isJourney() {
+                if route.getEndTime() < now {
+                    // If we have recent locations, then the bus just might be late.
+                    if (route.lastKnownLocation != nil && route.lastLocationUpdate != nil) {
+                        if route.lastLocationUpdate! < (now - Int64(1 * 60 * 1000)) {
+                            removeJourney = true
+                        }
+                    } else {
+                        // We give it a minute in case we just turned the app on and don't
+                        // have a location yet.
+                        if route.getEndTime() < (now - Int64(1 * 60 * 1000)) {
+                            removeJourney = true
+                        }
+                    }
                 }
             }
             if removeJourney {

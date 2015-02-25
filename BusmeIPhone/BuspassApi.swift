@@ -315,20 +315,21 @@ class BuspassApi : ApiBase, EventsApi {
             let response = postURLResponse(url, parameters: params)
             let status = response.getStatusLine()
             if status.statusCode == 200 {
-                let tag = xmlParse(response.getEntity())
-                if tag != nil {
-                    if ("ok" == tag!.name.lowercaseString) {
-                        return (status, tag!)
-                    } else {
-                        let s = HttpStatusLine(statusCode: 1000, reasonPhrase: "Wrong Response")
-                        if (BLog.ERROR) { BLog.logger.error(s.toString()) }
-                        return (s, nil)
-                    }
-                } else {
-                    let s = HttpStatusLine(statusCode: 1000, reasonPhrase: "Invalid Structure")
-                    if (BLog.ERROR) { BLog.logger.error(s.toString()) }
-                    return (s,nil)
-                }
+                return (status, nil)
+//                let tag = xmlParse(response.getEntity())
+//                if tag != nil {
+//                    if ("ok" == tag!.name.lowercaseString) {
+//                        return (status, tag!)
+//                    } else {
+//                        let s = HttpStatusLine(statusCode: 1000, reasonPhrase: "Wrong Response")
+//                        if (BLog.ERROR) { BLog.logger.error(s.toString()) }
+//                        return (s, nil)
+//                    }
+//                } else {
+//                    let s = HttpStatusLine(statusCode: 1000, reasonPhrase: "Invalid Structure")
+//                    if (BLog.ERROR) { BLog.logger.error(s.toString()) }
+//                    return (s,nil)
+//                }
             } else {
                 if (BLog.ERROR) { BLog.logger.error(status.toString()) }
                 return (status, nil)

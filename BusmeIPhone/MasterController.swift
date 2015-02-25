@@ -9,6 +9,34 @@
 import Foundation
 import UIKit
 
+class MasterLogin {
+    var masterSlug : String!
+    var email : String = ""
+    var authToken : String = ""
+    
+    init(masterSlug : String, email: String, authToken: String) {
+        self.masterSlug = masterSlug
+        self.email = email
+        self.authToken = authToken
+    }
+    
+    func saveToKeyChain() {
+        Locksmith.saveData(["email": email, "authToken" : authToken],forUserAccount: masterSlug, inService: "busme")
+    }
+    
+    class func getFromKeyChain(masterSlug : String) -> MasterLogin? {
+        let (data, error) = Locksmith.loadDataForUserAccount(masterSlug, inService: "busme")
+        if data != nil {
+            let email = data!["email"] as? String
+            let authToken = data!["authToken"] as? String
+            if email != nil && authToken != nil {
+                return MasterLogin(masterSlug: masterSlug, email: email!, authToken: authToken!)
+            }
+        }
+        return nil
+    }
+}
+
 class MasterEventData {
     var dialog : UIAlertView?
     var error : HttpStatusLine?
@@ -134,6 +162,8 @@ class MasterController : BuspassEventListener {
         
         api.bgEvents.registerForEvent("JourneySync", listener: self)
         api.bgEvents.registerForEvent("Update", listener: self)
+        
+        api.uiEvents.registerForEvent("LoginEvent", listener: self)
     }
     
     func unregisterForEvents() {
@@ -145,6 +175,7 @@ class MasterController : BuspassEventListener {
         
         api.bgEvents.unregisterForEvent("JourneySync", listener: self)
         api.bgEvents.unregisterForEvent("Update", listener: self)
+        api.uiEvents.unregisterForEvent("LoginEvent", listener: self)
     }
     
     func unregisterForEventsAllComponents() {
@@ -188,6 +219,26 @@ class MasterController : BuspassEventListener {
         } else if eventName == "Master:store" {
             let eventData = event.eventData as MasterEventData
             storeMaster()
+        } else if eventName == "LoginEvent" {
+            let eventData = event.eventData as LoginEventData
+            onLoginEvent(eventData)
+        }
+    }
+    
+    func onLoginEvent(eventData: LoginEventData) {
+        let loginManager = eventData.loginManager
+        let login = loginManager.login
+        switch login.loginState {
+        case LoginState.LS_LOGIN_SUCCESS, LoginState.LS_REGISTER_SUCCESS, LoginState.LS_AUTHTOKEN_SUCCESS:
+            let email = login.email
+            let authToken = login.authToken
+            if email != nil && authToken != nil {
+                let masterLogin = MasterLogin(masterSlug: master.slug!, email: email!, authToken: authToken!)
+                masterLogin.saveToKeyChain()
+            }
+            break
+        default:
+            break
         }
     }
     
@@ -198,6 +249,18 @@ class MasterController : BuspassEventListener {
             eventData.returnStatus = "Error"
         } else {
             eventData.returnStatus = "MasterReady"
+            let masterLogin = MasterLogin.getFromKeyChain(master.slug!)
+            if masterLogin != nil {
+                let login = Login()
+                login.loginState = LoginState.LS_AUTHTOKEN
+                login.email = masterLogin!.email
+                login.authToken = masterLogin!.authToken
+                login.quiet = true
+                let lm = LoginManager(api: api)
+                lm.login = login
+                let evd = LoginEventData(loginManager: lm)
+                api.bgEvents.postEvent("LoginEvent", data: evd)
+            }
         }
         api.uiEvents.postEvent("Master:Init:return", data: eventData)
     }

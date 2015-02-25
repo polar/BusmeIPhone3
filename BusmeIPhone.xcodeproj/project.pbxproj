@@ -110,6 +110,8 @@
 		F3C33CDE1A6627E600EF8E24 /* DiscoverEventData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C33CDD1A6627E600EF8E24 /* DiscoverEventData.swift */; };
 		F3C33CE11A663CAD00EF8E24 /* DiscoverController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C33CE01A663CAD00EF8E24 /* DiscoverController.swift */; };
 		F3C33CE31A663D9200EF8E24 /* MastersTableScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C33CE21A663D9200EF8E24 /* MastersTableScreen.swift */; };
+		F3C706A01A9E7B620071B9BC /* Locksmith.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C7069E1A9E7B620071B9BC /* Locksmith.swift */; };
+		F3C706A11A9E7B620071B9BC /* LocksmithRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C7069F1A9E7B620071B9BC /* LocksmithRequest.swift */; };
 		F3C8FE521A5359B0009FF404 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C8FE511A5359B0009FF404 /* AppDelegate.swift */; };
 		F3C8FE5B1A5359B0009FF404 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F3C8FE5A1A5359B0009FF404 /* Images.xcassets */; };
 		F3C8FE841A535B0D009FF404 /* ApiBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C8FE741A535B0D009FF404 /* ApiBase.swift */; };
@@ -291,6 +293,8 @@
 		F3C33CDD1A6627E600EF8E24 /* DiscoverEventData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverEventData.swift; sourceTree = "<group>"; };
 		F3C33CE01A663CAD00EF8E24 /* DiscoverController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverController.swift; sourceTree = "<group>"; };
 		F3C33CE21A663D9200EF8E24 /* MastersTableScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MastersTableScreen.swift; sourceTree = "<group>"; };
+		F3C7069E1A9E7B620071B9BC /* Locksmith.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Locksmith.swift; sourceTree = "<group>"; };
+		F3C7069F1A9E7B620071B9BC /* LocksmithRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocksmithRequest.swift; sourceTree = "<group>"; };
 		F3C8FE4C1A5359B0009FF404 /* BusmeIPhone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BusmeIPhone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3C8FE501A5359B0009FF404 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F3C8FE511A5359B0009FF404 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AppDelegate.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -478,6 +482,15 @@
 			name = Logins;
 			sourceTree = "<group>";
 		};
+		F3C7069C1A9E7B400071B9BC /* Locksmith */ = {
+			isa = PBXGroup;
+			children = (
+				F3C7069E1A9E7B620071B9BC /* Locksmith.swift */,
+				F3C7069F1A9E7B620071B9BC /* LocksmithRequest.swift */,
+			);
+			name = Locksmith;
+			sourceTree = "<group>";
+		};
 		F3C8FE431A5359B0009FF404 = {
 			isa = PBXGroup;
 			children = (
@@ -549,6 +562,7 @@
 		F3C8FE8F1A535B13009FF404 /* lib */ = {
 			isa = PBXGroup;
 			children = (
+				F3C7069C1A9E7B400071B9BC /* Locksmith */,
 				F3C8FE911A535B2D009FF404 /* busme */,
 			);
 			name = lib;
@@ -873,7 +887,9 @@
 				F33EBFED1A795D4700B2A694 /* ProjectionController.swift in Sources */,
 				F3140F5F1A61AC330024A65D /* JourneyLocationPoster.swift in Sources */,
 				F3C8FE521A5359B0009FF404 /* AppDelegate.swift in Sources */,
+				F3C706A11A9E7B620071B9BC /* LocksmithRequest.swift in Sources */,
 				F33B69BA1A5B43D2004C7742 /* IPUtils.swift in Sources */,
+				F3C706A01A9E7B620071B9BC /* Locksmith.swift in Sources */,
 				F35E28EB1A647D2A004DF0D7 /* MasterMessageRequestProcessor.swift in Sources */,
 				F385E59C1A7B489A00358A47 /* JourneyLocationAnnotationView.swift in Sources */,
 				F37633B51A5ADB7B005AFB8F /* NameId.swift in Sources */,

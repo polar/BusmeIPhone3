@@ -44,6 +44,7 @@ class Route : Storage {
     var lastKnownTimediff : Double?
     var lastKnownDistance : Double?
     var lastKnownDirection : Double?
+    var lastLocationUpdate : TimeValue64?
     var onRoute : Bool = false
     var timeZone : String?
     var reported : Bool = false
@@ -494,6 +495,7 @@ class Route : Storage {
         self.lastKnownDirection = loc.dir
         self.lastKnownDistance = loc.distance
         self.lastKnownTime = UtilsTime.stringForTime(loc.reported_time)
+        self.lastLocationUpdate = UtilsTime.current()
         self.onRoute = loc.onroute
         self.reported = loc.reported
         if lastLocation != nil {
