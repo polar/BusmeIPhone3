@@ -14,7 +14,7 @@ class LocationController : NSObject, CLLocationManagerDelegate {
     var mainController : MainController
     var oldLocation : CLLocation?
     var currentLocation : CLLocation?
-    var currentGeoPoint : GeoPoint?
+    var currentGeoPoint : GeoPointImpl?
     var locationManager : CLLocationManager
     
     init(mainController : MainController) {
@@ -40,6 +40,13 @@ class LocationController : NSObject, CLLocationManagerDelegate {
     
     func stop() {
         locationManager.stopUpdatingLocation()
+        storeLocation()
+    }
+    
+    func storeLocation() {
+        if currentGeoPoint != nil {
+            mainController.configurator.setLastLocation(currentGeoPoint!)
+        }
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
@@ -50,7 +57,7 @@ class LocationController : NSObject, CLLocationManagerDelegate {
         
         self.oldLocation = self.currentLocation
         self.currentLocation = locations.last as? CLLocation
-        self.currentGeoPoint = currentLocation!.coordinate
+        self.currentGeoPoint = GeoPointImpl(geoPoint: currentLocation!.coordinate)
         let evd = LocationEventData(
             location: Location(
                 name: "\(NSDate())",
@@ -63,7 +70,7 @@ class LocationController : NSObject, CLLocationManagerDelegate {
     func locationManager(manager: CLLocationManager!, didUpdateToLocation newLocation: CLLocation!, fromLocation oldLocation: CLLocation!) {
         self.oldLocation = oldLocation
         self.currentLocation = newLocation
-        currentGeoPoint = newLocation.coordinate
+        currentGeoPoint = GeoPointImpl(geoPoint: newLocation.coordinate)
         let evd = LocationEventData(
             location: Location(
                 name: "\(NSDate())",

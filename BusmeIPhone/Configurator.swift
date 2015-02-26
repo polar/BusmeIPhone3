@@ -36,11 +36,17 @@ class Configurator {
     func setLastLocation(location : GeoPoint) {
         let loc = GeoPointImpl(lat: location.getLatitude(), lon: location.getLongitude())
         if BLog.DEBUG { BLog.logger.debug("Saving Last Location \(loc)") }
-        NSUserDefaults.standardUserDefaults().setObject(loc, forKey: "LastLocation")
+        let data = NSKeyedArchiver.archivedDataWithRootObject(loc)
+        NSUserDefaults.standardUserDefaults().setObject(data, forKey: "LastLocation")
     }
     
     func getLastLocation() -> GeoPoint? {
-        return NSUserDefaults.standardUserDefaults().objectForKey("LastLocation") as? GeoPointImpl
+        let data = NSUserDefaults.standardUserDefaults().objectForKey("LastLocation") as? NSData
+        if data != nil {
+            let loc = NSKeyedUnarchiver.unarchiveObjectWithData(data!) as? GeoPointImpl
+            return loc
+        }
+        return nil
     }
     
     func saveAsDefaultMaster(master : Master)  {

@@ -140,7 +140,10 @@ class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDelegate,
     }
     
     func onInitReturn(eventData : DiscoverEventData) {
-        
+        let loc = mainController.configurator.getLastLocation()
+        if loc != nil {
+            performDiscoverFromGeoPoint(true, geoPoint: loc!)
+        }
     }
     
     func onDiscoverReturn(eventData : DiscoverEventData) {
@@ -217,6 +220,18 @@ class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDelegate,
             let mapRegion = mapView.region
             let buf = mapRegion.span.latitudeDelta / GeoCalc.LAT_PER_FOOT
             performDiscoverFromLoc(true, loc: loc, buf: buf)
+        }
+    }
+    
+    func performDiscoverFromGeoPoint(showDialog : Bool, geoPoint: GeoPoint) {
+        if !discoverInProgress {
+            self.discoverInProgress = true
+            
+            let coord = CLLocationCoordinate2D(latitude: geoPoint.getLatitude(), longitude: geoPoint.getLongitude())
+            mapView.centerCoordinate = coord
+            let mapRegion = mapView.region
+            let buf = mapRegion.span.latitudeDelta / GeoCalc.LAT_PER_FOOT
+            performDiscoverFromLoc(true, loc: coord, buf: buf)
         }
     }
     

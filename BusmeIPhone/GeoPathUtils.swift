@@ -151,6 +151,12 @@ class GeoPointImpl : NSObject, GeoPointMutable {
         super.init()
     }
     
+    init(geoPoint: GeoPoint) {
+        self.longitude = geoPoint.getLongitude()
+        self.latitude = geoPoint.getLatitude()
+        super.init()
+    }
+    
     init( coder : NSCoder ) {
         super.init()
         initWithCoder(coder)

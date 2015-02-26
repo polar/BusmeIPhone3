@@ -226,22 +226,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener, CLL
                     self.contactBusServer()
             })
         } else if eventData.returnStatus == "Discover" {
-            doDiscoverInit(eventData.discoverApi!)
+            doDiscoverInit(eventData)
         } else if eventData.returnStatus == "Master" {
             doMasterInit(eventData.master!)
         }
         
     }
     
-    func doDiscoverInit(discoverApi : DiscoverApiVersion1) {
-        // We are going to a discover screen, so stop any Master based timers
+    func doDiscoverInit(eventData : MainEventData) {
+        // We are going to a discover screen, so stop any Master based timers. Save current location so Disocver Controller can pick it up.
         
         self.stopTimers()
         self.takedownTimers()
-
-        let evd = MainEventData(discoverApi: discoverApi)
-        eventsController.register(discoverApi)
-        api.bgEvents.postEvent("Main:Discover:init", data: evd)
+        locationController?.storeLocation()
+        eventsController.register(eventData.discoverApi!)
+        api.bgEvents.postEvent("Main:Discover:init", data: eventData)
     }
     
     func doMasterInit(master : Master) {
@@ -384,6 +383,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener, CLL
             syncTimer?.start(true)
         }
     }
+    
     func stopTimers() {
         bannerTimer?.stop()
         updateTimer?.stop()
@@ -403,6 +403,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener, CLL
         if mainController?.masterController != nil {
             mainController?.masterController?.api.bgEvents.postEvent("Master:store", data: MasterEventData())
         }
+        locationController?.storeLocation()
     }
     
     func applicationWillResignActive(application: UIApplication) {
@@ -442,6 +443,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener, CLL
         if (mainController?.masterController != nil) {
             stopTimers()
         }
+        locationController?.stop()
     }
     
     // MARK: - Core Data stack
