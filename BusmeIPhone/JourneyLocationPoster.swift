@@ -38,11 +38,13 @@ class JourneyEventData {
         self.role = role
         self.location = location
     }
-    init(route : Route, role : String, reason : Int) {
+    
+    init(route : Route, role : String, reason : Int = 0) {
         self.route = route
         self.role = role
         self.reason = reason
     }
+    
     init(reason: Int) {
         self.reason = reason
     }
@@ -216,6 +218,8 @@ class JourneyLocationPoster : BuspassEventListener {
             endPosting(reason: JourneyEvent.R_FORCED)
         }
         startPosting(eventData.route, role: eventData.role)
+        // Clears the request.
+        api.uiEvents.postEvent("JourneyPostingRequestClear", data: JourneyPostingRecognizerEventData())
     }
     
     func onJourneyStopPosting(eventData : JourneyEventData) {

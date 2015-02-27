@@ -359,7 +359,7 @@ class Route : Storage {
         var result = [DGeoPoint]()
         for jp in getJourneyPatterns() {
             let path = jp.path!
-            let possibles = GeoPathUtils.whereOnPath(path, buffer: buffer, c3: point)
+            let possibles = GeoPathUtils.whereOnPath(path, buffer: buffer, point: point)
             result += possibles
         }
         return result

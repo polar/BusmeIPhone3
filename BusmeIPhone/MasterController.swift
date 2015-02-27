@@ -35,6 +35,10 @@ class MasterLogin {
         }
         return nil
     }
+    
+    class func forget(masterSlug : String) {
+        Locksmith.deleteDataForUserAccount(masterSlug, inService: "busme")
+    }
 }
 
 class MasterEventData {
@@ -89,6 +93,7 @@ class MasterController : BuspassEventListener {
     var journeyLocationPoster : JourneyLocationPoster
     var journeyEventController : JourneyEventController
     var journeyPostingController : JourneyPostingController
+    var journeyPostingRecognizer : JourneyPostingRecognizer
     
     var updateRemoteInvocation : UpdateRemoteInvocation
     var journeySyncRemoteInvocation : JourneySyncRemoteInvocation
@@ -147,6 +152,7 @@ class MasterController : BuspassEventListener {
         self.journeyLocationPoster = JourneyLocationPoster(api: api)
         self.journeyEventController = JourneyEventController(api: api)
         self.journeyPostingController = JourneyPostingController(api: api)
+        self.journeyPostingRecognizer = JourneyPostingRecognizer(api: api, journeyDisplayController: journeyDisplayController, journeyLocationPoster : journeyLocationPoster)
         
         //self.loginForeground = LoginForeground(api: api)
         self.loginBackground = LoginBackground(api: api)

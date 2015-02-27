@@ -12,6 +12,12 @@ import UIKit
 class MasterMainMenu : MenuScreen, MenuDelegate {
     weak var masterController : MasterController?
     weak var mainController : MainController?
+    weak var masterMapScreen : MasterMapScreen?
+    
+    func initWithMasterMapScreen(masterMapScreen : MasterMapScreen) -> MasterMainMenu {
+        self.masterMapScreen = masterMapScreen
+        return initWithMasterController(masterMapScreen.masterController)
+    }
     
     func initWithMasterController(masterController : MasterController) -> MasterMainMenu {
         self.masterController = masterController
@@ -41,23 +47,60 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
             active(menuItem)
         } else if action == "reload" {
             reload(menuItem)
+        } else if action == "recognize" {
+            recognize(menuItem)
         }
         return true
     }
     
     func reportingMenu() -> MenuItem {
-        let submenu : [MenuItem] = [
+        var submenu : [MenuItem] = [
             MenuItem(title: "Driver", action: "report", target: self),
             MenuItem(title: "Passenger", action: "report", target: self),
             MenuItem(title: "Stop", action: "report", target: self),
             MenuItem(title: "Login", action: "report", target: self),
             MenuItem(title: "Logout", action: "report", target: self),
             MenuItem(title: "Register", action: "report", target: self),
+            MenuItem(title: "Forget Me", action: "report", target: self),
             
         ]
+        if BLog.DEBUG {
+            submenu.append(
+                MenuItem(title: "Test:Recognizer", action: "recognize", target: self))
+        }
         return MenuItem(title: "Reporting", submenu: submenu)
     }
 
+    func recognize(menuItem: MenuItem) {
+        // Toggle off if needed
+        if masterMapScreen?.testLocationController?.selectedRoute != nil {
+            masterMapScreen!.testLocationController!.selectedRoute = nil
+            Toast(title: "Test Recognizer", message: "No longer testing", duration: 3).show()
+            menuItem.navigationController?.popToRootViewControllerAnimated(true)
+            return
+        }
+        
+        let now = UtilsTime.current()
+        // Just select the first one.
+        var journey : JourneyDisplay?
+        for jd in masterController!.journeyDisplayController.getJourneyDisplays() {
+            if jd.route.isJourney() && jd.route.getStartTime() < now && now < jd.route.getEndTime() {
+                if jd.route.lastLocationUpdate != nil {
+                    let diff = UtilsTime.current() - jd.route.lastLocationUpdate!
+                    if diff < 10000 {
+                        let route = jd.route
+                        let startT = UtilsTime.hhmmaForTime(route.getStartTime())
+                        let endT = UtilsTime.hhmmaForTime(route.getEndTime())
+                        let msg = "Trying to recognize \(route.name!) \(startT) - \(endT)"
+                        Toast(title: "Test Recognizer", message: msg, duration: 3).show()
+                        masterMapScreen?.testLocationController?.selectedRoute = jd.route
+                    }
+                }
+            }
+        }
+        menuItem.navigationController?.popToRootViewControllerAnimated(true)
+        
+    }
     
     func report(menuItem : MenuItem) {
         let title = menuItem.title
@@ -74,6 +117,8 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
             startLogout(menuItem)
         } else if title == "Register" {
             startRegister(menuItem)
+        } else if title == "Forget Me" {
+            forgetMe(menuItem)
         }
     }
     
@@ -112,6 +157,21 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
         let loginManager = LoginManager(api: masterController!.api)
         var loginController = RegisterFormController(loginManager: loginManager)
         menuItem.navigationController?.pushViewController(loginController, animated: true)
+    }
+    
+    func forgetMe(menuItem: MenuItem) {
+        let evd = JourneyEventData(reason: JourneyEvent.R_FORCED)
+        masterController?.api.bgEvents.postEvent("JourneyStopPosting", data: evd)
+        navigationController?.popToRootViewControllerAnimated(true)
+        if (masterController?.api.isLoggedIn() != nil) {
+            let evd1 = LoginEventData(loginManager: masterController!.api.loginManager!)
+            masterController?.api.bgEvents.postEvent("Logout", data: evd1)
+        }
+        let slug = masterController?.master.slug
+        if slug != nil {
+            MasterLogin.forget(slug!)
+        }
+        Toast(title: "Forget Me", message: "Your Busme! identity and credentials have been removed from the device.", duration: 3).show()
     }
     
     func startReporting(menuItem : MenuItem) {

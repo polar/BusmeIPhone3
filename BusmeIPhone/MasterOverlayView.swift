@@ -58,7 +58,7 @@ class LocatorView {
             return icon!
         }
         if params.isReporting {
-            icon = Locators.getReporting("passenger")?.getIcon()
+            icon = Locators.getReporting(params.reportingRole)?.getIcon()
             return icon
         }
         switch params.iconType {
@@ -188,8 +188,9 @@ class MasterOverlayView : MKOverlayRenderer, BuspassEventListener {
     
     func resetAll() {
         let journeyDisplays = [JourneyDisplay](masterController.journeyDisplayController.getJourneyDisplays())
+        let vState = masterController.journeyVisibilityController.getCurrentState()
         let patterns = mapLayer.getRoutePatterns(journeyDisplays)
-        let locators = mapLayer.getJourneyLocators(journeyDisplays)
+        let locators = mapLayer.getJourneyLocators(vState, journeyDisplays: journeyDisplays)
         dispatch_semaphore_wait(writeLock, DISPATCH_TIME_FOREVER)
         self.patternViews = patterns.map({(p) in PatternView(args: p)})
         self.locatorViews = locators.map({(loc) in LocatorView(args: loc)})
@@ -204,7 +205,8 @@ class MasterOverlayView : MKOverlayRenderer, BuspassEventListener {
     
     func resetLocators() {
         let journeyDisplays = [JourneyDisplay](masterController.journeyDisplayController.getJourneyDisplays())
-        let locators = mapLayer.getJourneyLocators(journeyDisplays)
+        let vState = masterController.journeyVisibilityController.getCurrentState()
+        let locators = mapLayer.getJourneyLocators(vState, journeyDisplays: journeyDisplays)
         dispatch_semaphore_wait(writeLock, DISPATCH_TIME_FOREVER)
         self.locatorViews = locators.map({(loc) in LocatorView(args: loc)})
         let locatorMapRects = [MKMapRect](previousLocators.values.array)

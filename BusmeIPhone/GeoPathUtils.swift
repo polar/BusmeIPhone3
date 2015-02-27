@@ -189,10 +189,12 @@ class DGeoPoint {
     var geoPoint : GeoPoint
     var bearing : Double
     var distance : Double
-    init(point : GeoPoint, b: Double, d :Double) {
+    var index : Int
+    init(point : GeoPoint, b: Double, d :Double, i : Int) {
         self.geoPoint = point
         self.bearing  = b
         self.distance = d
+        self.index = i
     }
 }
 
@@ -373,7 +375,7 @@ struct GeoCalc {
         let lon2 = lon1 + atan2(sin(brad)*sin(angularDistance)*cos(lat1), cos(angularDistance) - sin(lat1)*sin(lat2))
         let lat2d = GeoCalc.to_degrees(lat2)
         let lon2d = GeoCalc.to_degrees(lon2)
-        let dpoint = DGeoPoint(point: GeoPointImpl(lat: lat2d, lon: lon2d), b: bearing, d: distance)
+        let dpoint = DGeoPoint(point: GeoPointImpl(lat: lat2d, lon: lon2d), b: bearing, d: distance, i : -1)
         return dpoint
     }
     
@@ -592,21 +594,22 @@ struct GeoPathUtils {
         return min
     }
     
-    static func whereOnPath(path : [GeoPoint], buffer : Double, c3 : GeoPoint) -> [DGeoPoint] {
+    static func whereOnPath(path : [GeoPoint], buffer : Double, point : GeoPoint) -> [DGeoPoint] {
         var results = [DGeoPoint]()
         var distance = 0.0
         var p1 = path[0]
         for(var i = 1; i < path.count-1; i++) {
             var p2 = path[i]
+            let maxdist = GeoCalc.getGeoDistance(p1, c2: p2)
             //if isOnLine(p1, c2: p2, buffer: buffer, c3: c3) {
-            let offPath = GeoCalc.offLine(p1, c2: p2, c3: c3)
+            let offPath = GeoCalc.offLine(p1, c2: p2, c3: point)
             if offPath < buffer {
-                let dist = GeoCalc.getGeoDistance(p1, c2: c3)
-                let bearing = GeoCalc.getBearing(c3, gp2: p2)
-                results.append(DGeoPoint(point: c3, b: distance + dist, d: bearing))
-                distance += GeoCalc.getGeoDistance(p1, c2: p2)
+                let dist = min(maxdist, GeoCalc.getGeoDistance(p1, c2: point))
+                let bearing = GeoCalc.getBearing(point, gp2: p2)
+                results.append(DGeoPoint(point: point, b: distance + dist, d: bearing, i: i))
+                distance += maxdist
             } else {
-                distance += GeoCalc.getGeoDistance(p1, c2: p2)
+                distance += maxdist
             }
             p1 = p2
         }
@@ -622,7 +625,7 @@ struct GeoPathUtils {
             if isOnLine(p1, c2: p2, buffer: buffer, c3: c3) {
                 let dist = GeoCalc.getGeoDistance(p1, c2: c3)
                 let bearing = GeoCalc.getBearing(c3, gp2: p2)
-                results.append(DGeoPoint(point: c3, b: distance + dist, d: bearing))
+                results.append(DGeoPoint(point: c3, b: distance + dist, d: bearing, i: i))
                 distance += GeoCalc.getGeoDistance(p1, c2: p2)
             } else {
                 distance += GeoCalc.getGeoDistance(p1, c2: p2)

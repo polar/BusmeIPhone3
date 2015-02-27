@@ -14,6 +14,7 @@ struct Disposition {
     static let NORMAL = 3
 }
 struct IconType {
+    static let NONE = 0
     static let NORMAL = 1
     static let REPORTING = 2
     static let TOO_EARLY = 3
@@ -32,6 +33,7 @@ struct LocatorArgs {
     let startMeasure : Double
     let disposition : Int
     let iconType : Int
+    let reportingRole : String
 }
 
 class PatternArgs {
@@ -65,7 +67,7 @@ class RouteAndLocationsMapLayer {
         return journeyLocationPoster.getCurrentLocation()
     }
     
-    func getJourneyLocator(journeyDisplay : JourneyDisplay, disposition : Int) -> LocatorArgs? {
+    func getJourneyLocator(vState: VisualState, journeyDisplay : JourneyDisplay, disposition : Int) -> LocatorArgs? {
         if journeyDisplay.route.getJourneyPatterns().isEmpty || !journeyDisplay.route.getJourneyPatterns()[0].isReady() {
             // We need a path, it may have not come in yet.
             return nil
@@ -78,14 +80,16 @@ class RouteAndLocationsMapLayer {
         var currentBearing : Double? = nil
         var currentDistance : Double? = nil
         var currentTimeDiff : Double? = nil
+        var reportingRole : String = "passenger"
         if journeyDisplay.route.isReporting() {
             isReporting = true
             isReported = true
+            reportingRole = api.loginCredentials!.roleIntent
             let loc = getCurrentLocation()
             if loc != nil {
                 currentLocation = GeoCalc.toGeoPoint(loc!)
                 currentBearing = loc!.bearing
-                let points = GeoPathUtils.whereOnPath(journeyDisplay.route.getPaths()[0], buffer: 60.0, c3: currentLocation!)
+                let points = GeoPathUtils.whereOnPath(journeyDisplay.route.getPaths()[0], buffer: 60.0, point: currentLocation!)
                 for gp in points {
                     let offPath = GeoPathUtils.offPath(journeyDisplay.route.getPaths()[0], point: gp.geoPoint)
                     if gp.distance > 0 {
@@ -131,7 +135,13 @@ class RouteAndLocationsMapLayer {
         } else {
             if startingMeasure < 1.0 {
                 if startingMeasure < 0 {
-                    iconType = IconType.TOO_EARLY
+                    
+                    if vState.state != vState.S_ALL {
+                        iconType = IconType.TOO_EARLY
+                    } else {
+                        // Do not place it
+                        return nil
+                    }
                 } else {
                     iconType = IconType.START
                 }
@@ -146,13 +156,13 @@ class RouteAndLocationsMapLayer {
             }
         }
         if currentLocation != nil {
-            let args = LocatorArgs(journeyDisplay: journeyDisplay, currentLocation: currentLocation!, currentDirection: GeoCalc.to_radians(currentBearing!), currentDistance: currentDistance!, currentTimeDiff: currentTimeDiff!, onRoute: onRoute, isReporting: isReporting, isReported: isReported, startMeasure: startingMeasure, disposition: disposition, iconType: iconType)
+            let args = LocatorArgs(journeyDisplay: journeyDisplay, currentLocation: currentLocation!, currentDirection: GeoCalc.to_radians(currentBearing!), currentDistance: currentDistance!, currentTimeDiff: currentTimeDiff!, onRoute: onRoute, isReporting: isReporting, isReported: isReported, startMeasure: startingMeasure, disposition: disposition, iconType: iconType, reportingRole : reportingRole)
             return args
         }
         return nil
     }
     
-    func getJourneyLocators(journeyDisplays : [JourneyDisplay]) -> [LocatorArgs] {
+    func getJourneyLocators(vState: VisualState, journeyDisplays : [JourneyDisplay]) -> [LocatorArgs] {
         var locators : [LocatorArgs] = [LocatorArgs]()
         var highlighted : [LocatorArgs] = [LocatorArgs]()
         var postingRoute : JourneyDisplay? = nil
@@ -162,7 +172,7 @@ class RouteAndLocationsMapLayer {
             let jd = state.selectedRoute!
             let pats = jd.route.getJourneyPatterns()
             if pats.count > 0 && pats[0].isReady() {
-                let locarg = getJourneyLocator(jd, disposition: Disposition.TRACK)
+                let locarg = getJourneyLocator(vState, journeyDisplay: jd, disposition: Disposition.TRACK)
                 if locarg != nil {
                     locators.append(locarg!)
                 }
@@ -175,12 +185,12 @@ class RouteAndLocationsMapLayer {
                     } else {
                         if !jd.isFinished() {
                             if jd.isPathHighlighted() {
-                                let locarg = getJourneyLocator(jd, disposition: Disposition.HIGHLIGHT)
+                                let locarg = getJourneyLocator(vState, journeyDisplay: jd, disposition: Disposition.HIGHLIGHT)
                                 if locarg != nil {
                                     highlighted.append(locarg!)
                                 }
                             } else {
-                                let locarg = getJourneyLocator(jd, disposition: Disposition.NORMAL)
+                                let locarg = getJourneyLocator(vState, journeyDisplay: jd, disposition: Disposition.NORMAL)
                                 if locarg != nil {
                                     locators.append(locarg!)
                                 }
@@ -193,7 +203,7 @@ class RouteAndLocationsMapLayer {
         }
         locators.extend(highlighted)
         if postingRoute != nil {
-            let locarg = getJourneyLocator(postingRoute!, disposition: Disposition.NORMAL)
+            let locarg = getJourneyLocator(vState, journeyDisplay: postingRoute!, disposition: Disposition.NORMAL)
             if locarg != nil {
                 locators.append(locarg!)
             }

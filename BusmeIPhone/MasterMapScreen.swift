@@ -35,7 +35,9 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate, CLLocationManagerDe
     var locationManager : CLLocationManager!
     
     var testPostingController : TestPostingController?
+    var testLocationController : TestLocationController?
     var fgJourneyPostingController : FGJourneyPostingController?
+    var fgJourneyPostingRecognizer : FGJourneyPostingRecognizer?
     
     func setMasterController(masterController : MasterController) {
         self.masterController = masterController
@@ -53,8 +55,10 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate, CLLocationManagerDe
         }
         if BLog.DEBUG {
             testPostingController = TestPostingController(api: api)
+            testLocationController = TestLocationController(masterMapScreen: self)
         }
         fgJourneyPostingController = FGJourneyPostingController(api: api)
+        fgJourneyPostingRecognizer = FGJourneyPostingRecognizer(masterMapScreen: self)
     }
     
     var splashView : UIImageView?
@@ -171,7 +175,7 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate, CLLocationManagerDe
     }
 
     func openMenu() {
-        let menuScreen = MasterMainMenu().initWithMasterController(masterController!)
+        let menuScreen = MasterMainMenu().initWithMasterMapScreen(self)
         navigationController?.pushViewController(menuScreen, animated: true)
     }
     
@@ -221,6 +225,12 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate, CLLocationManagerDe
         masterOverlayView?.unregisterForEvents()
         testPostingController?.unregisterForEvents()
         fgJourneyPostingController?.unregisterForEvents()
+        fgJourneyPostingRecognizer?.unregisterForEvents()
+    }
+    
+    func showSelections(journeyDisplays: [JourneyDisplay], role : String) {
+        var viewController = JourneyPostingSelectionView(api: masterController!.api, role: role, journeyDisplays: journeyDisplays)
+        self.navigationController?.pushViewController(viewController, animated: true)
     }
     
     deinit {

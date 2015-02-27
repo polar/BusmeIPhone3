@@ -28,6 +28,13 @@ class JourneyPostingSelectionView : UITableViewController, UIAlertViewDelegate {
         super.viewDidLoad()
     }
     
+    var needJourneyPostingRequestClear = true
+    override func viewDidDisappear(animated: Bool) {
+        if needJourneyPostingRequestClear {
+            api.uiEvents.postEvent("JourneyPostingRequestClear", data: JourneyPostingRecognizerEventData())
+        }
+    }
+    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return journeyDisplays.count
     }
@@ -62,18 +69,22 @@ class JourneyPostingSelectionView : UITableViewController, UIAlertViewDelegate {
                 UIAlertView(title: "Report on Route \(route)", message: "\(vid)You are \(dist) feet from the route. Do you still want to report?", delegate: self, cancelButtonTitle: "Cancel", otherButtonTitles: "Yes").show()
             } else {
                 Toast(title: "Reporting on Route \(route)", message: "You are now reporting on Route \(route) \(vid)", duration: 5).show()
-                
+                // The RequestClear will come from JourneyLocationPoster after it starts posting
+                needJourneyPostingRequestClear = false
                 api.bgEvents.postEvent("JourneyStartPosting", data: JourneyEventData(route: currentJourneyDisplay!.route, role: role, reason: JourneyEvent.R_NORMAL))
                 navigationController?.popToRootViewControllerAnimated(true)
                 currentJourneyDisplay = nil
             }
         } else {
             Toast(title: "Report on Route \(route)", message: "Reporting on Route \(route) \(vid) is not available", duration: 10).show()
+            navigationController?.popToRootViewControllerAnimated(true)
         }
     }
     
     func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
         if alertView.buttonTitleAtIndex(buttonIndex) == "Yes" {
+            // The RequestClear will come from JourneyLocationPoster after it starts posting
+            needJourneyPostingRequestClear = false
             api.bgEvents.postEvent("JourneyStartPosting", data: JourneyEventData(route: currentJourneyDisplay!.route, role: role, reason: JourneyEvent.R_NORMAL))
         }
         navigationController?.popToRootViewControllerAnimated(true)

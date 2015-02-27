@@ -73,7 +73,7 @@ class JourneyDisplay {
             var distance = route.lastKnownDistance
             var selected : DGeoPoint?
             if distanceFromRoute(point!) < 60 {
-                let dpoints = GeoPathUtils.whereOnPath(route.getPaths()[0], buffer: 60, c3: point!)
+                let dpoints = GeoPathUtils.whereOnPath(route.getPaths()[0], buffer: 60, point: point!)
                 for dp in dpoints {
                     if dp.distance > route.lastKnownDistance {
                         if dp.distance <= distance {
