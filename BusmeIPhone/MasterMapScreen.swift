@@ -48,7 +48,7 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate, CLLocationManagerDe
         self.fgMarkerPresentationController = FGMarkerPresentController(masterMapScreen: self)
         self.fgMasterMessagePresentationController = FGMasterMessagePresentController(masterMapScreen: self)
         self.masterOverlay = MasterOverlay(master: masterController.master, masterController: masterController)
-        self.fgLoginPresentController = FGLoginPresentController(api: api)
+        self.fgLoginPresentController = FGLoginPresentController(api: api, master: masterController.master)
         self.locationManager = CLLocationManager()
         if locationManager.respondsToSelector("requestWhenInUseAuthorization") {
             locationManager.requestWhenInUseAuthorization()

@@ -148,7 +148,7 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
     func startRegister(menuItem : MenuItem) {
         if masterController!.api.isLoggedIn() {
             let login = masterController!.api.loginCredentials!
-            UIAlertView(title: "Already Logged In", message: "You are already logged in as \(login.roleIntent). Please log out before trying to create a new user.", delegate: nil, cancelButtonTitle: "OK").show()
+            UIAlertView(title: "Already Logged In", message: "You are already logged in. Please log out before trying to create a new user.", delegate: nil, cancelButtonTitle: "OK").show()
         } else {
             register(menuItem)
         }
@@ -159,7 +159,7 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
             login(menuItem)
         } else {
             let login = masterController!.api.loginCredentials!
-            Toast(title: "Already Logged In", message: "You are already logged in as \(login.roleIntent).", duration : 5).show()
+            Toast(title: "Already Logged In", message: "You are already logged in.", duration : 5).show()
         }
     }
     
@@ -205,7 +205,7 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
                 login(menuItem)
             } else {
                 if (menuItem.title == "Driver" && !masterController!.api.loginCredentials!.hasRole("driver")) {
-                    Toast(title: "Not Authorized", message: "You are authorized as a driver.", duration: 5).show()
+                    Toast(title: "Not Authorized", message: "You are not authorized to report as a driver.", duration: 5).show()
                 } else {
                     showSelections(menuItem)
                 }
@@ -259,7 +259,7 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
         let master = masterController!.master
         let defaultMaster = mainController?.configurator.getDefaultMaster()
         var submenu : [MenuItem] = [
-            MenuItem(title: "Select.", action: "busme", target: self),
+            MenuItem(title: "Select", action: "busme", target: self),
             MenuItem(title: "Set \(master.name!) as your default.", action: "busme", target: self),
         ]
         if defaultMaster != nil {

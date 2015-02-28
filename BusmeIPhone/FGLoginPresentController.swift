@@ -10,9 +10,11 @@ import Foundation
 
 class FGLoginPresentController : BuspassEventListener {
     var api : BuspassApi
+    var master : Master
     
-    init(api : BuspassApi) {
+    init(api : BuspassApi, master: Master) {
         self.api = api
+        self.master = master
         api.uiEvents.registerForEvent("LoginEvent", listener: self)
     }
     
@@ -104,10 +106,10 @@ class FGLoginPresentController : BuspassEventListener {
         let login = eventData.loginManager.login
         switch login.loginState {
         case LoginState.LS_LOGIN_SUCCESS:
-            Toast(title: "Logged In", message: "You are logged in as \(login.roleIntent)", duration: 4).show()
+            Toast(title: "Logged In", message: "You are logged in.", duration: 5).show()
             break
         case LoginState.LS_REGISTER_SUCCESS:
-            Toast(title: "Registered", message: "You are registered and logged in as \(login.roleIntent)", duration: 4).show()
+            Toast(title: "Registered", message: "You are now registered and logged in. Be sure to go to the Busme! website for \(master.name!) and fill in other aspects of your Busme! identity.", duration: 15).show()
             break
         default:
             if (BLog.ERROR) { BLog.logger.error("Bad LoginState \(login.loginState)") }
