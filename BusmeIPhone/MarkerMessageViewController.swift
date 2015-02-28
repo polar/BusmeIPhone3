@@ -73,8 +73,8 @@ class MarkerMessageViewController : UIViewController, UIAlertViewDelegate {
             
         case B_REMOVE:
             if BLog.DEBUG { BLog.logger.debug("B_REMOVE \(buttonIndex)") }
-            eventData.resolve = MarkerEvent.R_CANCEL
-            api?.uiEvents.postEvent("MarkerEvent", data: eventData);
+            eventData.resolve = MarkerEvent.R_REMOVE
+            api?.uiEvents.postEvent("MarkerEvent", data: eventData)
             removeFromController()
             break
 

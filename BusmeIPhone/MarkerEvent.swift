@@ -109,11 +109,11 @@ class MarkerForeground : BuspassEventListener {
             break;
         case MarkerEvent.R_REMIND:
             markerPresentationController?.onDismiss(true, markerInfo: markerInfo, time: time)
-            api.uiEvents.postEvent("MarkerEvent", data: eventData)
+            api.bgEvents.postEvent("MarkerEvent", data: eventData)
             break;
         case MarkerEvent.R_REMOVE:
             markerPresentationController?.onDismiss(false, markerInfo: markerInfo, time: time)
-            api.uiEvents.postEvent("MarkerEvent", data: eventData)
+            api.bgEvents.postEvent("MarkerEvent", data: eventData)
             break;
         default:
             break;
@@ -122,10 +122,32 @@ class MarkerForeground : BuspassEventListener {
     
     // From the MarkerBackground Thread
     func onResolved(eventData : MarkerEventData) {
-        let evd = eventData.dup()
-        api.uiEvents.postEvent("MarkerPresent:webDisplay", data: evd)
-        evd.state = MasterMessageEvent.S_DONE
-        api.bgEvents.postEvent("MarkerEvent", data: evd.dup())
+        switch eventData.resolve {
+        case MarkerEvent.R_GO:
+            var evd = eventData.dup()
+            api.uiEvents.postEvent("MarkerPresent:webDisplay", data: evd)
+            evd = evd.dup()
+            evd.state = MasterMessageEvent.S_DONE
+            api.bgEvents.postEvent("MarkerEvent", data: evd)
+            break
+        case MarkerEvent.R_REMOVE:
+            var evd = eventData.dup()
+            api.uiEvents.postEvent("MarkerPresent:dismiss", data: evd)
+            evd = evd.dup()
+            evd.state = MasterMessageEvent.S_DONE
+            api.bgEvents.postEvent("MarkerEvent", data: evd)
+            break
+        case MarkerEvent.R_CANCEL, MarkerEvent.R_REMIND:
+            var evd = eventData.dup()
+            evd.state = MasterMessageEvent.S_DONE
+            api.bgEvents.postEvent("MarkerEvent", data: evd)
+            break
+        default:
+            var evd = eventData.dup()
+            evd.state = MasterMessageEvent.S_DONE
+            api.bgEvents.postEvent("MarkerEvent", data: evd)
+            break
+        }
     }
     
     func onError(eventData : MarkerEventData) {

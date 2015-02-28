@@ -148,7 +148,7 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
     func startRegister(menuItem : MenuItem) {
         if masterController!.api.isLoggedIn() {
             let login = masterController!.api.loginCredentials!
-            UIAlertView(title: "Already Logged In", message: "You are already logged in as \(login.roleIntent). Please log out before trying to create a new user", delegate: nil, cancelButtonTitle: "OK").show()
+            UIAlertView(title: "Already Logged In", message: "You are already logged in as \(login.roleIntent). Please log out before trying to create a new user.", delegate: nil, cancelButtonTitle: "OK").show()
         } else {
             register(menuItem)
         }
@@ -159,7 +159,7 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
             login(menuItem)
         } else {
             let login = masterController!.api.loginCredentials!
-            Toast(title: "Already Logged In", message: "You are already logged in as \(login.roleIntent)", duration : 2).show()
+            Toast(title: "Already Logged In", message: "You are already logged in as \(login.roleIntent).", duration : 5).show()
         }
     }
     
@@ -183,6 +183,7 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
     }
     
     func forgetMe(menuItem: MenuItem) {
+        let master = masterController!.master
         let evd = JourneyEventData(reason: JourneyEvent.R_FORCED)
         masterController?.api.bgEvents.postEvent("JourneyStopPosting", data: evd)
         navigationController?.popToRootViewControllerAnimated(true)
@@ -194,7 +195,7 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
         if slug != nil {
             MasterLogin.forget(slug!)
         }
-        Toast(title: "Forget Me", message: "Your Busme! identity and credentials have been removed from the device.", duration: 3).show()
+        Toast(title: "Forget Me", message: "Your Busme! identity and credentials have been removed from the device for \(master.name!).", duration: 5).show()
     }
     
     func startReporting(menuItem : MenuItem) {
@@ -204,19 +205,19 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
                 login(menuItem)
             } else {
                 if (menuItem.title == "Driver" && !masterController!.api.loginCredentials!.hasRole("driver")) {
-                    Toast(title: "Not Authorized", message: "You are authorized as a driver", duration: 5).show()
+                    Toast(title: "Not Authorized", message: "You are authorized as a driver.", duration: 5).show()
                 } else {
                     showSelections(menuItem)
                 }
             }
         } else {
-            Toast(title: "Need GPS", message: "We have not yet gotten GPS locations from your device", duration: 3).show()
+            Toast(title: "Need GPS", message: "We have not yet gotten GPS locations from your device.", duration: 5).show()
         }
     }
     
     func showSelections(menuItem : MenuItem) {
         if (!masterController!.journeyVisibilityController.hasCurrentLocation()) {
-            Toast(title: "No Location", message: "We do not have a GPS location for your device. Please try later", duration: 4).show()
+            Toast(title: "No Location", message: "We do not have a GPS location for your device. Please try later.", duration: 5).show()
             menuItem.navigationController?.popToRootViewControllerAnimated(true)
         } else {
             let role = menuItem.title == "Driver" ? "driver" : "passenger"
@@ -225,15 +226,19 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
                 var viewController = JourneyPostingSelectionView(api: masterController!.api, role: role, journeyDisplays: jds)
                 menuItem.navigationController?.pushViewController(viewController, animated: true)
             } else {
-                Toast(title: "No Selections", message: "There are no journeys within your location", duration: 3).show()
+                Toast(title: "No Selections", message: "There are no active journeys within your location.", duration: 5).show()
                 menuItem.navigationController?.popToRootViewControllerAnimated(true)
             }
         }
     }
     
     func stopReporting(menuItem : MenuItem) {
-        let evd = JourneyEventData(reason: JourneyEvent.R_FORCED)
-        masterController?.api.bgEvents.postEvent("JourneyStopPosting", data: evd)
+        if masterController!.journeyLocationPoster.isPosting() {
+            let evd = JourneyEventData(reason: JourneyEvent.R_FORCED)
+            masterController?.api.bgEvents.postEvent("JourneyStopPosting", data: evd)
+        } else {
+            Toast(title: "Not Reporting", message: "You were not reporting your location.", duration: 5).show()
+        }
         navigationController?.popToRootViewControllerAnimated(true)
     }
     
@@ -244,30 +249,42 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
         if (masterController?.api.isLoggedIn() != nil) {
             let evd1 = LoginEventData(loginManager: masterController!.api.loginManager!)
             masterController?.api.bgEvents.postEvent("Logout", data: evd1)
-            Toast(title: "Logout", message: "Logging out", duration: 3).show()
+            Toast(title: "Logout", message: "You have been logged out.", duration: 3).show()
         } else {
-            Toast(title: "Logout", message: "Not logged in", duration: 3).show()
+            Toast(title: "Logout", message: "You are not currently logged in", duration: 3).show()
         }
     }
     
     func busmeTransitMenu() -> MenuItem {
-        let submenu : [MenuItem] = [
-            MenuItem(title: "Select", action: "busme", target: self),
-            MenuItem(title: "Save As Default", action: "busme", target: self),
-            MenuItem(title: "Remove As Default", action: "busme", target: self),
-            MenuItem(title: "Store", action: "busme", target: self),
-            MenuItem(title: "Reload", action: "busme", target: self)
+        let master = masterController!.master
+        let defaultMaster = mainController?.configurator.getDefaultMaster()
+        var submenu : [MenuItem] = [
+            MenuItem(title: "Select.", action: "busme", target: self),
+            MenuItem(title: "Set \(master.name!) as your default.", action: "busme", target: self),
         ]
+        if defaultMaster != nil {
+            submenu.append(
+                MenuItem(title: "Unset \(defaultMaster!.name!) as your default.", action: "busme", target: self)
+            )
+        }
+        if BLog.DEBUG {
+            submenu.extend([
+                MenuItem(title: "Store", action: "busme", target: self),
+                MenuItem(title: "Reload", action: "busme", target: self)
+            ])
+        }
         return MenuItem(title: "Busme Transit Systems", submenu: submenu)
     }
     
     func busme(menuItem : MenuItem) {
         let title = menuItem.title
-        if title == "Select" {
+        
+        // You have got to be fucking kidding me. Figuring out whether a string starts with another string. Geez.
+        if title.rangeOfString("Select") != nil && title.rangeOfString("Select")!.startIndex == title.startIndex {
             busmeSelect(menuItem)
-        } else if title == "Save As Default" {
+        } else if title.rangeOfString("Set") != nil && title.rangeOfString("Set")!.startIndex == title.startIndex {
             busmeSaveAsDefault(menuItem)
-        } else if title == "Remove As Default" {
+        } else if title.rangeOfString("Unset") != nil && title.rangeOfString("Unset")!.startIndex == title.startIndex {
             busmeRemoveAsDefault(menuItem)
         } else if title == "Store" {
             store(menuItem)
@@ -277,11 +294,15 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
     }
     
     func reloadStore(menuItem : MenuItem) {
-        mainController!.masterController?.reloadStores();
+        mainController!.masterController?.reloadStores()
+        Toast(title: "Master reload", message: "\(masterController?.master.name!) is reloaded", duration: 5).show()
+        menuItem.navigationController?.popToRootViewControllerAnimated(true)
     }
     
     func store(menuItem : MenuItem) {
         mainController!.masterController?.storeMaster()
+        Toast(title: "Master reload", message: "\(masterController?.master.name!) is stored", duration: 5).show()
+        menuItem.navigationController?.popToRootViewControllerAnimated(true)
     }
     
     func busmeSelect(menuItem : MenuItem) {
@@ -292,13 +313,15 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
         // TODO Possible Error
         let master = masterController!.master
         mainController!.configurator.saveAsDefaultMaster(master)
-        Toast(title: "Saved", message: "\(master.name!) is now your default Busme Transit Site", duration: 2).show()
+        Toast(title: "Default Set", message: "\(master.name!) is now your default Busme Transit Site", duration: 5).show()
+        menuItem.navigationController?.popToRootViewControllerAnimated(true)
     }
     
     func busmeRemoveAsDefault(menuItem : MenuItem) {
         let master = masterController!.master
         mainController!.configurator.removeAsDefault(master)
-        Toast(title: "Removed", message: "\(master.name!) is no longer your default Busme Transit Site. You will be asked to select next time", duration: 2).show()
+        Toast(title: "Default Unset", message: "\(master.name!) is no longer your default Busme Transit Site. You will be asked to select one next time.", duration: 5).show()
+        menuItem.navigationController?.popToRootViewControllerAnimated(true)
     }
     
     func nearbyMenu() -> MenuItem {
@@ -331,8 +354,9 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
         if nearBy != stateNearBy {
             masterController!.journeyVisibilityController.setNearbyState(nearBy)
             masterController!.api.uiEvents.postEvent("VisibilityChanged", data: MainEventData())
-            Toast(title : "Nearby Routes", message : nearBy == 0 ? "Now showing all routes" : "Now showing only routes within \(Int(nearBy)) feet.", duration: 1).show()
+            Toast(title : "Nearby Routes", message : nearBy == 0 ? "Now showing all routes." : "Now showing only routes within \(Int(nearBy)) feet.", duration: 5).show()
         }
+        menuItem.navigationController?.popToRootViewControllerAnimated(true)
     }
     
     func activeMenu() -> MenuItem {
@@ -357,8 +381,9 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
         if state.onlyActive != active {
             masterController!.journeyVisibilityController.setOnlyActiveState(active)
             masterController!.api.uiEvents.postEvent("VisibilityChanged", data: MainEventData())
-            Toast(title : "Active Buses", message : active ? "Now showing only active buses and routes" : "Now showing all routes", duration: 1).show()
+            Toast(title : "Active Buses", message : active ? "Now showing only active buses and routes." : "Now showing all routes.", duration: 5).show()
         }
+        menuItem.navigationController?.popToRootViewControllerAnimated(true)
     }
     
     func reloadMenu() -> MenuItem {
@@ -375,14 +400,15 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
         if title == "Reload All" {
             masterController!.api.uiEvents.postEvent("StopTimers", data: MainEventData())
             masterController!.api.bgEvents.postEvent("Master:reload", data: MasterEventData())
-            Toast(title: "Reload All", message: "", duration: 1).show()
+            Toast(title: "Reload All", message: "", duration: 5).show()
         } else if title == "Reset Seen Markers" {
             masterController!.api.bgEvents.postEvent("Master:resetSeenMarkers", data: MasterEventData())
-            Toast(title: "Reset Seen Markers", message: "The markers you have ingored will now reappear if appropriate and not expired.", duration: 2).show()
+            Toast(title: "Reset Seen Markers", message: "The markers you have ingored will now reappear if appropriate and not expired.", duration: 5).show()
         } else if title == "Reset Seen Messages"{
             masterController!.api.bgEvents.postEvent("Master:resetSeenMessages", data: MasterEventData())
-            Toast(title: "Reset Seen Markers", message: "The messages you have marked as seen will now reappear if and when scheduled and not expired.", duration: 2).show()
+            Toast(title: "Reset Seen Markers", message: "The messages you have marked as seen will now reappear if and when they are scheduled and not expired.", duration: 5).show()
         }
+        menuItem.navigationController?.popToRootViewControllerAnimated(true)
     }
     
     deinit {
