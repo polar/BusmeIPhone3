@@ -123,6 +123,7 @@
 		F3CCC39E1A9F9BDE003831B3 /* JourneyPostingRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3CCC39D1A9F9BDE003831B3 /* JourneyPostingRecognizer.swift */; };
 		F3CCC3A11A9FD07D003831B3 /* FGJourneyPostingRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3CCC3A01A9FD07D003831B3 /* FGJourneyPostingRecognizer.swift */; };
 		F3CCC3A31A9FE6BA003831B3 /* TestLocationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3CCC3A21A9FE6BA003831B3 /* TestLocationController.swift */; };
+		F3CCC3A51AA20F53003831B3 /* IconographyScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3CCC3A41AA20F53003831B3 /* IconographyScreen.swift */; };
 		F3E8A9561A696EFC0034F17E /* MasterMainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E8A9551A696EFC0034F17E /* MasterMainMenu.swift */; };
 		F3E8A9591A69BE110034F17E /* BannerTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E8A9581A69BE110034F17E /* BannerTimer.swift */; };
 		F3E8A95B1A69C2C90034F17E /* UpdateTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E8A95A1A69C2C90034F17E /* UpdateTimer.swift */; };
@@ -314,6 +315,7 @@
 		F3CCC39D1A9F9BDE003831B3 /* JourneyPostingRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JourneyPostingRecognizer.swift; sourceTree = "<group>"; };
 		F3CCC3A01A9FD07D003831B3 /* FGJourneyPostingRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FGJourneyPostingRecognizer.swift; sourceTree = "<group>"; };
 		F3CCC3A21A9FE6BA003831B3 /* TestLocationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestLocationController.swift; sourceTree = "<group>"; };
+		F3CCC3A41AA20F53003831B3 /* IconographyScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IconographyScreen.swift; sourceTree = "<group>"; };
 		F3E8A9551A696EFC0034F17E /* MasterMainMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterMainMenu.swift; sourceTree = "<group>"; };
 		F3E8A9581A69BE110034F17E /* BannerTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BannerTimer.swift; sourceTree = "<group>"; };
 		F3E8A95A1A69C2C90034F17E /* UpdateTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateTimer.swift; sourceTree = "<group>"; };
@@ -429,6 +431,7 @@
 				F3263BCB1A950BA6001D22A1 /* FGLoginPresentController.swift */,
 				F3CCC3A01A9FD07D003831B3 /* FGJourneyPostingRecognizer.swift */,
 				F3CCC3A21A9FE6BA003831B3 /* TestLocationController.swift */,
+				F3CCC3A41AA20F53003831B3 /* IconographyScreen.swift */,
 			);
 			name = MasterMapScreen;
 			sourceTree = "<group>";
@@ -879,6 +882,7 @@
 				F3140F5C1A61AAC00024A65D /* Location.swift in Sources */,
 				F35E28F81A64DE75004DF0D7 /* JourneySyncRemoteInvocation.swift in Sources */,
 				F398020C1A5A424200D6C2B0 /* MarkerInfo.swift in Sources */,
+				F3CCC3A51AA20F53003831B3 /* IconographyScreen.swift in Sources */,
 				F37602141A76C89E002976B7 /* MasterOverlayView.swift in Sources */,
 				F3C33CDE1A6627E600EF8E24 /* DiscoverEventData.swift in Sources */,
 				F39802081A5A08A400D6C2B0 /* BuspasEvents.swift in Sources */,

@@ -9,14 +9,40 @@
 import Foundation
 
 struct JourneyIcon {
-    static let ROUTE_ICON = 1
-    static let ROUTE_ICON_ACTIVE = 2
-    static let PURPLE_DOT_ICON = 3
-    static let BLUE_CIRCLE_ICON = 4
-    static let GREEN_ARROW_ICON = 5
-    static let BLUE_ARROW_ICON = 6
-    static let BUS_ICON_ACTIVE = 7
-    static let RED_ARROW_ICON = 8
+    
+    static let imageNames = [
+        "route_icon.png",
+        "route_icon_active.png",
+        "purple_dot_icon.png",
+        "blue_circle_icon.png",
+        "green_arrow_icon.png",
+        "blue_arrow_icon.png",
+        "bus_icon_active.png",
+        "red_arrow_icon.png"
+    ]
+    
+    static let ROUTE_ICON = 0
+    static let ROUTE_ICON_ACTIVE = 1
+    static let PURPLE_DOT_ICON = 2
+    static let BLUE_CIRCLE_ICON = 3
+    static let GREEN_ARROW_ICON = 4
+    static let BLUE_ARROW_ICON = 5
+    static let BUS_ICON_ACTIVE = 6
+    static let RED_ARROW_ICON = 7
+    
+    static var imageCache : [String:UIImage] = [:]
+    
+    static func getIconImage(index : Int) -> UIImage? {
+        let imageName = imageNames[index]
+        var image = imageCache[imageName]
+        if image == nil {
+            image = UIImage(named: imageNames[index])
+            if image != nil {
+                imageCache[imageName] = image
+            }
+        }
+        return image
+    }
 }
 
 protocol OnVisibilityListener : class {
@@ -73,7 +99,7 @@ class JourneyDisplay {
             var distance = route.lastKnownDistance
             var selected : DGeoPoint?
             if distanceFromRoute(point!) < 60 {
-                let dpoints = GeoPathUtils.whereOnPath(route.getPaths()[0], buffer: 60, point: point!)
+                let dpoints = GeoPathUtils.whereOnPath(route.getPaths()[0], buffer: route.distanceTolerance, point: point!)
                 for dp in dpoints {
                     if dp.distance > route.lastKnownDistance {
                         if dp.distance <= distance {

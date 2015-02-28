@@ -58,9 +58,10 @@ class TestPostingController : BuspassEventListener {
                         }
                         if loc != nil && postingRoute!.getPaths().count > 0 {
                             let offPath = GeoPathUtils.offPath(postingRoute!.getPaths()[0], point: loc!)
-                            let dpoints = GeoPathUtils.whereOnPath(postingRoute!.getPaths()[0], buffer: 140, point: loc!)
+                            let dpoints = GeoPathUtils.whereOnPath(postingRoute!.getPaths()[0], buffer: postingRoute!.distanceTolerance, point: loc!)
                             if dpoints.count > 0 {
                                 let dpoint = dpoints[0]
+                                // The 200 is arbitrary here.
                                 let jpoint = GeoPathUtils.whereOnPathByDistance(postingRoute!.getPaths()[0], distance: dpoint.distance + 200)
                                 if jpoint != nil {
                                     let location = Location(name: "\(UtilsTime.current())", lon: jpoint!.geoPoint.getLongitude(), lat: jpoint!.geoPoint.getLatitude())

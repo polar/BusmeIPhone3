@@ -30,6 +30,8 @@ class VisualState {
 }
 
 class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJourneyDisplayAddedListener, BuspassEventListener {
+    let JOURNEY_BY_LOCATION_TOLLERANCE = 200.0
+    
     unowned var api : BuspassApi
     unowned var journeyDisplayController : JourneyDisplayController
     
@@ -124,7 +126,7 @@ class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJourneyDi
                 for display in getJourneyDisplays() {
                     var isNearBy = false
                     for path in display.route.getPaths() {
-                        if GeoPathUtils.isOnPath(path, buffer: 60, c3: point) {
+                        if GeoPathUtils.isOnPath(path, buffer: display.route.distanceTolerance, c3: point) {
                             isNearBy = true
                             changed = changed || setVisibilityJourneyDisplay(state, display: display)
                             break
@@ -201,7 +203,7 @@ class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJourneyDi
     
     func getJourneysAtCurrentLocation() -> [JourneyDisplay] {
         if currentLocation != nil {
-            return getJourneysByLocation(currentLocation!, buffer: 200)
+            return getJourneysByLocation(currentLocation!, buffer: JOURNEY_BY_LOCATION_TOLLERANCE)
         } else {
             return [JourneyDisplay]()
         }
@@ -334,7 +336,7 @@ class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJourneyDi
                     } else {
                         for point in state.selectedLocations {
                             for path in display.route.getPaths() {
-                                if GeoPathUtils.isOnPath(path, buffer: 60, c3: point) {
+                                if GeoPathUtils.isOnPath(path, buffer: display.route.distanceTolerance, c3: point) {
                                     state.selectedRoutes.addObject(display)
                                     return true
                                 }
@@ -353,7 +355,7 @@ class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJourneyDi
                     } else {
                         for point in state.selectedLocations {
                             for path in display.route.getPaths() {
-                                if GeoPathUtils.isOnPath(path, buffer: 60, c3: point) {
+                                if GeoPathUtils.isOnPath(path, buffer: display.route.distanceTolerance, c3: point) {
                                     state.selectedRoutes.addObject(display)
                                     return true
                                 }

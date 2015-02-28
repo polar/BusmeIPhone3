@@ -70,10 +70,10 @@ class JourneyPostingRecognizer : BuspassEventListener {
         if route.isJourney() {
             if locationsPath.count > 2 {
                 for path in route.getPaths() {
-                    var candidates = GeoPathUtils.whereOnPath(path, buffer: 60, point: geoPoint)
+                    var candidates = GeoPathUtils.whereOnPath(path, buffer: route.distanceTolerance, point: geoPoint)
                     for(var i = locationsPath.count-2; i > 0; i--) {
                         let (p,t) = locationsPath[i]
-                        let dpoints = GeoPathUtils.whereOnPath(path, buffer: 60, point: p)
+                        let dpoints = GeoPathUtils.whereOnPath(path, buffer: route.distanceTolerance, point: p)
                         var cds : [DGeoPoint] = []
                         for dp in dpoints {
                             for cd in candidates {

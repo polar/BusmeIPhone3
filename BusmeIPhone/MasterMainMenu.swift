@@ -32,7 +32,8 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
             busmeTransitMenu(),
             nearbyMenu(),
             activeMenu(),
-            reloadMenu()]
+            reloadMenu(),
+            helpMenu()]
     }
     
     func menuItemSelected(menuItem: MenuItem) -> Bool {
@@ -49,8 +50,30 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
             reload(menuItem)
         } else if action == "recognize" {
             recognize(menuItem)
+        } else if action == "help" {
+            help(menuItem)
         }
         return true
+    }
+    
+    func helpMenu() -> MenuItem {
+        var submenu : [MenuItem] = [
+            MenuItem(title: "Iconography", action: "help", target:self),
+            MenuItem(title: "About Busme!", action: "help", target:self)
+        ]
+        return MenuItem(title: "Help", submenu: submenu)
+    }
+    
+    func help(menuItem: MenuItem) {
+        if menuItem.title == "Iconography" {
+            let controller = IconographyScreen().initIt()
+            menuItem.navigationController?.pushViewController(controller, animated: true)
+        } else if menuItem.title == "About Busme!" {
+            menuItem.navigationController?.popToRootViewControllerAnimated(true)
+            
+            let msg = "Busme! iPhone Version \(APP_VERSION)\n(C) Copyright 2015, Adiron, LLC. All rights reserved."
+            Toast(title: "About Busme!", message: msg, duration: 10).show()
+        }
     }
     
     func reportingMenu() -> MenuItem {

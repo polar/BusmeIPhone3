@@ -49,6 +49,7 @@ class Route : Storage {
     var timeZone : String?
     var reported : Bool = false
     var reporting : Bool = false
+    var distanceTolerance : Double = 60.0
     
     init(tag : Tag) {
         super.init()
@@ -91,6 +92,9 @@ class Route : Storage {
         self.onRoute = coder.decodeBoolForKey("onRoute")
         self.timeZone = coder.decodeObjectForKey("timeZone") as? String
         self.reported = coder.decodeBoolForKey("reported")
+        // Added, should be removed and just set up straight after progress.
+        let dt = coder.decodeDoubleForKey("distanceTolerance")
+        if dt != 0.0 { self.distanceTolerance = dt }
     }
     
     func encodeWithCoder(coder : NSCoder) {
@@ -127,6 +131,7 @@ class Route : Storage {
         coder.encodeBool(onRoute, forKey: "onRoute")
         if (timeZone != nil) { coder.encodeObject(timeZone!, forKey: "timeZone") }
         coder.encodeBool(reported, forKey: "reported")
+        coder.encodeDouble(distanceTolerance, forKey: "distanceTolerance")
     }
     
     override func preSerialize(api : ApiBase, time : TimeValue64) {
@@ -461,6 +466,11 @@ class Route : Storage {
         let patternids = tag.attributes["patternids"]
         if (patternids != nil) {
             self.patternids = patternids!.componentsSeparatedByString(",")
+        }
+        
+        let disT = tag.attributes["distanceTolerance"] as NSString?
+        if (disT != nil) {
+            self.distanceTolerance = disT!.doubleValue
         }
         
         if isValid() {

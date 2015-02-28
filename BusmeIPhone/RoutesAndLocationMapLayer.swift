@@ -89,7 +89,7 @@ class RouteAndLocationsMapLayer {
             if loc != nil {
                 currentLocation = GeoCalc.toGeoPoint(loc!)
                 currentBearing = loc!.bearing
-                let points = GeoPathUtils.whereOnPath(journeyDisplay.route.getPaths()[0], buffer: 60.0, point: currentLocation!)
+                let points = GeoPathUtils.whereOnPath(journeyDisplay.route.getPaths()[0], buffer: journeyDisplay.route.distanceTolerance, point: currentLocation!)
                 for gp in points {
                     let offPath = GeoPathUtils.offPath(journeyDisplay.route.getPaths()[0], point: gp.geoPoint)
                     if gp.distance > 0 {

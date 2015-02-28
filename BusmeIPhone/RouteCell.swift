@@ -11,15 +11,6 @@ import UIKit
 
 class RouteCell : UITableViewCell {
     var journeyDisplay : JourneyDisplay?
-    
-    let ICONS = ["route_icon.png",
-        "route_icon_active.png",
-        "purple_dot_icon.png",
-        "blue_circle_icon.png",
-        "green_arrow_icon.png",
-        "blue_arrow_icon.png",
-        "bus_icon_active.png",
-        "red_arrow_icon.png"]
 
     required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -100,7 +91,7 @@ class RouteCell : UITableViewCell {
     }
     
     func handleJourneyDisplay(journeyDisplay : JourneyDisplay) {
-        iconView.image = UIImage(named: ICONS[journeyDisplay.getIcon()-1])
+        iconView.image = JourneyIcon.getIconImage(journeyDisplay.getIcon())
         if journeyDisplay.route.isJourney() {
             prepareJourney(journeyDisplay)
         } else {
