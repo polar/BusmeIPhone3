@@ -230,7 +230,7 @@ class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJourneyDi
         return selected.sorted{(x: JourneyDisplay,y: JourneyDisplay) in x.compareTo(y) < 0}
     }
     
-    func onLocationSelected(geoPoint : GeoPoint, buffer : Double) -> Bool {
+    func onLocationSelected(geoPoint : GeoPoint) -> Bool {
         var atLeastOneSelected = false
         var selected = [JourneyDisplay]()
         var unselected = [JourneyDisplay]()
@@ -238,7 +238,7 @@ class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJourneyDi
             if display.isPathVisible() {
                 var isSelected = false
                 for path in display.route.getPaths() {
-                    if GeoPathUtils.isOnPath(path, buffer: buffer, c3: geoPoint) {
+                    if GeoPathUtils.isOnPath(path, buffer: display.route.distanceTolerance, c3: geoPoint) {
                         isSelected = true
                         break
                     }

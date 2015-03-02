@@ -147,6 +147,12 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate, CLLocationManagerDe
     
     func onClick(gestureRecognizer : UIGestureRecognizer) {
         if BLog.DEBUG { BLog.logger.debug("onClick\(gestureRecognizer.locationInView(mapView))") }
+        if mapView != nil {
+            let point = gestureRecognizer.locationInView(mapView)
+            let coord = mapView.convertPoint(point, toCoordinateFromView: mapView!)
+            masterController.journeyVisibilityController.onLocationSelected(coord)
+            masterController.api.uiEvents.postEvent("VisibilityChanged", data: MasterEventData())
+        }
     }
     
     func onPress(gestureRecognizer : UIGestureRecognizer) {
