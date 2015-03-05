@@ -69,7 +69,6 @@
 		F35E28F81A64DE75004DF0D7 /* JourneySyncRemoteInvocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35E28F71A64DE75004DF0D7 /* JourneySyncRemoteInvocation.swift */; };
 		F35E28FC1A65731F004DF0D7 /* RequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35E28FB1A65731F004DF0D7 /* RequestController.swift */; };
 		F35F75431A59D93200283F1C /* BannerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35F75421A59D93200283F1C /* BannerInfo.swift */; };
-		F36316911A5C63D2002CAE61 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F363168C1A5C60CC002CAE61 /* Alamofire.framework */; };
 		F36316921A5C63D2002CAE61 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F363168C1A5C60CC002CAE61 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F363169A1A5CF904002CAE61 /* JourneyLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36316991A5CF904002CAE61 /* JourneyLocation.swift */; };
 		F363169D1A5D80E8002CAE61 /* DiscoverApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = F363169C1A5D80E8002CAE61 /* DiscoverApi.swift */; };
@@ -102,6 +101,9 @@
 		F39802081A5A08A400D6C2B0 /* BuspasEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39802071A5A08A400D6C2B0 /* BuspasEvents.swift */; };
 		F398020A1A5A40FF00D6C2B0 /* MessageSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39802091A5A40FF00D6C2B0 /* MessageSpec.swift */; };
 		F398020C1A5A424200D6C2B0 /* MarkerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F398020B1A5A424200D6C2B0 /* MarkerInfo.swift */; };
+		F39CED321AA7A2A400D67564 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F39CED311AA7A2A400D67564 /* Foundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F39CED341AA7A4DD00D67564 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F39CED331AA7A4DD00D67564 /* CFNetwork.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F39CED361AA7A4EF00D67564 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F39CED351AA7A4EF00D67564 /* UIKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F3B3B2D61A93D1B60058B356 /* AboutDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B3B2D51A93D1B60058B356 /* AboutDialog.swift */; };
 		F3B3B2D81A93E0830058B356 /* JourneyPostingSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B3B2D71A93E0830058B356 /* JourneyPostingSelectionView.swift */; };
 		F3B3B2DB1A9426900058B356 /* FormController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B3B2DA1A9426900058B356 /* FormController.swift */; };
@@ -289,6 +291,9 @@
 		F39802071A5A08A400D6C2B0 /* BuspasEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BuspasEvents.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F39802091A5A40FF00D6C2B0 /* MessageSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSpec.swift; sourceTree = "<group>"; };
 		F398020B1A5A424200D6C2B0 /* MarkerInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MarkerInfo.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		F39CED311AA7A2A400D67564 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		F39CED331AA7A4DD00D67564 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		F39CED351AA7A4EF00D67564 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F3B3B2D51A93D1B60058B356 /* AboutDialog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutDialog.swift; sourceTree = "<group>"; };
 		F3B3B2D71A93E0830058B356 /* JourneyPostingSelectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JourneyPostingSelectionView.swift; sourceTree = "<group>"; };
 		F3B3B2DA1A9426900058B356 /* FormController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormController.swift; sourceTree = "<group>"; };
@@ -347,8 +352,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F39CED361AA7A4EF00D67564 /* UIKit.framework in Frameworks */,
+				F39CED321AA7A2A400D67564 /* Foundation.framework in Frameworks */,
+				F39CED341AA7A4DD00D67564 /* CFNetwork.framework in Frameworks */,
 				C8BE4554CCF547B7FD7FE6B2 /* libPods.a in Frameworks */,
-				F36316911A5C63D2002CAE61 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -358,6 +365,9 @@
 		06482B5AED0455B91E1FA0D1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F39CED351AA7A4EF00D67564 /* UIKit.framework */,
+				F39CED331AA7A4DD00D67564 /* CFNetwork.framework */,
+				F39CED311AA7A2A400D67564 /* Foundation.framework */,
 				F36316861A5C60CC002CAE61 /* Alamofire.xcodeproj */,
 				4E7B68B852D084A31CAB8A6B /* libPods.a */,
 			);
@@ -740,6 +750,7 @@
 					};
 					F3C8FE4B1A5359B0009FF404 = {
 						CreatedOnToolsVersion = 6.1;
+						DevelopmentTeam = 548GD5VDB9;
 					};
 				};
 			};
@@ -1069,7 +1080,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos8.1;
+				SDKROOT = iphoneos7.1;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1092,11 +1103,13 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -1107,7 +1120,8 @@
 				"INFOPLIST_FILE[sdk=*]" = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				SDKROOT = iphoneos8.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos7.1;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1117,9 +1131,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4D6944093EB05AC881FF119D /* Pods.debug.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				GCC_DYNAMIC_NO_PIC = YES;
 				INFOPLIST_FILE = BusmeIPhone/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1133,12 +1150,16 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 67BCDFAB8FCC113F4A9613FC /* Pods.release.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				GCC_DYNAMIC_NO_PIC = YES;
 				INFOPLIST_FILE = BusmeIPhone/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "BusmeIPhone/BusmeIPhone-Bridging-Header.h";
 			};

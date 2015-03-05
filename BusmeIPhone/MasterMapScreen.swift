@@ -155,8 +155,26 @@ class MasterMapScreen : UIViewController, MKMapViewDelegate, CLLocationManagerDe
         }
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        if BLog.DEBUG { BLog.logger.debug("onPress\(onPressInProgress)") }
+        onPressInProgress = false
+    }
+    
+    var onPressInProgress = false
     func onPress(gestureRecognizer : UIGestureRecognizer) {
         if BLog.DEBUG { BLog.logger.debug("onPress\(gestureRecognizer.locationInView(mapView))") }
+        if !onPressInProgress && mapView != nil && masterOverlayView != nil && masterController.api.isLoggedIn() {
+            let point = gestureRecognizer.locationInView(mapView)
+            let coord = mapView.convertPoint(point, toCoordinateFromView: mapView!)
+            let mapPoint = MKMapPointForCoordinate(coord)
+            let hits = masterOverlayView!.getLocatorHits(mapPoint)
+            if hits.count > 0 {
+                let js = JourneyPostingSelectionView(api: masterController.api, role: masterController.api.loginCredentials!.roleIntent, journeyDisplays: hits)
+                onPressInProgress = true
+                navigationController?.pushViewController(js, animated: true)
+            }
+        }
     }
 
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {

@@ -24,6 +24,7 @@ struct JourneyEvent {
     static let R_SERVICE       = 4
     static let R_OFF_ROUTE     = 5
     static let R_NOT_AVAILABLE = 6
+    static let R_NO_GPS_UPDATE = 7
 }
 
 class JourneyEventData {
@@ -76,6 +77,8 @@ class JourneyLocationPoster : BuspassEventListener {
         api.bgEvents.registerForEvent("JourneyStartPosting", listener: self)
         api.bgEvents.registerForEvent("JourneyStopPosting", listener: self)
         api.bgEvents.registerForEvent("JourneyRemoved", listener: self)
+        
+        api.bgEvents.registerForEvent("Update", listener: self)
     }
     
     func unregisterForEvents() {
@@ -86,6 +89,7 @@ class JourneyLocationPoster : BuspassEventListener {
         api.bgEvents.unregisterForEvent("JourneyStartPosting", listener: self)
         api.bgEvents.unregisterForEvent("JourneyStopPosting", listener: self)
         api.bgEvents.unregisterForEvent("JourneyRemoved", listener: self)
+        api.bgEvents.unregisterForEvent("Update", listener: self)
     }
     
     func isPosting() -> Bool {
@@ -121,6 +125,12 @@ class JourneyLocationPoster : BuspassEventListener {
             if (evd != nil) {
                 onJourneyRemoved(evd!)
             }
+        } else if (eventName == "Update") {
+            let evd = event.eventData as? UpdateEventData
+            if (evd != nil) {
+                onUpdate(evd!)
+            }
+            
         }
     }
     
@@ -141,6 +151,8 @@ class JourneyLocationPoster : BuspassEventListener {
         self.startPoint = self.postingPathPoints.first
         self.endPoint = self.postingPathPoints.last
         postingRoute!.reporting = true
+        self.lastChecked = nil
+        self.isOffRoute = false
     }
     
     func endPosting(reason : Int = JourneyEvent.R_FORCED) {
@@ -148,9 +160,12 @@ class JourneyLocationPoster : BuspassEventListener {
             postingRoute!.reporting = false
             notifyOnRouteDone(reason)
             self.postingRoute = nil
+            self.lastChecked = nil
+            self.isOffRoute = false
         }
     }
     
+    var isOffRoute = false
     func processLocation(location : Location ) {
         if postingRoute != nil {
             if !alreadyPosting {
@@ -162,6 +177,21 @@ class JourneyLocationPoster : BuspassEventListener {
                 if location.speed > 5 && !alreadyStarted {
                     notifyAtRouteStart(location)
                     self.alreadyStarted = true
+                }
+            }
+            if postingRoute!.lastKnownLocation != nil {
+                let geoPoint = postingRoute!.lastKnownLocation!
+                if postingRoute!.getPaths().count > 0 {
+                    let path = postingRoute!.getPaths()[0]
+                    if GeoPathUtils.offPath(path, point: point) >= Double(api.offRouteDistanceThreshold) {
+                        isOffRoute = true
+                        notifyOffRoute(location)
+                    } else {
+                        if isOffRoute {
+                            isOffRoute = false
+                            notifyOnRoute(location)
+                        }
+                    }
                 }
             }
             postLocation(location)
@@ -225,6 +255,31 @@ class JourneyLocationPoster : BuspassEventListener {
     func onJourneyStopPosting(eventData : JourneyEventData) {
         if postingRoute != nil {
             endPosting(reason: eventData.reason)
+        }
+    }
+    
+    var lastChecked : TimeValue64?
+    func onUpdate(eventData : UpdateEventData) {
+        let now = UtilsTime.current()
+        if postingRoute != nil {
+            if currentLocation == nil {
+                notifyOnRouteDone(JourneyEvent.R_NO_GPS_UPDATE)
+            } else {
+                if (now - currentLocation!.time) > (api.updateRate * 3)  {
+                    notifyOnRouteDone(JourneyEvent.R_NO_GPS_UPDATE)
+                } else {
+                    if lastChecked != nil {
+                        if (now - lastChecked!) < api.offRouteTimeThreshold {
+                            notifyOnRouteDone(JourneyEvent.R_NO_GPS_UPDATE)
+                        } else {
+                            // We are fine
+                            lastChecked = now
+                        }
+                    } else {
+                        lastChecked = now
+                    }
+                }
+            }
         }
     }
     

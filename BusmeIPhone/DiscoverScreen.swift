@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import MapKit
 
-let APP_VERSION = "1.0.0"
+let APP_VERSION = "0.1.0"
 let PLATFORM_NAME = "iOS"
 
 class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDelegate, BuspassEventListener {
@@ -78,7 +78,7 @@ class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDelegate,
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(mapView)
+        view = mapView
         view.addSubview(directionLabelView!)
         directionLabelView!.userInteractionEnabled = false
             

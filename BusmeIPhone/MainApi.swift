@@ -12,6 +12,8 @@ let OPM_TEST = "test"
 let OPM_NORMAL = "normal"
 
 let NORMAL_URL = "https://busme-apis.herokuapp.com/apis/d1/get"
+let NORMAL_URL2 = "http://localhost/apis/d1/get"
+let NORMAL_URL1 = "http://Polars-MacBook-Air.local:3002/apis/d1/get"
 let TEST_URL = "https://busme-apis.herokuapp.com/apis/td1/get"
 
 class MainApi : ApiBase, EventsApi {

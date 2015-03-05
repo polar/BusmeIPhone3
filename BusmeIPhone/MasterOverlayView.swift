@@ -403,6 +403,19 @@ class MasterOverlayView : MKOverlayRenderer, BuspassEventListener {
         previousLocators[journeyDisplay.route.id!] = mapRect
     }
     
+    func getLocatorHits(mapPoint : MKMapPoint) -> [JourneyDisplay] {
+        var result = [JourneyDisplay]()
+        for (jdid,mapRect) in previousLocators {
+            if MKMapRectContainsPoint(mapRect, mapPoint) {
+                let jd = masterController.journeyDisplayController.journeyDisplayMap[jdid]
+                if jd != nil {
+                    result.append(jd!)
+                }
+            }
+        }
+        return result
+    }
+    
     deinit {
         if BLog.DEALLOC { Eatme.add(self); BLog.logger.debug("DEALLOC MasterOverlayView \(masterController.master.slug!)") }
     }

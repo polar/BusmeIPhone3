@@ -53,9 +53,10 @@ class FGJourneyPostingController : JourneyEventController {
         let route = eventData.route
         let name = route.name!
         let code = route.code!
-        let vid = route.vid == nil ? "" : " VID \(route.vid!)"
+        let vid = route.vid == nil ? "" : "\nVID \(route.vid!)"
         let startT = UtilsTime.hhmmaForTime(route.getStartTime())
         let endT = UtilsTime.hhmmaForTime(route.getEndTime())
+        let routeName = "Route \(route.code!): \(route.name!)\(vid)\n\(startT) - \(endT)"
         if eventData.reason != JourneyEvent.R_FORCED {
             var message = "Unknown Reason"
             switch(eventData.reason) {
@@ -69,10 +70,12 @@ class FGJourneyPostingController : JourneyEventController {
                 message = "The Journey has ended."
             case JourneyEvent.R_NOT_AVAILABLE:
                 message = "The Journey is no longer in service."
+            case JourneyEvent.R_NO_GPS_UPDATE:
+                message = "There are no good GPS updates for your phone"
             default:
                 message = "Unknown Reason"
             }
-            message = "Route \(route.code!) \(startT) - \(endT): " + message
+            message = "\(routeName)\n" + message
             Toast(title: "Stopped Posting Locations", message: message, duration: 10).show()
         } else {
             Toast(title: "Stopped Posting Locations", message: "at your request", duration: 2).show()

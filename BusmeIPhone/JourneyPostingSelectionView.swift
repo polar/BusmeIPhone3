@@ -26,6 +26,7 @@ class JourneyPostingSelectionView : UITableViewController, UIAlertViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationItem.title = "Select Reporting"
     }
     
     var needJourneyPostingRequestClear = true
@@ -57,26 +58,27 @@ class JourneyPostingSelectionView : UITableViewController, UIAlertViewDelegate {
     var currentJourneyDisplay : JourneyDisplay?
     func confirm(journeyDisplay: JourneyDisplay) {
         currentJourneyDisplay = journeyDisplay
-        let startTime = UtilsTime.hhmmaForTime(journeyDisplay.route.getStartTime())
-        let endTime = UtilsTime.hhmmaForTime(journeyDisplay.route.getEndTime())
-        let route = "\(journeyDisplay.route.code!) \(startTime) - \(endTime)"
-        let vid = journeyDisplay.route.vid == nil ? "" : "Vid \(journeyDisplay.route.vid): "
+        let route = journeyDisplay.route
+        let startTime = UtilsTime.hhmmaForTime(route.getStartTime())
+        let endTime = UtilsTime.hhmmaForTime(route.getEndTime())
+        let routeName = "\n\(route.code!) :\(route.name!)\n\(startTime) - \(endTime)"
+        let vid = journeyDisplay.route.vid == nil ? "" : "\nVid \(journeyDisplay.route.vid)\n"
 
         let ans = journeyDisplay.currentDistanceFromRoute()
         if ans != nil {
             let (point, dist) = ans!
             if dist > 100.0 {
-                UIAlertView(title: "Report on Route \(route)", message: "\(vid)You are \(dist) feet from the route. Do you still want to report?", delegate: self, cancelButtonTitle: "Cancel", otherButtonTitles: "Yes").show()
+                UIAlertView(title: "Report on Route \(routeName)", message: "\(vid)You are \(dist) feet from the route. Do you still want to report?", delegate: self, cancelButtonTitle: "Cancel", otherButtonTitles: "Yes").show()
             } else {
-                Toast(title: "Reporting on Route \(route)", message: "You are now reporting on Route \(route) \(vid)", duration: 5).show()
+                Toast(title: "Reporting on Route \(routeName)", message: "You are now reporting on Route \(routeName) \(vid)", duration: 5).show()
                 // The RequestClear will come from JourneyLocationPoster after it starts posting
                 needJourneyPostingRequestClear = false
-                api.bgEvents.postEvent("JourneyStartPosting", data: JourneyEventData(route: currentJourneyDisplay!.route, role: role, reason: JourneyEvent.R_NORMAL))
+                api.bgEvents.postEvent("JourneyStartPosting", data: JourneyEventData(route: route, role: role, reason: JourneyEvent.R_NORMAL))
                 navigationController?.popToRootViewControllerAnimated(true)
                 currentJourneyDisplay = nil
             }
         } else {
-            Toast(title: "Report on Route \(route)", message: "Reporting on Route \(route) \(vid) is not available", duration: 10).show()
+            Toast(title: "Report on Route \(routeName)", message: "Reporting on Route \(routeName) \(vid). You have no good GPS location for your device.", duration: 10).show()
             navigationController?.popToRootViewControllerAnimated(true)
         }
     }

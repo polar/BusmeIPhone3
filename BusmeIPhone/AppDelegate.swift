@@ -123,7 +123,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener, CLL
         registerForEvents()
         
         contactBusServer()
-        self.splashScreen = SplashScreen(imageName: "Default")
+        self.splashScreen = SplashScreen(imageName: splashImage())
         self.navigationController = UINavigationController(rootViewController: splashScreen!)
         navigationController.navigationBarHidden = true
         window!.rootViewController = navigationController
@@ -135,12 +135,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener, CLL
     func splashImage() -> String {
         switch UIScreen.mainScreen().bounds.size.height {
         case 568, 1136:
-            return "Default-586h@2x.png"
+            return "LaunchImage-700-586h"
         default:
             if UIScreen.mainScreen().bounds.size.height < 800 {
-                return "Default@2x.png"
+                return "LaunchImage-700@2x"
             } else {
-                return "Default.png"
+                return "LaunchImage-700"
             }
         }
     }

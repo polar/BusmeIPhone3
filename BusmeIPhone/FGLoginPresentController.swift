@@ -60,13 +60,13 @@ class FGLoginPresentController : BuspassEventListener {
             if (login.status == "NetworkProblem") {
                 message = "There was a network problem. Please check your wireless connection."
             } else if (login.status == "InvalidPassword") {
-                message = "Invalid Password. Please try again"
+                message = "Invalid Password. Please try again."
             } else if (login.status == "NotAuthorized") {
                 message = "Not authorized for the \(login.roleIntent) role."
             } else if (login.status == "NotRegistered") {
                 message = "Not registered. Please register."
             } else if (login.status == "InvalidToken") {
-                message = "Invalid Login Token. Please try again"
+                message = "Invalid Login Token. Please try again."
             } else {
                 if (BLog.ERROR) { BLog.logger.error("Bad Login Status: \(login.status)") }
             }
@@ -79,13 +79,13 @@ class FGLoginPresentController : BuspassEventListener {
             if (login.status == "NetworkProblem") {
                 message = "There was a network problem. Please check your wireless connection."
             } else if (login.status == "InvalidPassword") {
-                message = "You are already registered and your password is invalid. Please login"
+                message = "You are either already registered and your password is invalid, or your password is too short (6 characters minimum). Please login or try again."
             } else if (login.status == "InvalidPasswordConfirmation") {
                 message = "Invalid password confirmation. Please try again."
             } else if (login.status == "NotAuthorized") {
                 message = "You are not authorized for the \(login.roleIntent) role."
             } else if (login.status == "NotRegistered") {
-                message = "You are not registered. Please try again"
+                message = "You are not registered. Please try again."
             } else if (login.status == "InvalidToken") {
                 message = "Invalid Login Token. Please try again."
             } else if (login.status == "InvalidAuthCode") {

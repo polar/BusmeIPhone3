@@ -23,12 +23,15 @@ class RoutesView : UITableViewController, BuspassEventListener {
     weak var masterMapScreen : MasterMapScreen!
     var backButton : UIButton
     var tabButton : TabButton
+    var noRoutesLabel : UILabel
     
     init(masterController : MasterController, masterMapScreen : MasterMapScreen, tabButton : TabButton) {
         self.masterController = masterController
         self.masterMapScreen = masterMapScreen
         self.backButton = UIButton()
         self.tabButton = tabButton
+        self.noRoutesLabel = UILabel()
+        self.noRoutesLabel.text = "No Routes Selected"
         super.init(nibName: nil, bundle: nil)
         //super.init(style: UITableViewStyle.Plain)
         backButton.frame.size = CGSize(width: 50,height: 28)
@@ -56,7 +59,6 @@ class RoutesView : UITableViewController, BuspassEventListener {
     private var journeyDisplays : [JourneyDisplay] = [JourneyDisplay]()
     func onBuspassEvent(event: BuspassEvent) {
         reload()
-        
     }
     func reload() {
         let jds  = masterController.journeyDisplayController.getJourneyDisplays()
@@ -70,8 +72,13 @@ class RoutesView : UITableViewController, BuspassEventListener {
             }
         }
         jds2.sort({(jd1 :JourneyDisplay, jd2 :JourneyDisplay) in jd1.compareTo(jd2) < 0})
+        let oldCount = journeyDisplays.count
         journeyDisplays = jds2
+        if oldCount != jds2.count && oldCount == 0 || jds2.count == 0 {
+            resizeAll()
+        }
         tableView.reloadData()
+
     }
 
     func getJourneyDisplays() -> [JourneyDisplay] {
@@ -85,7 +92,7 @@ class RoutesView : UITableViewController, BuspassEventListener {
     }
     
     override func viewDidLoad() {
-        view.addSubview(backButton)
+        tableView.addSubview(backButton)
         
         let swipeRight = UISwipeGestureRecognizer(target: self, action: "onSwipeRight")
         swipeRight.direction = UISwipeGestureRecognizerDirection.Right
@@ -110,6 +117,7 @@ class RoutesView : UITableViewController, BuspassEventListener {
         view.layer.shadowColor = UIColor.blackColor().CGColor
         view.layer.shadowRadius = 1.0
         view.layer.masksToBounds = false
+
     }
     
     func onLongPress(gesture : UIGestureRecognizer) {
@@ -204,7 +212,7 @@ class RoutesView : UITableViewController, BuspassEventListener {
     }
     
     func resizeIt(notification: NSNotification) {
-        let object = notification.object!
+        let object : AnyObject = notification.object!
         let orient = UIDevice.currentDevice().orientation
         if orient == UIDeviceOrientation.FaceUp || orient == UIDeviceOrientation.FaceDown {
             
@@ -287,7 +295,11 @@ class RoutesView : UITableViewController, BuspassEventListener {
             let screenX = screenRect.origin.x
             let screenWidth = screenRect.size.width
             
-            let viewSize = CGSize(width: min(screenWidth * 0.8, 350), height: screenRect.size.height/4.0)
+            var viewSize = CGSize(width: min(screenWidth * 0.8, 350), height: screenRect.size.height/4.0)
+            
+            if journeyDisplays.count == 0 {
+                viewSize.height = 36
+            }
             
             let outsideOrigin = CGPoint(x: screenX + screenWidth + 10, y: navBarEnd)
             let insideOrigin = CGPoint(x: screenX + screenWidth - viewSize.width, y: navBarEnd)
@@ -310,12 +322,33 @@ class RoutesView : UITableViewController, BuspassEventListener {
         }
     }
     
+    func visibleCount() -> Int {
+        var n = 0
+        for jd in journeyDisplays {
+            if jd.isNameVisible() {
+                n++
+            }
+        }
+        return n
+    }
+    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return journeyDisplays.count
+        return max(journeyDisplays.count, 1)
     }
 
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        if indexPath.row == 0 && journeyDisplays.count == 0 {
+            var cell = tableView.dequeueReusableCellWithIdentifier("NoRoutes") as UITableViewCell?
+            if cell == nil {
+                cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "NoRoutes")
+                cell!.autoresizingMask = UIViewAutoresizing.FlexibleWidth|UIViewAutoresizing.FlexibleLeftMargin|UIViewAutoresizing.FlexibleRightMargin
+                cell!.clipsToBounds = true // fix for changed default in 7.1
+                cell!.textLabel?.text = "No Routes Selected"
+                return cell!
+            }
+            return cell!
+        }
         let journeyDisplay = journeyDisplays[indexPath.row]
         if journeyDisplay.route.isJourney() {
             var cell = tableView.dequeueReusableCellWithIdentifier("JourneyCell") as JourneyCell?
