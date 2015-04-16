@@ -56,6 +56,21 @@ class JourneyCurrentLocationRequestProcessor : ArgumentPreparer, ResponseProcess
                 if lastLoc == nil || samePoint(newLoc, loc2: lastLoc!) {
                     if (BLog.DEBUG) {BLog.logger.debug("Location received for route \(journey!.name)")}
                 }
+                let vid = loc.vid
+                if vid != nil {
+                    if journey!.vid == nil {
+                        if BLog.DEBUG {BLog.logger.debug("New Vid \(vid) for route \(journey!.name)")}
+                        journey!.vid = vid
+                    } else if vid != journey!.vid {
+                        if BLog.DEBUG {BLog.logger.debug("VID Change Old Vid \(journey!.vid) New Vid \(vid) for route \(journey!.name)")}
+                        journey!.vid = vid
+                    }
+                } else {
+                    if journey!.vid != nil {
+                        if BLog.DEBUG {BLog.logger.debug("VID Nulled Old Vid \(journey!.vid)  for route \(journey!.name)")}
+                    }
+                    journey!.vid = nil
+                }
             }
         }
     }

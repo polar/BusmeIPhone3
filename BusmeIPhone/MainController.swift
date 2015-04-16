@@ -142,7 +142,7 @@ class MainController : BuspassEventListener {
         if oldMasterController != nil {
             oldMasterController!.unregisterForEventsAllComponents()
         }
-        if eventData.saveAsDefault {
+        if configurator.getDefaultMaster() == nil || eventData.saveAsDefault {
             // TODO Possible Error
             configurator.saveAsDefaultMaster(eventData.master!)
         }

@@ -374,7 +374,8 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
         let onlyActive : Bool = state.onlyActive
         let submenu : [MenuItem] = [
             MenuItem(title: "Show All", action: "active", target: self, checked: !onlyActive),
-            MenuItem(title: "Only Active Buses", action: "active", target: self, checked: onlyActive)
+            MenuItem(title: "Only Active Buses", action: "active", target: self, checked: onlyActive),
+            MenuItem(title: "Show Vehicle Ids", action: "active", target: self, checked: masterMapScreen!.masterOverlay.showVehicleIds)
         ]
         return MenuItem(title: "Active Buses", submenu: submenu)
     }
@@ -386,6 +387,14 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
             active = false
         } else if title == "Only Active Buses" {
             active = true
+        } else if title == "Show Vehicle Ids" {
+            let showVehicleIds = !masterMapScreen!.masterOverlay.showVehicleIds
+            masterMapScreen!.masterOverlay.showVehicleIds = showVehicleIds
+            let message = showVehicleIds ? "Vehicle Ids will be shown next to the route code when known." : "Vehicle Ids will not be shown on the map."
+            Toast(title : "Show Vehicle Ids", message: message, duration: 5).show()
+            masterController!.api.uiEvents.postEvent("VisibilityChanged", data: MasterEventData())
+            menuItem.navigationController?.popToRootViewControllerAnimated(true)
+            return
         }
         let state = masterController!.journeyVisibilityController.getCurrentState()
         if state.onlyActive != active {

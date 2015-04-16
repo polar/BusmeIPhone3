@@ -16,6 +16,8 @@ class MasterOverlay : NSObject, MKOverlay {
     var coordinate : CLLocationCoordinate2D
     var boundingMapRect : MKMapRect
     
+    var showVehicleIds : Bool = false
+    
     init(master : Master, masterController : MasterController) {
         self.masterController = masterController
         self.master = master

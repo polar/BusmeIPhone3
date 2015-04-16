@@ -31,6 +31,7 @@ class JourneyLocation : GeoPoint {
     var reported : Bool = false
     var distance : Double = 0
     var time : Double = -1
+    var vid : String?
 
     init(tag: Tag) {
         loadParsedXMLTag(tag)
@@ -59,6 +60,7 @@ class JourneyLocation : GeoPoint {
         self.reported_time = Int64((tag.attributes["reported_time"]! as NSString).integerValue)
         self.recorded_time = Int64((tag.attributes["recorded_time"]! as NSString).integerValue)
         self.onroute = tag.attributes["onroute"] == "true"
+        self.vid = tag.attributes["vid"]
     }
     
     func isValid() -> Bool {

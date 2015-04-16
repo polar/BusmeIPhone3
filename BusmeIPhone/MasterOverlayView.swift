@@ -374,7 +374,12 @@ class MasterOverlayView : MKOverlayRenderer, BuspassEventListener {
             let mapPoint = MKMapPointForCoordinate(coord)
             let cgPoint = pointForMapPoint(mapPoint)
             let jd = locatorView.params.journeyDisplay
-            let imageRect = drawLocatorIcon(cgPoint, icon: icon!, label: jd.route.code!, projection: projection, context: context)
+            let vid = locatorView.params.journeyDisplay.route.vid
+            var label = jd.route.code!
+            if (self.overlay as MasterOverlay).showVehicleIds && vid != nil {
+                label = label + "-" + vid!
+            }
+            let imageRect = drawLocatorIcon(cgPoint, icon: icon!, label: label, projection: projection, context: context)
             let mapRect = mapRectForRect(imageRect)
             recordLocatorMapRect(jd, mapRect: mapRect)
         }
