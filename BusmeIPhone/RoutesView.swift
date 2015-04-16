@@ -380,9 +380,11 @@ class RoutesView : UITableViewController, BuspassEventListener {
         if cell!.isKindOfClass(RouteCell) {
             let routecell = cell as RouteCell
             hit(routecell.journeyDisplay!)
-        } else {
+        } else if cell!.isKindOfClass(JourneyCell) {
             let journeycell = cell as JourneyCell
             hit(journeycell.journeyDisplay!)
+        } else {
+            // It's the NoRouteSelected cell.
         }
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
     }
