@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import MapKit
 
-let APP_VERSION = "0.1.0"
+let APP_VERSION = "0.1.1"
 let PLATFORM_NAME = "iOS"
 
 class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDelegate, BuspassEventListener {
@@ -87,6 +87,7 @@ class DiscoverScreen : UIViewController, MKMapViewDelegate, UIAlertViewDelegate,
         direct.offset(dx: 0, dy: navigationController!.navigationBar.frame.origin.y + navigationController!.navigationBar.frame.size.height)
         direct.inset(dx: direct.width * 0.05, dy: 10)
         directionLabelView!.frame = direct
+        directionLabelView!.sizeToFit()
             
         initializeTouches()
         

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import AlamoFire
+//import AlamoFire
 
 class HttpResponse {
     private var response: NSHTTPURLResponse?;

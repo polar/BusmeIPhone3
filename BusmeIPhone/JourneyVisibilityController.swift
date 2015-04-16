@@ -424,6 +424,7 @@ class JourneyVisibilityController : OnJourneyDisplayRemovedListener, OnJourneyDi
                         display.setNameVisible(true)
                         display.setPathVisible(true)
                         selectedRouteDef = display.getRouteDefinition()
+                        selectedRouteDef?.setNameVisible(true)
                     }
                 } else {
                     display.setNameVisible(false)

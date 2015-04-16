@@ -59,6 +59,7 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
     func helpMenu() -> MenuItem {
         var submenu : [MenuItem] = [
             MenuItem(title: "Iconography", action: "help", target:self),
+            MenuItem(title: "Help", action: "help", target:self),
             MenuItem(title: "About Busme!", action: "help", target:self)
         ]
         return MenuItem(title: "Help", submenu: submenu)
@@ -68,6 +69,15 @@ class MasterMainMenu : MenuScreen, MenuDelegate {
         if menuItem.title == "Iconography" {
             let controller = IconographyScreen().initIt()
             menuItem.navigationController?.pushViewController(controller, animated: true)
+        } else if menuItem.title == "Help" {
+            let controller = WebScreen()
+            let helpUrl = masterController?.api.getHelpUrl()
+            if helpUrl != nil {
+                controller.openUrl(helpUrl!)
+                menuItem.navigationController?.pushViewController(controller, animated: true)
+            } else {
+                menuItem.navigationController?.popToRootViewControllerAnimated(true)
+            }
         } else if menuItem.title == "About Busme!" {
             menuItem.navigationController?.popToRootViewControllerAnimated(true)
             

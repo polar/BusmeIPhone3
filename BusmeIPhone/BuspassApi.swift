@@ -19,7 +19,7 @@ class BuspassApi : ApiBase, EventsApi {
     var syncRate : Int = 60 * 1000;
     var updateRate : Int = 60 * 1000;
     var activeStartDisplayThreshold : Double = 60 * 1000;
-    var busmeAppVersionString : String = "iPhone 1.0.0"
+    var busmeAppVersionString : String = "iOS 1.0.0"
     var loginManager : LoginManager?
     var uiEvents : BuspassEventDistributor
     var bgEvents : BuspassEventDistributor
@@ -145,6 +145,7 @@ class BuspassApi : ApiBase, EventsApi {
                     self.offRouteTimeThreshold = bp.offRouteTimeThreshold != nil ? (bp.offRouteTimeThreshold! as NSString).integerValue : 20000 // milliseconds
                     self.buspass = bp
                     self.ready = true
+                    
                     return (response.getStatusLine(), self)
                 } else {
                     return (HttpStatusLine(statusCode: 1000, reasonPhrase: "Wrong Version"), nil)
@@ -188,6 +189,13 @@ class BuspassApi : ApiBase, EventsApi {
         let q = Query()
         q.add(getPlatformArgs())
         return q
+    }
+    
+    func getHelpUrl() -> String? {
+        if buspass != nil && buspass!.helpUrl != nil {
+            return "\(buspass!.helpUrl!)?\(getPlatformArgs())"
+        }
+        return nil
     }
     
     func authTokenLogin(login : Login) -> (HttpStatusLine, Tag?) {

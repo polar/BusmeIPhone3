@@ -67,6 +67,8 @@ class MenuScreen : UITableViewController {
         let item = menu_data[indexPath.row]
         
         cell!.textLabel!.text = item.title
+        cell!.textLabel!.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        cell!.textLabel!.numberOfLines = 0
         if item.submenu != nil {
             cell!.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
         } else if (item.checked != nil && item.checked!) {

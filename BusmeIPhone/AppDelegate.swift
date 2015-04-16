@@ -135,7 +135,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, BuspassEventListener, CLL
     func splashImage() -> String {
         switch UIScreen.mainScreen().bounds.size.height {
         case 568, 1136:
-            return "LaunchImage-700-586h"
+            return "LaunchImage-700-568h"
         default:
             if UIScreen.mainScreen().bounds.size.height < 800 {
                 return "LaunchImage-700@2x"

@@ -7,7 +7,15 @@
 //
 
 import Foundation
-import Alamofire
+
+// This shim approach is for dealing with iOS7 since we cannot embed Frameworks until iOS8
+//import Alamofire
+
+public struct AlamofireStub {
+    static public func stubrequest(method: Method, _ url: URLStringConvertible, parameters: [String: AnyObject]? = nil, encoding: ParameterEncoding = .URL) -> Request {
+        return request(method, url, parameters: parameters, encoding: encoding)
+    }
+}
 
 class HttpClient {
     var queue: dispatch_queue_t?
@@ -23,7 +31,7 @@ class HttpClient {
     func getURLResponse(url: String) -> HttpResponse {
         dispatch_semaphore_wait(self.entry, DISPATCH_TIME_FOREVER);
         if BLog.DEBUG_NETWORK { BLog.logger.debug("GET \(url)") }
-        Alamofire.request(.GET, url)
+        AlamofireStub.stubrequest(.GET, url)
             .response(queue: self.queue,  serializer: Request.stringResponseSerializer(encoding: NSUTF8StringEncoding), completionHandler: {(request, response, data, error) in
                 self.response = HttpResponse(response: response, data: data, error: error);
                 dispatch_semaphore_signal(self.sem);
@@ -50,7 +58,7 @@ class HttpClient {
             }
             BLog.logger.debug("POST \(url) params \(params)")
         }
-        Alamofire.request(.POST, url, parameters: parameters)
+        AlamofireStub.stubrequest(.POST, url, parameters: parameters)
             .response(queue: self.queue,  serializer: Request.stringResponseSerializer(encoding: NSUTF8StringEncoding), completionHandler: {(request, response, data, error) in
                 self.response = HttpResponse(response: response, data: data, error: error);
                 if (BLog.DEBUG) { BLog.logger.debug("postURLResponse signal sem return \(self.response)") }
